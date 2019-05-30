@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Menu, Table } from 'antd';
 
 const History = () => {
-  const { histories } = useSelector(state => state);
+  const { histories } = useSelector(state => state.tokens);
   const [history, setHistory] = useState(histories.orderHistory);
 
   const handleMenuClick = useCallback(
@@ -16,7 +16,7 @@ const History = () => {
   return (
     <>
       <Menu
-        style={{ marginTop: '10px' }}
+        style={{ marginTop: '10px', border: '1px solid #e8e8e8' }}
         mode='horizontal'
         onClick={handleMenuClick}
         defaultSelectedKeys={['orderHistory']}
@@ -28,7 +28,7 @@ const History = () => {
           TradeHistory
         </Menu.Item>
       </Menu>
-      <Table dataSource={history} rowKey='id'>
+      <Table dataSource={history} rowKey='id' pagination={{ pageSize: 10 }}>
         <Table.Column
           title='createdAt'
           dataIndex='createdAt'

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { Col, Row, Card, Icon, Input, PageHeader } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -8,9 +8,12 @@ import OrderBook from '../components/OrderBook';
 import { iconexEvent } from '../utils/events';
 import TokenList from '../components/TokenList';
 import History from '../components/History';
+import { RESPONSE_ADDRESS } from '../reducers/iconex';
+import TokenSearchInput from '../components/TokenSearchInput';
 
 const Home = () => {
-  const { selectedToken } = useSelector(state => state.tokens);
+  const [searchText, setSearchText] = useState('');
+  const { tokenList, selectedToken } = useSelector(state => state.tokens);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -18,10 +21,10 @@ const Home = () => {
       const { type, payload } = e.detail;
       console.log(type, payload);
       switch (type) {
-        case 'RESPONSE_ADDRESS':
+        case RESPONSE_ADDRESS:
           dispatch({
             type,
-            data: payload,
+            payload,
           });
         default:
           break;
@@ -36,13 +39,17 @@ const Home = () => {
 
     window.addEventListener('ICONEX_RELAY_RESPONSE', eventHandler);
 
-    window.dispatchEvent(getAddress);
+    // window.dispatchEvent(getAddress);
     window.dispatchEvent(getTotalSupply);
     return () => {
       console.log('unmount component');
       window.removeEventListener('ICONEX_RELAY_RESPONSE', eventHandler);
     };
   }, []);
+
+  const setText = useCallback(e => {
+    setSearchText(e.target.value);
+  });
 
   return (
     <div>
@@ -94,13 +101,11 @@ const Home = () => {
         <Col xs={0} md={0} lg={1} />
         <Col xs={24} md={6} lg={6}>
           <Card
-            title={
-              <Input.Search enterButton style={{ verticalAlign: 'middle' }} />
-            }
+            title={<TokenSearchInput setText={setText} />}
             style={{ marginTop: '10px' }}
             bodyStyle={{ padding: '0' }}
           >
-            <TokenList />
+            <TokenList list={tokenList} searchText={searchText} />
           </Card>
         </Col>
         <Col xs={24} md={18} lg={16}>

@@ -9,7 +9,7 @@ const OrderBook = () => {
       <Table
         dataSource={orderHistory}
         size='middle'
-        pagination={false}
+        pagination={{ pageSize: 5, hideOnSinglePage: true }}
         rowKey='id'
       >
         <Table.Column

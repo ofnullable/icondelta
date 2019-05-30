@@ -37,6 +37,10 @@ export const initialState = {
   ],
 };
 
+export const LOAD_TOKEN_HISTORY_REQUEST = 'HISTORY/LOAD_TOKEN_HISTORY_REQUEST';
+export const LOAD_TOKEN_HISTORY_SUCCESS = 'HISTORY/LOAD_TOKEN_HISTORY_SUCCESS';
+export const LOAD_TOKEN_HISTORY_FAILURE = 'HISTORY/LOAD_TOKEN_HISTORY_FAILURE';
+
 export default (state = initialState, action) => {
   switch (action.type) {
     default:
