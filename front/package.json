@@ -1,0 +1,35 @@
+{
+  "name": "iconoverflow-front",
+  "version": "0.0.1",
+  "description": "Front application for iconoverflow",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon",
+    "build": "cross-env NODE_ENV=production next build",
+    "start": "cross-env NODE_ENV=production next start"
+  },
+  "author": "joonak",
+  "license": "ISC",
+  "dependencies": {
+    "antd": "^3.18.2",
+    "axios": "^0.18.0",
+    "cross-env": "^5.2.0",
+    "dotenv": "^8.0.0",
+    "express": "^4.17.0",
+    "morgan": "^1.9.1",
+    "next": "^8.1.0",
+    "next-redux-saga": "^4.0.2",
+    "next-redux-wrapper": "^3.0.0-alpha.2",
+    "prop-types": "^15.7.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-redux": "^7.1.0-alpha.5",
+    "react-slick": "^0.24.0",
+    "redux": "^4.0.1",
+    "redux-saga": "^1.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.0",
+    "webpack": "^4.32.2"
+  }
+}
