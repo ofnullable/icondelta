@@ -1,9 +1,8 @@
 export const initialState = {
   selectedToken: {
-    id: 1,
-    name: 'AC3 ',
+    name: 'AC3',
     address: 'cx9ab3078e72c8d9017194d17b34b1a47b661945ca',
-    symbol: 'AC3 ',
+    symbol: 'AC3',
     currentPrice: 0.5,
   },
   tokenList: [

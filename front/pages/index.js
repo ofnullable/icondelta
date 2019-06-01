@@ -5,44 +5,47 @@ import { useSelector, useDispatch } from 'react-redux';
 import TradeForm from '../components/TradeForm';
 import Balance from '../components/Balance';
 import OrderBook from '../components/OrderBook';
-import iconexEvent, {
-  REQUEST_ADDRESS,
-  REQUEST_JSON_RPC,
-} from '../utils/events';
+import iconexEvent, { REQUEST_ADDRESS } from '../utils/events';
 import History from '../components/History';
 import TokenMenu from '../components/TokenMenu';
-import { RESPONSE_ADDRESS, ICONEX_RELAY_RESPONSE } from '../reducers/iconex';
+import {
+  RESPONSE_ADDRESS,
+  ICONEX_RELAY_RESPONSE,
+  RESPONSE_JSON_RPC,
+} from '../reducers/iconex';
 
 const Home = () => {
   const { selectedToken } = useSelector(state => state.tokens);
+  const { address, icxRequestId, tokenRequestId } = useSelector(
+    state => state.iconex
+  );
   const dispatch = useDispatch();
 
+  // didMount
   useEffect(() => {
+    console.log('address', address, !!address);
     const eventHandler = e => {
       const { type, payload } = e.detail;
-      console.log(type, payload);
-      switch (type) {
-        case RESPONSE_ADDRESS:
-          dispatch({
-            type,
-            payload,
-          });
-        default:
-          break;
-      }
+      console.log('type:', type, payload, e.detail);
+      dispatch({
+        type,
+        payload,
+        tokenAddress: selectedToken.address,
+      });
+      console.log(
+        'is icx request',
+        icxRequestId === payload.id,
+        'is token request',
+        tokenRequestId === payload.id
+      );
     };
     const getAddress = iconexEvent(REQUEST_ADDRESS);
-    const getTotalSupply = iconexEvent(REQUEST_JSON_RPC, {
-      jsonrpc: '2.0',
-      method: 'icx_getTotalSupply',
-      id: 6339,
-      params: {},
-    });
 
     window.addEventListener(ICONEX_RELAY_RESPONSE, eventHandler);
 
-    // window.dispatchEvent(getAddress);
-    window.dispatchEvent(getTotalSupply);
+    if (!address) {
+      window.dispatchEvent(getAddress);
+    }
     return () => {
       console.log('unmount component');
       window.removeEventListener(ICONEX_RELAY_RESPONSE, eventHandler);
@@ -62,7 +65,7 @@ const Home = () => {
             </Col>
           </Row>
         </Col>
-        <Col xs={24} md={18} lg={12} style={{ marginTop: '10px' }}>
+        <Col xs={24} md={12} lg={12} style={{ marginTop: '10px' }}>
           <PageHeader
             title={selectedToken.symbol}
             subTitle={`${selectedToken.symbol}/ICX - ${

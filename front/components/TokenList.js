@@ -1,11 +1,12 @@
 import React, { memo } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Table } from 'antd';
 import { CHANGE_TOKEN } from '../reducers/tokens';
 import { LOAD_ORDERBOOK_REQUEST } from '../reducers/order';
 import { LOAD_TRADE_HISTORY_REQUEST } from '../reducers/trade';
 
 const TokenList = memo(({ list, searchText }) => {
+  const { selectedToken } = useSelector(state => state.tokens);
   const dispatch = useDispatch();
 
   const setList = () => {
@@ -23,6 +24,7 @@ const TokenList = memo(({ list, searchText }) => {
   const onRow = token => {
     return {
       onClick() {
+        console.log(token === selectedToken);
         dispatch({
           type: CHANGE_TOKEN,
           token,
