@@ -42,7 +42,6 @@ const IconDelta = ({ Component, store, pageProps }) => {
 IconDelta.getInitialProps = async context => {
   const { ctx, Component } = context;
   const state = ctx.store.getState();
-  const cookie = ctx.isServer ? ctx.req.headers.cookie : '';
 
   let pageProps = {};
   if (Component.getInitialProps) {
@@ -60,10 +59,11 @@ const logger = store => next => action => {
 
 const storeConfig = (initialState, options) => {
   const sagaMiddleware = createSagaMiddleware();
-  const middlewares = [sagaMiddleware, logger];
+  const middlewares = isProd ? [sagaMiddleware] : [sagaMiddleware, logger];
 
   const reduxDevtools =
     !options.isServer && window.__REDUX_DEVTOOLS_EXTENSION__;
+
   const enhancer = isProd
     ? compose(applyMiddleware(...middlewares))
     : compose(

@@ -1,16 +1,14 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { Table } from 'antd';
 
 const OrderBook = () => {
-  const { orderHistory } = useSelector(state => state.histories);
   return (
     <>
       <Table
-        dataSource={orderHistory}
+        dataSource={orderBook}
         size='middle'
         pagination={{ pageSize: 5, hideOnSinglePage: true }}
-        rowKey='id'
+        rowKey='symbol'
       >
         <Table.Column
           title='symbol'

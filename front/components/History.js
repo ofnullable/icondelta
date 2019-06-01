@@ -3,15 +3,20 @@ import { useSelector } from 'react-redux';
 import { Menu, Table } from 'antd';
 
 const History = () => {
-  const { histories } = useSelector(state => state.tokens);
-  const [history, setHistory] = useState(histories.orderHistory);
+  const { orderBook } = useSelector(state => state.order);
+  const { tradeHistory } = useSelector(state => state.trade);
+  const [data, setData] = useState(orderBook);
 
   const handleMenuClick = useCallback(
     e => {
-      setHistory(histories[e.key]);
+      setData(e.key === 'order' ? orderBook : tradeHistory);
     },
-    [history]
+    [data]
   );
+
+  const createdAt = data => {
+    return data.orderedAt ? data.orderedAt : data.tradedAt;
+  };
 
   return (
     <>
@@ -19,20 +24,18 @@ const History = () => {
         style={{ marginTop: '10px', border: '1px solid #e8e8e8' }}
         mode='horizontal'
         onClick={handleMenuClick}
-        defaultSelectedKeys={['orderHistory']}
+        defaultSelectedKeys={['order']}
       >
-        <Menu.Item key='orderHistory' style={{ width: '50%' }}>
-          OrderHistory
-        </Menu.Item>
-        <Menu.Item key='tradeHistory' style={{ width: '50%' }}>
-          TradeHistory
-        </Menu.Item>
+        <Menu.Item key='order'>History</Menu.Item>
+        {/*<Menu.Item key='trade' style={{ width: '50%' }}>
+          My Trade History
+  </Menu.Item>*/}
       </Menu>
-      <Table dataSource={history} rowKey='id' pagination={{ pageSize: 10 }}>
+      <Table dataSource={data} rowKey='total' pagination={{ pageSize: 10 }}>
         <Table.Column
           title='createdAt'
-          dataIndex='createdAt'
-          key={data => data.id}
+          key='createdAt'
+          render={data => createdAt(data)}
           width={'20%'}
         />
         <Table.Column title='type' dataIndex='type' key='type' width={'20%'} />

@@ -1,16 +1,41 @@
 import React, { memo, useState, useCallback } from 'react';
+import { useSelector } from 'react-redux';
 import { Form, Button, Menu, InputNumber } from 'antd';
-import { numberFormatter } from '../utils/formatter';
+
+import { toCurrency } from '../utils/formatter';
 
 const TradeForm = memo(() => {
   const [tradeType, setTradeType] = useState('buy');
+  const [price, setPrice] = useState();
+  const [amount, setAmount] = useState();
+  const [total, setTotal] = useState();
+  const { selectedToken } = useSelector(state => state.tokens);
 
-  const applyTrade = e => e.preventDefault();
+  const applyTrade = useCallback(e => e.preventDefault());
   const handleMenuClick = useCallback(
     e => {
       setTradeType(e.key);
     },
     [tradeType]
+  );
+
+  const changePrice = useCallback(
+    priceValue => {
+      setPrice(priceValue);
+      if (amount) {
+        setTotal(priceValue * amount);
+      }
+    },
+    [price, amount]
+  );
+  const changeAmount = useCallback(
+    amountValue => {
+      setAmount(amountValue);
+      if (price) {
+        setTotal(price * amountValue);
+      }
+    },
+    [price, amount]
   );
 
   return (
@@ -29,16 +54,26 @@ const TradeForm = memo(() => {
       </Menu>
       <Form onSubmit={applyTrade}>
         <InputNumber
-          formatter={numberFormatter}
           style={{ margin: '10px 0 5px', width: '100%' }}
-          placeholder='price ( ICX )'
+          placeholder={`Price ( ${selectedToken.symbol}/ICX )`}
           min={0}
+          value={price}
+          onChange={changePrice}
         />
         <InputNumber
-          formatter={numberFormatter}
           style={{ margin: '5px 0 10px', width: '100%' }}
-          placeholder='amount'
+          placeholder='Amount to buy'
           min={0}
+          value={amount}
+          onChange={changeAmount}
+        />
+        <InputNumber
+          readOnly
+          formatter={toCurrency}
+          style={{ margin: '0 0 10px', width: '100%' }}
+          placeholder='Total'
+          min={0}
+          value={total}
         />
         <Button
           type={tradeType === 'buy' ? 'primary' : 'danger'}

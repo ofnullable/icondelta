@@ -1,19 +1,20 @@
-import React, { useEffect, useCallback, useState } from 'react';
-import { Col, Row, Card, Icon, Input, PageHeader } from 'antd';
+import React, { useEffect } from 'react';
+import { Col, Row, PageHeader } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 
 import TradeForm from '../components/TradeForm';
-import UserBalance from '../components/UserBalance';
+import Balance from '../components/Balance';
 import OrderBook from '../components/OrderBook';
-import { iconexEvent } from '../utils/events';
-import TokenList from '../components/TokenList';
+import iconexEvent, {
+  REQUEST_ADDRESS,
+  REQUEST_JSON_RPC,
+} from '../utils/events';
 import History from '../components/History';
-import { RESPONSE_ADDRESS } from '../reducers/iconex';
-import TokenSearchInput from '../components/TokenSearchInput';
+import TokenMenu from '../components/TokenMenu';
+import { RESPONSE_ADDRESS, ICONEX_RELAY_RESPONSE } from '../reducers/iconex';
 
 const Home = () => {
-  const [searchText, setSearchText] = useState('');
-  const { tokenList, selectedToken } = useSelector(state => state.tokens);
+  const { selectedToken } = useSelector(state => state.tokens);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -30,83 +31,66 @@ const Home = () => {
           break;
       }
     };
-    const getAddress = iconexEvent('REQUEST_ADDRESS');
-    const getTotalSupply = iconexEvent('REQUEST_JSON-RPC', {
+    const getAddress = iconexEvent(REQUEST_ADDRESS);
+    const getTotalSupply = iconexEvent(REQUEST_JSON_RPC, {
       jsonrpc: '2.0',
       method: 'icx_getTotalSupply',
       id: 6339,
+      params: {},
     });
 
-    window.addEventListener('ICONEX_RELAY_RESPONSE', eventHandler);
+    window.addEventListener(ICONEX_RELAY_RESPONSE, eventHandler);
 
     // window.dispatchEvent(getAddress);
     window.dispatchEvent(getTotalSupply);
     return () => {
       console.log('unmount component');
-      window.removeEventListener('ICONEX_RELAY_RESPONSE', eventHandler);
+      window.removeEventListener(ICONEX_RELAY_RESPONSE, eventHandler);
     };
   }, []);
-
-  const setText = useCallback(e => {
-    setSearchText(e.target.value);
-  });
 
   return (
     <div>
       <Row gutter={8} style={{ margin: 0 }}>
-        <Col xs={0} md={0} lg={1} />
-        <Col xs={24} md={24} lg={22} style={{ marginTop: '10px' }}>
-          <UserBalance />
-        </Col>
-        <Col xs={0} md={0} lg={1} />
-      </Row>
-      <Row gutter={8} style={{ margin: 0 }}>
-        <Col xs={0} md={0} lg={1} />
-        <Col xs={24} md={6} lg={6}>
+        <Col xs={24} md={6} lg={6} style={{ marginTop: '10px' }}>
           <Row>
             <Col>
-              <Card
-                style={{ marginTop: '10px' }}
-                actions={[
-                  <Icon type='setting' />,
-                  <Icon type='edit' />,
-                  <Icon type='ellipsis' />,
-                ]}
-              >
-                <Card.Meta
-                  title={selectedToken.symbol}
-                  description={`${selectedToken.symbol}/ICX`}
-                />
-              </Card>
+              <Balance />
             </Col>
-          </Row>
-        </Col>
-        <Col xs={24} md={18} lg={16} style={{ marginTop: '10px' }}>
-          <PageHeader
-            title={selectedToken.symbol}
-            subTitle={`${selectedToken.symbol}/ICX`}
-          />
-          <Row gutter={8} style={{ margin: 0 }}>
-            <Col xs={24} md={12} lg={12} style={{ marginTop: '10px' }}>
-              <OrderBook />
-            </Col>
-            <Col xs={24} md={12} lg={12} style={{ marginTop: '10px' }}>
+            <Col style={{ marginTop: '10px' }}>
               <TradeForm />
             </Col>
           </Row>
         </Col>
-        <Col xs={0} md={0} lg={1} />
+        <Col xs={24} md={18} lg={12} style={{ marginTop: '10px' }}>
+          <PageHeader
+            title={selectedToken.symbol}
+            subTitle={`${selectedToken.symbol}/ICX - ${
+              selectedToken.currentPrice
+            }`}
+          />
+          <Row gutter={8} style={{ margin: 0 }}>
+            <Col xs={24} md={24} lg={24}>
+              <OrderBook />
+            </Col>
+            <Col xs={24} style={{ marginTop: '10px' }} />
+            <Col xs={24} style={{ marginTop: '10px' }}>
+              <History />
+            </Col>
+          </Row>
+        </Col>
+        <Col xs={24} md={6} lg={6} style={{ marginTop: '10px' }}>
+          <Row gutter={8} style={{ margin: 0 }}>
+            <Col xs={24}>
+              <TokenMenu />
+            </Col>
+          </Row>
+        </Col>
       </Row>
-      <Row gutter={8} style={{ margin: 0 }}>
+      {/*<Row gutter={8} style={{ margin: 0 }}>
         <Col xs={0} md={0} lg={1} />
         <Col xs={24} md={6} lg={6}>
-          <Card
-            title={<TokenSearchInput setText={setText} />}
-            style={{ marginTop: '10px' }}
-            bodyStyle={{ padding: '0' }}
-          >
-            <TokenList list={tokenList} searchText={searchText} />
-          </Card>
+          <TokenMenu />
         </Col>
         <Col xs={24} md={18} lg={16}>
           <Row gutter={8} style={{ margin: 0 }}>
@@ -114,7 +98,7 @@ const Home = () => {
           </Row>
         </Col>
         <Col xs={0} md={0} lg={1} />
-      </Row>
+          </Row>*/}
     </div>
   );
 };

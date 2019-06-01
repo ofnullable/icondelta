@@ -24,6 +24,6 @@ function* watchChangeToken() {
   yield takeLatest(CHANGE_TOKEN, changeToken);
 }
 
-export default function* testSage() {
+export default function*() {
   yield all([fork(watchChangeToken)]);
 }
