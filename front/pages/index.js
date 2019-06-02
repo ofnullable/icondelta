@@ -5,25 +5,18 @@ import { useSelector, useDispatch } from 'react-redux';
 import TradeForm from '../components/TradeForm';
 import Balance from '../components/Balance';
 import OrderBook from '../components/OrderBook';
-import iconexEvent, { REQUEST_ADDRESS } from '../utils/events';
+import { iconexEvent, REQUEST_ADDRESS } from '../utils/events';
 import History from '../components/History';
 import TokenMenu from '../components/TokenMenu';
-import {
-  RESPONSE_ADDRESS,
-  ICONEX_RELAY_RESPONSE,
-  RESPONSE_JSON_RPC,
-} from '../reducers/iconex';
+import { ICONEX_RELAY_RESPONSE, RESPONSE_JSON_RPC } from '../reducers/iconex';
 
 const Home = () => {
   const { selectedToken } = useSelector(state => state.tokens);
-  const { address, icxRequestId, tokenRequestId } = useSelector(
-    state => state.iconex
-  );
+  const { address, jsonRpcIds } = useSelector(state => state.iconex);
   const dispatch = useDispatch();
 
   // didMount
   useEffect(() => {
-    console.log('address', address, !!address);
     const eventHandler = e => {
       const { type, payload } = e.detail;
       console.log('type:', type, payload, e.detail);
@@ -32,12 +25,8 @@ const Home = () => {
         payload,
         tokenAddress: selectedToken.address,
       });
-      console.log(
-        'is icx request',
-        icxRequestId === payload.id,
-        'is token request',
-        tokenRequestId === payload.id
-      );
+      if (type === RESPONSE_JSON_RPC)
+        console.log('response for what?', jsonRpcIds[payload.id]);
     };
     const getAddress = iconexEvent(REQUEST_ADDRESS);
 
@@ -50,7 +39,7 @@ const Home = () => {
       console.log('unmount component');
       window.removeEventListener(ICONEX_RELAY_RESPONSE, eventHandler);
     };
-  }, []);
+  }, [jsonRpcIds]);
 
   return (
     <div>

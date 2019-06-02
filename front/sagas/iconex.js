@@ -1,70 +1,61 @@
-import { all, takeEvery, fork, put } from 'redux-saga/effects';
+import { all, takeLatest, takeEvery, fork, put } from 'redux-saga/effects';
 
 import {
   SEND_QUERY,
-  GET_ICX_BALANCE,
   GET_TOKEN_BALANCE,
   generateJsonRpcParam,
   generateJsonRpcId,
 } from '../utils/jsonrpc';
-import iconexEvent, { REQUEST_JSON_RPC } from '../utils/events';
+import {
+  iconexEvent,
+  REQUEST_JSON_RPC,
+  getIcxBalanceEvent,
+  getTokenBalanceEvent,
+} from '../utils/events';
 import {
   RESPONSE_ADDRESS,
   ICX_BALANCE_REQUEST,
   TOKEN_BALANCE_REQUEST,
 } from '../reducers/iconex';
+import { CHANGE_TOKEN } from '../reducers/tokens';
 
 function getIcxBalance(payload) {
   const id = generateJsonRpcId();
-  const getIcxBalanceEvent = iconexEvent(
-    REQUEST_JSON_RPC,
-    generateJsonRpcParam(id, GET_ICX_BALANCE, { address: payload })
-  );
-  console.log(window.dispatchEvent(getIcxBalanceEvent));
+  const event = getIcxBalanceEvent(id, payload);
+  window.dispatchEvent(event);
   return id;
 }
 
 function getTokenBalance(payload, tokenAddress) {
   const id = generateJsonRpcId();
-  const getTokenBalanceEvent = iconexEvent(
-    SEND_QUERY,
-    generateJsonRpcParam(id, {
-      from: payload,
-      to: tokenAddress,
-      dataType: 'call',
-      data: {
-        method: 'get_balance',
-        params: { address: payload },
-      },
-    })
-  );
-  console.log(window.dispatchEvent(getTokenBalanceEvent));
+  const event = getTokenBalanceEvent(id, payload, tokenAddress);
+  window.dispatchEvent(event);
   return id;
 }
 
 function* getBalance({ payload, tokenAddress }) {
-  try {
-    const icxId = yield getIcxBalance(payload);
-    console.log('icxId', icxId);
-    yield put({
-      type: ICX_BALANCE_REQUEST,
-      id: icxId,
-    });
-    const tokenId = yield getTokenBalance(payload, tokenAddress);
-    console.log('tokenId', tokenId);
-    yield put({
-      type: TOKEN_BALANCE_REQUEST,
-      id: tokenId,
-    });
-  } catch (e) {
-    console.error(e);
-  }
+  const icxId = getIcxBalance(payload);
+  console.log('icxId', icxId);
+  yield put({
+    type: ICX_BALANCE_REQUEST,
+    id: icxId,
+  });
+  const tokenId = getTokenBalance(payload, tokenAddress);
+  console.log('tokenId', tokenId);
+  yield put({
+    type: TOKEN_BALANCE_REQUEST,
+    id: tokenId,
+  });
 }
 
-function* watchChangeToken() {
+function* watchResponseAddress() {
   yield takeEvery(RESPONSE_ADDRESS, getBalance);
 }
 
+function* watchChangeToken() {
+  yield takeLatest(CHANGE_TOKEN, getBalance);
+}
+
 export default function*() {
-  yield all([fork(watchChangeToken)]);
+  yield all([fork(watchResponseAddress), fork(watchChangeToken)]);
 }

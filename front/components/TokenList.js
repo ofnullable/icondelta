@@ -48,15 +48,15 @@ const TokenList = memo(({ list, searchText }) => {
       onRow={onRow}
       pagination={{ pageSize: 10 }}
     >
-      <Table.Column title='name' dataIndex='name' key='name' width={'33%'} />
+      <Table.Column title='Name' dataIndex='name' key='name' width={'33%'} />
       <Table.Column
-        title='symbol'
+        title='Symbol'
         dataIndex='symbol'
         key='symbol'
         width={'33%'}
       />
       <Table.Column
-        title='currentPrice'
+        title='Current Price'
         dataIndex='currentPrice'
         key='currentPrice'
         width={'34%'}

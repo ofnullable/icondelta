@@ -1,21 +1,26 @@
 {
-  "name": "iconoverflow-front",
+  "name": "icondelta-front",
   "version": "0.0.1",
-  "description": "Front application for iconoverflow",
+  "description": "Front application for icondelta",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon",
-    "build": "cross-env NODE_ENV=production next build",
+    "build": "cross-env ANALYZE=true NODE_ENV=production next build",
+    "prestart": "npm run build",
     "start": "cross-env NODE_ENV=production next start"
   },
   "author": "joonak",
   "license": "ISC",
   "dependencies": {
-    "antd": "^3.18.2",
-    "axios": "^0.18.0",
+    "@next/bundle-analyzer": "^8.1.0",
+    "antd": "^3.19.2",
+    "axios": "^0.18.1",
+    "compression-webpack-plugin": "^2.0.0",
     "cross-env": "^5.2.0",
     "dotenv": "^8.0.0",
-    "express": "^4.17.0",
+    "express": "^4.17.1",
+    "immer": "^3.1.2",
+    "moment": "^2.24.0",
     "morgan": "^1.9.1",
     "next": "^8.1.0",
     "next-redux-saga": "^4.0.2",
@@ -23,13 +28,13 @@
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-redux": "^7.1.0-alpha.5",
-    "react-slick": "^0.24.0",
+    "react-redux": "^7.1.0-rc.1",
     "redux": "^4.0.1",
-    "redux-saga": "^1.0.2"
+    "redux-saga": "^1.0.2",
+    "webpack-ant-icon-loader": "^1.0.5"
   },
   "devDependencies": {
-    "nodemon": "^1.19.0",
+    "nodemon": "^1.19.1",
     "webpack": "^4.32.2"
   }
 }

@@ -21,7 +21,7 @@ const History = () => {
   return (
     <>
       <Menu
-        style={{ marginTop: '10px', border: '1px solid #e8e8e8' }}
+        style={{ marginTop: '10px' }}
         mode='horizontal'
         onClick={handleMenuClick}
         defaultSelectedKeys={['order']}

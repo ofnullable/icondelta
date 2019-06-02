@@ -1,6 +1,6 @@
 import React, { memo, useState, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { Form, Button, Menu, InputNumber } from 'antd';
+import { Form, Button, Menu, InputNumber, Input } from 'antd';
 
 import { toCurrency } from '../utils/formatter';
 
@@ -20,19 +20,19 @@ const TradeForm = memo(() => {
   );
 
   const changePrice = useCallback(
-    priceValue => {
-      setPrice(priceValue);
+    e => {
+      setPrice(e.target.value);
       if (amount) {
-        setTotal(priceValue * amount);
+        setTotal(e.target.value * amount);
       }
     },
     [price, amount]
   );
   const changeAmount = useCallback(
-    amountValue => {
-      setAmount(amountValue);
+    e => {
+      setAmount(e.target.value);
       if (price) {
-        setTotal(price * amountValue);
+        setTotal(price * e.target.value);
       }
     },
     [price, amount]
@@ -53,19 +53,22 @@ const TradeForm = memo(() => {
         </Menu.Item>
       </Menu>
       <Form onSubmit={applyTrade}>
-        <InputNumber
+        <Input
+          type='number'
           style={{ margin: '10px 0 5px', width: '100%' }}
           placeholder={`Price ( ${selectedToken.symbol}/ICX )`}
           min={0}
           value={price}
           onChange={changePrice}
+          addonAfter={`${selectedToken.symbol}`}
         />
-        <InputNumber
+        <Input
           style={{ margin: '5px 0 10px', width: '100%' }}
           placeholder='Amount to buy'
           min={0}
           value={amount}
           onChange={changeAmount}
+          addonAfter='ICX'
         />
         <InputNumber
           readOnly

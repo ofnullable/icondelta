@@ -1,3 +1,5 @@
+import produce from 'immer';
+
 export const initialState = {
   selectedToken: {
     name: 'AC3',
@@ -76,15 +78,15 @@ export const LOAD_TOKEN_HISTORY_SUCCESS = 'TOKEN/LOAD_TOKEN_HISTORY_SUCCESS';
 export const LOAD_TOKEN_HISTORY_FAILURE = 'TOKEN/LOAD_TOKEN_HISTORY_FAILURE';
 
 export default (state = initialState, action) => {
-  switch (action.type) {
-    case CHANGE_TOKEN:
-      return {
-        ...state,
-        selectedToken: action.token,
-      };
-    default:
-      return {
-        ...state,
-      };
-  }
+  return produce(state, draft => {
+    switch (action.type) {
+      case CHANGE_TOKEN:
+        draft.selectedToken = action.token;
+        break;
+      default:
+        return {
+          ...state,
+        };
+    }
+  });
 };

@@ -24,9 +24,9 @@ const UserBalance = ({ token }) => {
       dataSource={tableData}
       rowKey='name'
     >
-      <Table.Column title='name' dataIndex='name' key='name' width={'34%'} />
+      <Table.Column title='Name' dataIndex='name' key='name' width={'34%'} />
       <Table.Column
-        title='wallet'
+        title='Wallet'
         dataIndex='wallet'
         key='wallet'
         width={'33%'}

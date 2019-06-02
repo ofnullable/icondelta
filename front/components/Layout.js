@@ -5,7 +5,7 @@ import { Menu, Icon } from 'antd';
 const Layout = ({ children }) => {
   return (
     <div>
-      <Menu mode='horizontal' selectedKeys={['trade']}>
+      <Menu mode='horizontal' selectedKeys={['Trade']}>
         <Menu.Item key='home'>
           <Link href='/'>
             <a>
@@ -27,16 +27,16 @@ const Layout = ({ children }) => {
             </a>
           </Link>
         </Menu.Item>
-        <Menu.Item key='trade'>
+        <Menu.Item key='Trade'>
           <Link href=''>
-            <a>trade</a>
+            <a>Trade</a>
           </Link>
         </Menu.Item>
-        <Menu.Item key='someother'>
+        {/*<Menu.Item key=''>
           <Link href=''>
             <a>some other</a>
           </Link>
-        </Menu.Item>
+              </Menu.Item>*/}
       </Menu>
       {children}
     </div>
