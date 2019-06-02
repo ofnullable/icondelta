@@ -7,7 +7,6 @@ import TokenList from './TokenList';
 
 export default () => {
   const [searchText, setSearchText] = useState('');
-  const { tokenList } = useSelector(state => state.tokens);
 
   const setText = useCallback(e => {
     setSearchText(e.target.value);
@@ -19,7 +18,7 @@ export default () => {
       style={{ marginTop: '10px' }}
       bodyStyle={{ padding: '10px' }}
     >
-      <TokenList list={tokenList} searchText={searchText} />
+      <TokenList searchText={searchText} />
     </Card>
   );
 };

@@ -1,4 +1,11 @@
-import { all, takeLatest, takeEvery, fork, put } from 'redux-saga/effects';
+import {
+  all,
+  takeLatest,
+  takeEvery,
+  fork,
+  put,
+  select,
+} from 'redux-saga/effects';
 
 import { generateJsonRpcId } from '../utils/jsonrpc';
 import { getIcxBalanceEvent, getTokenBalanceEvent } from '../utils/events';
@@ -7,20 +14,26 @@ import {
   ICX_BALANCE_REQUEST,
   TOKEN_BALANCE_REQUEST,
   RESPONSE_JSON_RPC,
+  ICX_BALANCE_REQUEST_ID,
+  TOKEN_BALANCE_REQUEST_ID,
+  ICX_BALANCE_SUCCESS,
+  TOKEN_BALANCE_SUCCESS,
 } from '../reducers/iconex';
 import { CHANGE_TOKEN } from '../reducers/tokens';
 
-function getIcxBalance(payload) {
+export const jsonRpcIds = state => state.iconex.jsonRpcIds;
+
+function getIcxBalance(address) {
   const id = generateJsonRpcId();
-  const event = getIcxBalanceEvent(id, payload);
+  const event = getIcxBalanceEvent(id, address);
 
   window.dispatchEvent(event);
   return id;
 }
 
-function getTokenBalance(payload, tokenAddress) {
+function getTokenBalance(address, tokenAddress) {
   const id = generateJsonRpcId();
-  const event = getTokenBalanceEvent(id, payload, tokenAddress);
+  const event = getTokenBalanceEvent(id, address, tokenAddress);
 
   window.dispatchEvent(event);
   return id;
@@ -44,7 +57,7 @@ function* watchResponseAddress() {
 }
 
 function* getBalanceOnlyToken({ address, token }) {
-  const id = getTokenBalance(address, token);
+  const id = getTokenBalance(address, token.address);
   yield put({
     type: TOKEN_BALANCE_REQUEST,
     id,
@@ -56,7 +69,24 @@ function* watchChangeToken() {
 }
 
 function* checkRpcId(action) {
+  const ids = yield select(jsonRpcIds);
   console.log('check saga', action);
+  switch (ids[action.payload.id]) {
+    case ICX_BALANCE_REQUEST_ID:
+      yield put({
+        type: ICX_BALANCE_SUCCESS,
+        balance: action.payload.result,
+      });
+      break;
+    case TOKEN_BALANCE_REQUEST_ID:
+      yield put({
+        type: TOKEN_BALANCE_SUCCESS,
+        balance: action.payload.result,
+      });
+      break;
+    default:
+      break;
+  }
 }
 
 function* watchJsonRpcResponse() {

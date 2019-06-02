@@ -12,7 +12,11 @@ const Layout = ({ children }) => {
               <Icon
                 type='sync'
                 spin
-                style={{ fontSize: '20px', verticalAlign: 'middle' }}
+                style={{
+                  fontSize: '20px',
+                  verticalAlign: 'middle',
+                  color: '#40a9ff',
+                }}
               />
               <h1
                 style={{
@@ -32,12 +36,12 @@ const Layout = ({ children }) => {
             <a>Trade</a>
           </Link>
         </Menu.Item>
-        <Menu.Item key='howto' style={{ float: 'right' }}>
+        <Menu.Item key='howto' style={{ float: 'right', marginRight: '10px' }}>
           <a
             href='https://www.notion.so/How-to-Guide-5bc85e598dba4cb599b365d0b95f82d4'
             target='_blank'
           >
-            <Icon type='question-circle' />
+            <Icon type='question-circle' style={{ marginRight: '5px' }} />
             How can i use?
           </a>
         </Menu.Item>

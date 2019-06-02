@@ -1,5 +1,5 @@
 export const GET_ICX_BALANCE = 'icx_getBalance';
-export const GET_TOKEN_BALANCE = 'get_balance';
+export const GET_TOKEN_BALANCE = 'balanceOf';
 
 export const SEND_QUERY = 'icx_call';
 export const SEND_TRANSACTION = 'icx_sendTransaction';

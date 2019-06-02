@@ -6,6 +6,7 @@ import {
   GET_TOKEN_BALANCE,
 } from './jsonrpc';
 import { toLoop } from './formatter';
+import { ICONDELTA_ADDRESS } from '../reducers/iconex';
 
 export const REQUEST_ADDRESS = 'REQUEST_ADDRESS';
 export const REQUEST_JSON_RPC = 'REQUEST_JSON-RPC';
@@ -35,7 +36,7 @@ export const getTokenBalanceEvent = (id, address, tokenAddress) =>
       dataType: 'call',
       data: {
         method: GET_TOKEN_BALANCE,
-        params: { address },
+        params: { _owner: address },
       },
     })
   );

@@ -7,8 +7,6 @@ import UserBalance from './UserBalance';
 
 export default () => {
   const [action, setAction] = useState('Deposit');
-  const { selectedToken } = useSelector(state => state.tokens);
-  // `${selectedToken.symbol}/ICX`
 
   const changeAction = useCallback(e => {
     setAction(e.key);
@@ -30,8 +28,8 @@ export default () => {
           Withdraw
         </Menu.Item>
       </Menu>
-      <BalanceForm actionType={action} token={selectedToken} />
-      <UserBalance token={selectedToken} />
+      <BalanceForm actionType={action} />
+      <UserBalance />
     </Card>
   );
 };

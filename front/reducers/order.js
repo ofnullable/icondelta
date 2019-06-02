@@ -1,5 +1,8 @@
 export const initialState = {
-  orderBook: null,
+  orderList: {
+    sellingOrders: [{}],
+    buyingOrders: [{}],
+  },
   myOrderBook: null,
   isLoading: false,
 };

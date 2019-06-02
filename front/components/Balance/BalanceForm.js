@@ -9,7 +9,7 @@ import {
   WITHDRAW_TOKEN_REQUEST,
 } from '../../reducers/iconex';
 
-const BalanceForm = ({ actionType, token }) => {
+const BalanceForm = ({ actionType }) => {
   const [icxAmount, setIcxAmount] = useState('');
   const [tokenAmount, setTokenAmount] = useState('');
   const { address } = useSelector(state => state.iconex);
@@ -126,7 +126,7 @@ const BalanceForm = ({ actionType, token }) => {
         </div>
         <div style={{ marginBottom: '10px' }}>
           <p>
-            {actionType} {token.symbol}
+            {actionType} {selectedToken.symbol}
           </p>
           <Input
             type='text'

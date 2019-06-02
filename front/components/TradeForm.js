@@ -41,6 +41,7 @@ const TradeForm = memo(() => {
   return (
     <>
       <Menu
+        style={{ marginBottom: '10px' }}
         mode='horizontal'
         onClick={handleMenuClick}
         defaultSelectedKeys={['buy']}
@@ -55,7 +56,7 @@ const TradeForm = memo(() => {
       <Form onSubmit={applyTrade}>
         <Input
           type='number'
-          style={{ margin: '10px 0 5px', width: '100%' }}
+          style={{ margin: '10px 0', width: '100%' }}
           placeholder={`Price ( ${selectedToken.symbol}/ICX )`}
           min={0}
           value={price}
@@ -63,7 +64,7 @@ const TradeForm = memo(() => {
           addonAfter={`${selectedToken.symbol}`}
         />
         <Input
-          style={{ margin: '5px 0 10px', width: '100%' }}
+          style={{ margin: '10px 0', width: '100%' }}
           placeholder='Amount to buy'
           min={0}
           value={amount}
@@ -73,12 +74,13 @@ const TradeForm = memo(() => {
         <InputNumber
           readOnly
           formatter={toCurrency}
-          style={{ margin: '0 0 10px', width: '100%' }}
+          style={{ margin: '10px 0', width: '100%' }}
           placeholder='Total'
           min={0}
           value={total}
         />
         <Button
+          style={{ margin: '10px 0' }}
           type={tradeType === 'buy' ? 'primary' : 'danger'}
           icon={tradeType === 'buy' ? 'download' : 'upload'}
           block
