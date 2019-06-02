@@ -26,8 +26,8 @@ export default () => {
         <Menu.Item key='Deposit' style={{ width: '50%' }}>
           Deposit
         </Menu.Item>
-        <Menu.Item key='Whitdraw' style={{ width: '50%' }}>
-          Whitdraw
+        <Menu.Item key='Withdraw' style={{ width: '50%' }}>
+          Withdraw
         </Menu.Item>
       </Menu>
       <BalanceForm actionType={action} token={selectedToken} />

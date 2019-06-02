@@ -5,7 +5,7 @@ import { Menu, Icon } from 'antd';
 const Layout = ({ children }) => {
   return (
     <div>
-      <Menu mode='horizontal' selectedKeys={['Trade']}>
+      <Menu mode='horizontal' selectedKeys={['trade']}>
         <Menu.Item key='home'>
           <Link href='/'>
             <a>
@@ -27,16 +27,20 @@ const Layout = ({ children }) => {
             </a>
           </Link>
         </Menu.Item>
-        <Menu.Item key='Trade'>
-          <Link href=''>
+        <Menu.Item key='trade'>
+          <Link href='/'>
             <a>Trade</a>
           </Link>
         </Menu.Item>
-        {/*<Menu.Item key=''>
-          <Link href=''>
-            <a>some other</a>
-          </Link>
-              </Menu.Item>*/}
+        <Menu.Item key='howto' style={{ float: 'right' }}>
+          <a
+            href='https://www.notion.so/How-to-Guide-5bc85e598dba4cb599b365d0b95f82d4'
+            target='_blank'
+          >
+            <Icon type='question-circle' />
+            How can i use?
+          </a>
+        </Menu.Item>
       </Menu>
       {children}
     </div>
