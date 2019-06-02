@@ -12,7 +12,11 @@ const Layout = ({ children }) => {
               <Icon
                 type='sync'
                 spin
-                style={{ fontSize: '20px', verticalAlign: 'middle' }}
+                style={{
+                  fontSize: '20px',
+                  verticalAlign: 'middle',
+                  color: '#40a9ff',
+                }}
               />
               <h1
                 style={{
