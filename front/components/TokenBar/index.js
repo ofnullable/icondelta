@@ -5,7 +5,7 @@ import { Card } from 'antd';
 import TokenSearchInput from './TokenSearchInput';
 import TokenList from './TokenList';
 
-const TokenMenu = () => {
+export default () => {
   const [searchText, setSearchText] = useState('');
   const { tokenList } = useSelector(state => state.tokens);
 
@@ -23,5 +23,3 @@ const TokenMenu = () => {
     </Card>
   );
 };
-
-export default TokenMenu;

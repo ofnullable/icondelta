@@ -1,5 +1,5 @@
 import React from 'react';
-import Head from 'next/head';
+import Helmet from 'react-helmet';
 import withRedux from 'next-redux-wrapper';
 import { createStore, compose, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
@@ -13,25 +13,53 @@ import Layout from '../components/Layout';
 const IconDelta = ({ Component, store, pageProps }) => {
   return (
     <Provider store={store}>
-      <Head>
-        <title>icondelta</title>
-        <link
-          rel='stylesheet'
-          type='text/css'
-          charSet='UTF-8'
-          href='https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css'
-        />
-        <link
-          rel='stylesheet'
-          type='text/css'
-          href='https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css'
-        />
-        <link
-          rel='stylesheet'
-          href='https://cdnjs.cloudflare.com/ajax/libs/antd/3.16.6/antd.min.css'
-        />
-        <script src='https://cdnjs.cloudflare.com/ajax/libs/antd/3.16.6/antd.min.js' />
-      </Head>
+      <Helmet
+        title='icondelta'
+        htmlAttributes={{ lang: 'ko' }}
+        meta={[
+          { charSet: 'UTF-8' },
+          {
+            name: 'viewport',
+            content:
+              'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no',
+          },
+          { 'http-equiv': 'X-UA-Compatible', content: 'IE=edge' },
+          {
+            name: 'description',
+            content: ' Decentralized Exchange on ICON Network ',
+          },
+          { name: 'og:title', content: 'icondelta' },
+          {
+            name: 'og:description',
+            content: ' Decentralized Exchange on ICON Network ',
+          },
+          { property: 'og:type', content: 'website' },
+        ]}
+        link={[
+          { rel: 'shortcut icon', href: '/static/favicon.ico' },
+          {
+            rel: 'stylesheet',
+            href:
+              'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css',
+          },
+          {
+            rel: 'stylesheet',
+            href:
+              'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css',
+          },
+          {
+            rel: 'stylesheet',
+            href:
+              'https://cdnjs.cloudflare.com/ajax/libs/antd/3.16.6/antd.min.css',
+          },
+        ]}
+        script={[
+          {
+            src:
+              'https://cdnjs.cloudflare.com/ajax/libs/antd/3.16.6/antd.min.js',
+          },
+        ]}
+      />
       <Layout>
         <Component {...pageProps} />
       </Layout>
@@ -42,6 +70,10 @@ const IconDelta = ({ Component, store, pageProps }) => {
 IconDelta.getInitialProps = async context => {
   const { ctx, Component } = context;
   const state = ctx.store.getState();
+
+  if (!state.iconex.address) {
+    // TODO: connect server to receive user wallet address
+  }
 
   let pageProps = {};
   if (Component.getInitialProps) {

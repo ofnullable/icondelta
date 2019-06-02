@@ -1,13 +1,7 @@
 import { all, takeEvery, fork, put } from 'redux-saga/effects';
 
-import {
-  SEND_QUERY,
-  GET_ICX_BALANCE,
-  GET_TOKEN_BALANCE,
-  generateJsonRpcParam,
-  generateJsonRpcId,
-} from '../utils/jsonrpc';
-import { iconexEvent, REQUEST_JSON_RPC } from '../utils/events';
+import { generateJsonRpcId } from '../utils/jsonrpc';
+import { getIcxBalanceEvent, getTokenBalanceEvent } from '../utils/events';
 import {
   RESPONSE_ADDRESS,
   ICX_BALANCE_REQUEST,
@@ -16,29 +10,17 @@ import {
 
 function getIcxBalance(payload) {
   const id = generateJsonRpcId();
-  const getIcxBalanceEvent = iconexEvent(
-    REQUEST_JSON_RPC,
-    generateJsonRpcParam(id, GET_ICX_BALANCE, { address: payload })
-  );
-  window.dispatchEvent(getIcxBalanceEvent);
+  const getIcxBalance = getIcxBalanceEvent(id, payload);
+
+  window.dispatchEvent(getIcxBalance);
   return id;
 }
 
 function getTokenBalance(payload, tokenAddress) {
   const id = generateJsonRpcId();
-  const getTokenBalanceEvent = iconexEvent(
-    REQUEST_JSON_RPC,
-    generateJsonRpcParam(id, SEND_QUERY, {
-      from: payload,
-      to: tokenAddress,
-      dataType: 'call',
-      data: {
-        method: GET_TOKEN_BALANCE,
-        params: { address: payload },
-      },
-    })
-  );
-  window.dispatchEvent(getTokenBalanceEvent);
+  const getTokenBalance = getTokenBalanceEvent(id, payload, tokenAddress);
+
+  window.dispatchEvent(getTokenBalance);
   return id;
 }
 

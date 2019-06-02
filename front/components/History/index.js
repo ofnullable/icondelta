@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Menu, Table } from 'antd';
 
-const History = () => {
+export default () => {
   const { orderBook } = useSelector(state => state.order);
   const { tradeHistory } = useSelector(state => state.trade);
   const [data, setData] = useState(orderBook);
@@ -61,5 +61,3 @@ const History = () => {
     </>
   );
 };
-
-export default History;

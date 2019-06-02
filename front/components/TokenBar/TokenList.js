@@ -1,9 +1,9 @@
 import React, { memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Table } from 'antd';
-import { CHANGE_TOKEN } from '../reducers/tokens';
-import { LOAD_ORDERBOOK_REQUEST } from '../reducers/order';
-import { LOAD_TRADE_HISTORY_REQUEST } from '../reducers/trade';
+import { CHANGE_TOKEN } from '../../reducers/tokens';
+import { LOAD_ORDERBOOK_REQUEST } from '../../reducers/order';
+import { LOAD_TRADE_HISTORY_REQUEST } from '../../reducers/trade';
 
 const TokenList = memo(({ list, searchText }) => {
   const { selectedToken } = useSelector(state => state.tokens);

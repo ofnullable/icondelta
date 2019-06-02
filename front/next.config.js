@@ -6,8 +6,6 @@ const CompressionPlugin = require('compression-webpack-plugin');
 
 module.exports = withBundleAnalyzer({
   webpack(config) {
-    // console.log('config:', config);
-    // console.log(config.module.rules[0]);
     const prod = process.env.NODE_ENV === 'production';
     const plugins = [
       ...config.plugins,
@@ -15,6 +13,8 @@ module.exports = withBundleAnalyzer({
     ];
     if (prod) {
       plugins.push(new CompressionPlugin()); // main.js.gz
+    } else {
+      console.log('config:', config);
     }
     return {
       ...config,

@@ -1,10 +1,19 @@
 import React, { useState, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Form, Input, Button } from 'antd';
+
+import {
+  DEPOSIT_ICX_REQUEST,
+  WITHDRAW_ICX_REQUEST,
+  DEPOSIT_TOKEN_REQUEST,
+  WITHDRAW_TOKEN_REQUEST,
+} from '../../reducers/iconex';
 
 const BalanceForm = ({ actionType, token }) => {
   const [icxAmount, setIcxAmount] = useState('');
   const [tokenAmount, setTokenAmount] = useState('');
+  const { address } = useSelector(state => state.iconex);
+  const { selectedToken } = useSelector(state => state.tokens);
   const dispatch = useDispatch();
 
   const changeIcxAmount = useCallback(
@@ -20,41 +29,78 @@ const BalanceForm = ({ actionType, token }) => {
     [tokenAmount]
   );
   const dispatchIcxEvent = useCallback(
-    e => {
-      setIcxAmount('');
-    },
-    [icxAmount]
-  );
-  const dispatchTokenEvent = useCallback(
-    e => {
-      setTokenAmount('');
-      console.log(e);
-    },
-    [tokenAmount]
-  );
-  const submitIcxAction = useCallback(
-    e => {
-      if (e.keyCode === 13) {
+    ({ keyCode }) => {
+      if (keyCode) {
+        if (keyCode === 13) {
+          _dispatchIcxAction();
+          setIcxAmount('');
+        }
+      } else {
+        _dispatchIcxAction();
         setIcxAmount('');
       }
     },
     [icxAmount]
   );
-  const submitTokenAction = useCallback(
-    e => {
-      if (e.keyCode === 13) {
+  const dispatchTokenEvent = useCallback(
+    ({ keyCode }) => {
+      if (keyCode) {
+        if (keyCode === 13) {
+          _dispatchTokenAction();
+          setTokenAmount('');
+        }
+      } else {
+        _dispatchTokenAction();
         setTokenAmount('');
       }
     },
     [tokenAmount]
   );
 
-  const actionRequest = () => {
+  const _dispatchIcxAction = () => {
     if (actionType === 'Deposit') {
-      dispatch({});
+      _depositIcx();
     } else {
-      dispatch({});
+      _withdrawIcx();
     }
+  };
+  const _dispatchTokenAction = () => {
+    if (actionType === 'Deposit') {
+      _depositToken();
+    } else {
+      _withdrawToken();
+    }
+  };
+
+  const _depositIcx = () => {
+    dispatch({
+      type: DEPOSIT_ICX_REQUEST,
+      address,
+      amount: icxAmount,
+    });
+  };
+  const _withdrawIcx = () => {
+    dispatch({
+      type: WITHDRAW_ICX_REQUEST,
+      address,
+      amount: icxAmount,
+    });
+  };
+  const _depositToken = () => {
+    dispatch({
+      type: DEPOSIT_TOKEN_REQUEST,
+      address,
+      tokenAddress: selectedToken.address,
+      amount: tokenAmount,
+    });
+  };
+  const _withdrawToken = () => {
+    dispatch({
+      type: WITHDRAW_TOKEN_REQUEST,
+      address,
+      tokenAddress: selectedToken.address,
+      amount: tokenAmount,
+    });
   };
 
   return (
@@ -67,7 +113,7 @@ const BalanceForm = ({ actionType, token }) => {
             style={{ width: '65%', marginRight: '3%' }}
             value={icxAmount}
             onChange={changeIcxAmount}
-            onKeyDown={submitIcxAction}
+            onKeyDown={dispatchIcxEvent}
           />
           <Button
             htmlType='button'
@@ -87,7 +133,7 @@ const BalanceForm = ({ actionType, token }) => {
             style={{ width: '65%', marginRight: '3%' }}
             value={tokenAmount}
             onChange={changeTokenAmount}
-            onKeyDown={submitTokenAction}
+            onKeyDown={dispatchTokenEvent}
           />
           <Button
             htmlType='button'
