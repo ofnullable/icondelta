@@ -24,14 +24,15 @@ const Home = () => {
           type,
           payload,
         });
+        console.log('response for what?', jsonRpcIds[payload.id]);
       } else {
+        // RESPONSE_ADDRESS
         dispatch({
           type,
           payload,
           tokenAddress: selectedToken.address,
         });
       }
-      console.log('response for what?', jsonRpcIds[payload.id]);
     };
 
     window.addEventListener(ICONEX_RELAY_RESPONSE, eventHandler);
@@ -44,11 +45,12 @@ const Home = () => {
       console.log('unmount component');
       window.removeEventListener(ICONEX_RELAY_RESPONSE, eventHandler);
     };
-  }, [jsonRpcIds]);
+  }, [Object.hasOwnProperty(jsonRpcIds), jsonRpcIds]);
 
   return (
     <div>
       <Row gutter={8} style={{ margin: 0 }}>
+        <Col xs={0} md={0} lg={1} />
         <Col xs={24} md={6} lg={6} style={{ marginTop: '10px' }}>
           <Row>
             <Col>
@@ -59,7 +61,7 @@ const Home = () => {
             </Col>
           </Row>
         </Col>
-        <Col xs={24} md={12} lg={12} style={{ marginTop: '10px' }}>
+        <Col xs={24} md={12} lg={10} style={{ marginTop: '10px' }}>
           <PageHeader
             title={selectedToken.symbol}
             subTitle={`${selectedToken.symbol}/ICX - ${
@@ -83,19 +85,8 @@ const Home = () => {
             </Col>
           </Row>
         </Col>
+        <Col xs={0} md={0} lg={1} />
       </Row>
-      {/*<Row gutter={8} style={{ margin: 0 }}>
-        <Col xs={0} md={0} lg={1} />
-        <Col xs={24} md={6} lg={6}>
-          <TokenMenu />
-        </Col>
-        <Col xs={24} md={18} lg={16}>
-          <Row gutter={8} style={{ margin: 0 }}>
-            <History />
-          </Row>
-        </Col>
-        <Col xs={0} md={0} lg={1} />
-          </Row>*/}
     </div>
   );
 };

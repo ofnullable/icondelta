@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { Table } from 'antd';
 
-const UserBalance = ({ token }) => {
+const UserBalance = memo(() => {
+  const { selectedToken } = useSelector(state => state.tokens);
   const { icxBalance, tokenBalance } = useSelector(state => state.iconex);
+
   const tableData = [
     {
       name: 'ICX',
@@ -11,7 +13,7 @@ const UserBalance = ({ token }) => {
       icondelta: 0,
     },
     {
-      name: token.symbol,
+      name: selectedToken.symbol,
       wallet: tokenBalance,
       icondelta: 0,
     },
@@ -39,6 +41,6 @@ const UserBalance = ({ token }) => {
       />
     </Table>
   );
-};
+});
 
 export default UserBalance;
