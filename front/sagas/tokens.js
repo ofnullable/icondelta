@@ -1,4 +1,4 @@
-import { all, takeLatest, put, fork, delay } from 'redux-saga/effects';
+import { all, takeLatest, put, fork } from 'redux-saga/effects';
 import { CHANGE_TOKEN } from '../reducers/tokens';
 
 const dummyHistory = {

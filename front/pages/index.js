@@ -2,12 +2,12 @@ import React, { useEffect } from 'react';
 import { Col, Row, PageHeader } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 
-import TradeForm from '../components/TradeForm';
 import Balance from '../components/Balance';
 import OrderBook from '../components/OrderBook';
 import { getAddress } from '../utils/events';
 import History from '../components/History';
 import TokenBar from '../components/TokenBar';
+import TradeForm from '../components/TradeForm';
 import { ICONEX_RELAY_RESPONSE, RESPONSE_JSON_RPC } from '../reducers/iconex';
 
 const Home = () => {

@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from 'react';
-import { useSelector } from 'react-redux';
 import { Card } from 'antd';
 
 import TokenSearchInput from './TokenSearchInput';

@@ -3,11 +3,19 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Form, Input, Button } from 'antd';
 
 import {
-  DEPOSIT_ICX_REQUEST,
-  WITHDRAW_ICX_REQUEST,
-  DEPOSIT_TOKEN_REQUEST,
-  WITHDRAW_TOKEN_REQUEST,
+  ICX_DEPOSIT_REQUEST,
+  ICX_WITHDRAW_REQUEST,
+  TOKEN_DEPOSIT_REQUEST,
+  TOKEN_WITHDRAW_REQUEST,
 } from '../../reducers/iconex';
+import {
+  getAddress,
+  depositIcxEvent,
+  withdrawIcxEvent,
+  depositTokenEvent,
+  withdrawTokenEvent,
+} from '../../utils/events';
+import { generateJsonRpcId } from '../../utils/jsonrpc';
 
 const BalanceForm = ({ actionType }) => {
   const [icxAmount, setIcxAmount] = useState('');
@@ -30,6 +38,10 @@ const BalanceForm = ({ actionType }) => {
   );
   const dispatchIcxEvent = useCallback(
     ({ keyCode }) => {
+      if (!address) {
+        window.dispatchEvent(getAddress());
+        return;
+      }
       if (keyCode) {
         if (keyCode === 13) {
           _dispatchIcxAction();
@@ -40,10 +52,14 @@ const BalanceForm = ({ actionType }) => {
         setIcxAmount('');
       }
     },
-    [icxAmount]
+    [icxAmount, address, actionType]
   );
   const dispatchTokenEvent = useCallback(
     ({ keyCode }) => {
+      if (!address) {
+        window.dispatchEvent(getAddress());
+        return;
+      }
       if (keyCode) {
         if (keyCode === 13) {
           _dispatchTokenAction();
@@ -54,7 +70,7 @@ const BalanceForm = ({ actionType }) => {
         setTokenAmount('');
       }
     },
-    [tokenAmount]
+    [tokenAmount, address, actionType]
   );
 
   const _dispatchIcxAction = () => {
@@ -73,33 +89,59 @@ const BalanceForm = ({ actionType }) => {
   };
 
   const _depositIcx = () => {
+    const id = generateJsonRpcId();
+    const event = depositIcxEvent(id, address, icxAmount);
+
+    window.dispatchEvent(event);
     dispatch({
-      type: DEPOSIT_ICX_REQUEST,
-      address,
-      amount: icxAmount,
+      type: ICX_DEPOSIT_REQUEST,
+      id,
+      icxAmount,
     });
   };
+
   const _withdrawIcx = () => {
+    const id = generateJsonRpcId();
+    const event = withdrawIcxEvent(id, address, icxAmount);
+
+    window.dispatchEvent(event);
     dispatch({
-      type: WITHDRAW_ICX_REQUEST,
-      address,
-      amount: icxAmount,
+      type: ICX_WITHDRAW_REQUEST,
+      id,
+      icxAmount,
     });
   };
+
   const _depositToken = () => {
-    dispatch({
-      type: DEPOSIT_TOKEN_REQUEST,
+    const id = generateJsonRpcId();
+    const event = depositTokenEvent(
+      id,
       address,
-      tokenAddress: selectedToken.address,
-      amount: tokenAmount,
+      selectedToken.address,
+      tokenAmount
+    );
+
+    window.dispatchEvent(event);
+    dispatch({
+      type: TOKEN_DEPOSIT_REQUEST,
+      id,
+      tokenAmount,
     });
   };
   const _withdrawToken = () => {
-    dispatch({
-      type: WITHDRAW_TOKEN_REQUEST,
+    const id = generateJsonRpcId();
+    const event = withdrawTokenEvent(
+      id,
       address,
-      tokenAddress: selectedToken.address,
-      amount: tokenAmount,
+      selectedToken.address,
+      tokenAmount
+    );
+
+    window.dispatchEvent(event);
+    dispatch({
+      type: TOKEN_WITHDRAW_REQUEST,
+      id,
+      tokenAmount,
     });
   };
 
@@ -109,7 +151,7 @@ const BalanceForm = ({ actionType }) => {
         <div style={{ marginBottom: '10px' }}>
           <p>{actionType} ICX</p>
           <Input
-            type='text'
+            type='number'
             style={{ width: '65%', marginRight: '3%' }}
             value={icxAmount}
             onChange={changeIcxAmount}
@@ -129,7 +171,7 @@ const BalanceForm = ({ actionType }) => {
             {actionType} {selectedToken.symbol}
           </p>
           <Input
-            type='text'
+            type='number'
             style={{ width: '65%', marginRight: '3%' }}
             value={tokenAmount}
             onChange={changeTokenAmount}
