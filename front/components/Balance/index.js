@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { Card, Menu, Table } from 'antd';
+import { Card, Menu } from 'antd';
 
 import BalanceForm from './BalanceForm';
 import UserBalance from './UserBalance';

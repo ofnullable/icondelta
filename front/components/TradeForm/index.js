@@ -2,9 +2,9 @@ import React, { memo, useState, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Form, Button, Menu, InputNumber, Input } from 'antd';
 
-import { toCurrency } from '../utils/formatter';
+import { toCurrency } from '../../utils/formatter';
 
-const TradeForm = memo(() => {
+export default memo(() => {
   const [tradeType, setTradeType] = useState('buy');
   const [price, setPrice] = useState();
   const [amount, setAmount] = useState();
@@ -15,6 +15,9 @@ const TradeForm = memo(() => {
   const handleMenuClick = useCallback(
     e => {
       setTradeType(e.key);
+      setAmount(null);
+      setPrice(null);
+      setTotal(null);
     },
     [tradeType]
   );
@@ -91,5 +94,3 @@ const TradeForm = memo(() => {
     </>
   );
 });
-
-export default TradeForm;
