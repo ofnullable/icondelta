@@ -27,13 +27,11 @@ function getTokenBalance(payload, tokenAddress) {
 function* getBalance({ payload, tokenAddress }) {
   try {
     const icxId = yield getIcxBalance(payload);
-    console.log('icxId', icxId);
     yield put({
       type: ICX_BALANCE_REQUEST,
       id: icxId,
     });
     const tokenId = yield getTokenBalance(payload, tokenAddress);
-    console.log('tokenId', tokenId);
     yield put({
       type: TOKEN_BALANCE_REQUEST,
       id: tokenId,

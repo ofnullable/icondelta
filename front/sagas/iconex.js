@@ -132,7 +132,7 @@ function* checkRpcId(action) {
   const { payload } = action;
   const { name, address } = yield select(token);
 
-  console.log('check saga', iconexIds, payload);
+  // console.log('check saga', iconexIds, payload);
   switch (orderIds[payload.id]) {
     case LOAD_BUY_ORDER_REQUEST_ID:
       yield put({

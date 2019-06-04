@@ -91,7 +91,7 @@ const logger = store => next => action => {
 
 const storeConfig = (initialState, options) => {
   const sagaMiddleware = createSagaMiddleware();
-  const middlewares = isProd ? [sagaMiddleware] : [sagaMiddleware];
+  const middlewares = isProd ? [sagaMiddleware] : [sagaMiddleware, logger];
 
   const reduxDevtools =
     !options.isServer && window.__REDUX_DEVTOOLS_EXTENSION__;

@@ -31,7 +31,7 @@ const TokenList = memo(({ searchText }) => {
           type,
           payload,
         });
-        console.log('response for what?', jsonRpcIds[payload.id]);
+        // console.log('response for what?', jsonRpcIds[payload.id]);
       } else {
         // RESPONSE_ADDRESS
         dispatch({
