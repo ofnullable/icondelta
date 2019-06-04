@@ -14,8 +14,8 @@ export const TextColoredList = styled(List)`
       & .ant-card-body {
         padding: 15px;
         color: ${props => props.color};
-        font-size: ${props => (props.bigFont ? '16px' : '14px')};
-        font-weight: ${props => (props.bigFont ? '600' : '400')};
+        font-size: ${props => (props.bigfont ? '16px' : '14px')};
+        font-weight: ${props => (props.bigfont ? '600' : '400')};
       }
     }
   }
@@ -27,7 +27,7 @@ export default () => {
   return (
     <>
       <TextColoredList
-        bigFont
+        bigfont
         color='black'
         grid={{ gutter: 0, column: 3 }}
         dataSource={data}

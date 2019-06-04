@@ -57,17 +57,27 @@ export default (state = initialState, action) => {
       }
       case LOAD_BUY_ORDER_SUCCESS: {
         delete draft.jsonRpcIds[action.id];
-        const targetOrders = action.orders.filter(
-          o => o.token_get === action.address && o.order_fill < o.get_amount
-        );
+        const targetOrders = action.orders
+          .filter(
+            o => o.token_get === action.address && o.order_fill < o.get_amount
+          )
+          .sort(
+            (o1, o2) =>
+              o2.get_amount / o2.give_amount - o1.get_amount / o1.give_amount
+          );
         draft.buyingOrders = targetOrders;
         break;
       }
       case LOAD_SELL_ORDER_SUCCESS: {
         delete draft.jsonRpcIds[action.id];
-        const targetOrders = action.orders.filter(
-          o => o.token_give === action.address && o.order_fill < o.give_amount
-        );
+        const targetOrders = action.orders
+          .filter(
+            o => o.token_give === action.address && o.order_fill < o.give_amount
+          )
+          .sort(
+            (o1, o2) =>
+              o1.give_amount / o1.get_amount - o2.give_amount / o2.get_amount
+          );
         draft.sellingOrders = targetOrders;
         break;
       }

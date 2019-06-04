@@ -134,7 +134,6 @@ export default (state = initialState, action) => {
       }
       case ICX_DEPOSIT_SUCCESS: {
         draft.jsonRpcIds[action.id] && delete draft.jsonRpcIds[action.id];
-        console.log('deposit success', toIcx(draft.icxDepositAmount));
         draft.depositedIcx += toIcx(draft.icxDepositAmount);
         draft.undepositedIcx -= toIcx(draft.icxDepositAmount);
         draft.icxDepositAmount = 0;
