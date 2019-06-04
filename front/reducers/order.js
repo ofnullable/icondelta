@@ -1,10 +1,11 @@
+import produce from 'immer';
+import { findId } from './iconex';
+
 export const initialState = {
-  orderList: {
-    sellingOrders: [{}],
-    buyingOrders: [{}],
-  },
+  sellingOrders: [],
+  buyingOrders: [],
+  jsonRpcIds: {},
   myOrderBook: null,
-  isLoading: false,
 };
 
 // myOrderBook example
@@ -22,15 +23,68 @@ export const initialState = {
 //   },
 // ],
 
-export const LOAD_ORDERBOOK_REQUEST = 'ORDER/LOAD_ORDERBOOK_REQUEST';
-export const LOAD_ORDERBOOK_SUCCESS = 'ORDER/LOAD_ORDERBOOK_SUCCESS';
-export const LOAD_ORDERBOOK_FAILURE = 'ORDER/LOAD_ORDERBOOK_FAILURE';
+export const LOAD_BUY_ORDER_REQUEST_ID = 'LOAD_BUY_ORDER_REQUEST_ID';
+export const LOAD_SELL_ORDER_REQUEST_ID = 'LOAD_SELL_ORDER_REQUEST_ID';
+export const BUY_ORDER_REQUEST_ID = 'BUY_ORDER_REQUEST_ID';
+export const SELL_ORDER_REQUEST_ID = 'SELL_ORDER_REQUEST_ID';
+
+export const LOAD_BUY_ORDER_REQUEST = 'LOAD_BUY_ORDER_REQUEST';
+export const LOAD_BUY_ORDER_SUCCESS = 'LOAD_BUY_ORDER_SUCCESS';
+
+export const LOAD_SELL_ORDER_REQUEST = 'LOAD_SELL_ORDER_REQUEST';
+export const LOAD_SELL_ORDER_SUCCESS = 'LOAD_SELL_ORDER_SUCCESS';
+
+export const BUY_ORDER_REQUEST = 'BUY_ORDER_REQUEST';
+export const BUY_ORDER_SUCCESS = 'BUY_ORDER_SUCCESS';
+
+export const SELL_ORDER_REQUEST = 'SELL_ORDER_REQUEST';
+export const SELL_ORDER_SUCCESS = 'SELL_ORDER_SUCCESS';
 
 export default (state = initialState, action) => {
-  switch (action.type) {
-    default:
-      return {
-        ...state,
-      };
-  }
+  return produce(state, draft => {
+    switch (action.type) {
+      case LOAD_BUY_ORDER_REQUEST: {
+        const id = findId(draft, LOAD_BUY_ORDER_REQUEST_ID);
+        delete draft.jsonRpcIds[id];
+        draft.jsonRpcIds[action.id] = LOAD_BUY_ORDER_REQUEST_ID;
+        break;
+      }
+      case LOAD_SELL_ORDER_REQUEST: {
+        const id = findId(draft, LOAD_SELL_ORDER_REQUEST_ID);
+        delete draft.jsonRpcIds[id];
+        draft.jsonRpcIds[action.id] = LOAD_SELL_ORDER_REQUEST_ID;
+        break;
+      }
+      case LOAD_BUY_ORDER_SUCCESS: {
+        delete draft.jsonRpcIds[action.id];
+        const targetOrders = action.orders.filter(
+          o => o.token_get === action.address && o.order_fill < o.get_amount
+        );
+        draft.buyingOrders = targetOrders;
+        break;
+      }
+      case LOAD_SELL_ORDER_SUCCESS: {
+        delete draft.jsonRpcIds[action.id];
+        const targetOrders = action.orders.filter(
+          o => o.token_give === action.address && o.order_fill < o.give_amount
+        );
+        draft.sellingOrders = targetOrders;
+        break;
+      }
+      case BUY_ORDER_REQUEST: {
+        const id = findId(draft, BUY_ORDER_REQUEST_ID);
+        delete draft.jsonRpcIds[id];
+        draft.jsonRpcIds[action.id] = BUY_ORDER_REQUEST_ID;
+        break;
+      }
+      case SELL_ORDER_REQUEST: {
+        const id = findId(draft, SELL_ORDER_REQUEST_ID);
+        delete draft.jsonRpcIds[id];
+        draft.jsonRpcIds[action.id] = SELL_ORDER_REQUEST_ID;
+        break;
+      }
+      default:
+        break;
+    }
+  });
 };

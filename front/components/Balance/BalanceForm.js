@@ -9,7 +9,7 @@ import {
   TOKEN_WITHDRAW_REQUEST,
 } from '../../reducers/iconex';
 import {
-  getAddress,
+  getAddressEvent,
   depositIcxEvent,
   withdrawIcxEvent,
   depositTokenEvent,
@@ -39,7 +39,7 @@ const BalanceForm = ({ actionType }) => {
   const dispatchIcxEvent = useCallback(
     ({ keyCode }) => {
       if (!address) {
-        window.dispatchEvent(getAddress());
+        window.dispatchEvent(getAddressEvent());
         return;
       }
       if (keyCode) {
@@ -57,7 +57,7 @@ const BalanceForm = ({ actionType }) => {
   const dispatchTokenEvent = useCallback(
     ({ keyCode }) => {
       if (!address) {
-        window.dispatchEvent(getAddress());
+        window.dispatchEvent(getAddressEvent());
         return;
       }
       if (keyCode) {

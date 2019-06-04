@@ -1,38 +1,31 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Table } from 'antd';
+import { List, Card } from 'antd';
+import { toIcx } from '../../utils/formatter';
+import { TextColoredList } from './index';
 
 const BuyingOrderList = () => {
-  const { buyingOrder } = useSelector(state => state.order.orderList);
-  const { selectedToken } = useSelector(state => state.tokens);
-
+  const { buyingOrders } = useSelector(state => state.order);
   return (
-    <Table
-      dataSource={buyingOrder}
-      showHeader={false}
-      size='middle'
-      pagination={{ pageSize: 5, hideOnSinglePage: true }}
-      rowKey='symbol'
-    >
-      <Table.Column
-        title='amount'
-        key='amount'
-        dataIndex='amount'
-        width={'25%'}
-      />
-      <Table.Column
-        title={`${selectedToken.symbol}/ICX`}
-        key='price'
-        dataIndex='price'
-        width={'25%'}
-      />
-      <Table.Column
-        title='total'
-        key='total'
-        render={text => text.price * text.amount}
-        width={'25%'}
-      />
-    </Table>
+    <TextColoredList
+      color='royalblue'
+      grid={{ gutter: 0, column: 3 }}
+      dataSource={buyingOrders}
+      rowKey='hashed_data'
+      renderItem={item => (
+        <>
+          <List.Item>
+            <Card>{toIcx(item.get_amount)}</Card>
+          </List.Item>
+          <List.Item>
+            <Card>{(item.give_amount / item.get_amount).toFixed(9)}</Card>
+          </List.Item>
+          <List.Item>
+            <Card>{toIcx(item.give_amount).toFixed(9)}</Card>
+          </List.Item>
+        </>
+      )}
+    />
   );
 };
 

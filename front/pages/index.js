@@ -1,51 +1,15 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Col, Row, PageHeader } from 'antd';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import Balance from '../components/Balance';
 import OrderBook from '../components/OrderBook';
-import { getAddress } from '../utils/events';
 import History from '../components/History';
 import TokenBar from '../components/TokenBar';
 import TradeForm from '../components/TradeForm';
-import { ICONEX_RELAY_RESPONSE, RESPONSE_JSON_RPC } from '../reducers/iconex';
 
 const Home = () => {
   const { selectedToken } = useSelector(state => state.tokens);
-  const { address, jsonRpcIds } = useSelector(state => state.iconex);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    const eventHandler = e => {
-      const { type, payload } = e.detail;
-
-      if (type === RESPONSE_JSON_RPC) {
-        dispatch({
-          type,
-          payload,
-        });
-        console.log('response for what?', jsonRpcIds[payload.id]);
-      } else {
-        // RESPONSE_ADDRESS
-        dispatch({
-          type,
-          payload,
-          tokenAddress: selectedToken.address,
-        });
-      }
-    };
-
-    window.addEventListener(ICONEX_RELAY_RESPONSE, eventHandler);
-
-    if (!address) {
-      window.dispatchEvent(getAddress());
-    }
-
-    return () => {
-      console.log('unmount component');
-      window.removeEventListener(ICONEX_RELAY_RESPONSE, eventHandler);
-    };
-  }, [Object.hasOwnProperty(jsonRpcIds), jsonRpcIds]);
 
   return (
     <div>
@@ -63,7 +27,7 @@ const Home = () => {
         </Col>
         <Col xs={24} md={12} lg={10} style={{ marginTop: '10px' }}>
           <PageHeader
-            title={selectedToken.symbol}
+            title={`Order Book - ${selectedToken.symbol}`}
             subTitle={`${selectedToken.symbol}/ICX - ${
               selectedToken.currentPrice
             }`}
@@ -89,10 +53,6 @@ const Home = () => {
       </Row>
     </div>
   );
-};
-
-Home.getIntitalProps = async context => {
-  console.log('Home getInitailProps:', context);
 };
 
 export default Home;
