@@ -5,13 +5,18 @@ import {
   GET_ICX_BALANCE,
   BALANCE_OF,
   TOKEN_BALANCE_OF,
+  generateNonce,
 } from './jsonrpc';
 import { toLoop } from './formatter';
 
 const isProd = process.env.NODE_ENV === 'production';
-const nid = isProd ? '0x1' : '0x3';
-const stepLimit = '0x30001';
+
+const stepLimit = '0x550001';
 const version = '0x3';
+const nid = isProd ? '0x1' : '0x3';
+const ICONDELTA_ADDRESS = isProd
+  ? 'cxe014be09624aa681f441a632059245279c7bd554'
+  : 'cxfd865d6bbfd2931c053e6b105961cd43a3ad9c22';
 
 const txCallDefault = {
   version,
@@ -20,15 +25,11 @@ const txCallDefault = {
   dataType: 'call',
 };
 
-export const ICONDELTA_ADDRESS = isProd
-  ? 'cxe014be09624aa681f441a632059245279c7bd554'
-  : 'cxfd865d6bbfd2931c053e6b105961cd43a3ad9c22';
-
 export const REQUEST_ADDRESS = 'REQUEST_ADDRESS';
 export const REQUEST_JSON_RPC = 'REQUEST_JSON-RPC';
 
 export const iconexEvent = (type, payload) => {
-  console.log(payload);
+  console.log('payload', payload);
   if (window && window.CustomEvent) {
     return new CustomEvent('ICONEX_RELAY_REQUEST', {
       detail: { type, payload: payload || null },
@@ -36,7 +37,7 @@ export const iconexEvent = (type, payload) => {
   }
 };
 
-export const getAddress = () => iconexEvent(REQUEST_ADDRESS);
+export const getAddressEvent = () => iconexEvent(REQUEST_ADDRESS);
 
 export const getIcxBalanceEvent = (id, address) =>
   iconexEvent(
@@ -86,20 +87,7 @@ export const getDepositedTokenBalanceEvent = (id, address, tokenAddress) =>
     })
   );
 
-export const getSellOrdetList = (id, address) =>
-  iconexEvent(
-    REQUEST_JSON_RPC,
-    generateJsonRpcParam(id, SEND_QUERY, {
-      from: address,
-      to: ICONDELTA_ADDRESS,
-      dataType: 'call',
-      data: {
-        method: 'sellOrderList',
-      },
-    })
-  );
-
-export const getBuyOrdetList = (id, address) =>
+export const getBuyOrderListEvent = (id, address) =>
   iconexEvent(
     REQUEST_JSON_RPC,
     generateJsonRpcParam(id, SEND_QUERY, {
@@ -108,6 +96,19 @@ export const getBuyOrdetList = (id, address) =>
       dataType: 'call',
       data: {
         method: 'buyOrderList',
+      },
+    })
+  );
+
+export const getSellOrderListEvent = (id, address) =>
+  iconexEvent(
+    REQUEST_JSON_RPC,
+    generateJsonRpcParam(id, SEND_QUERY, {
+      from: address,
+      to: ICONDELTA_ADDRESS,
+      dataType: 'call',
+      data: {
+        method: 'sellOrderList',
       },
     })
   );
@@ -164,6 +165,34 @@ export const withdrawTokenEvent = (id, address, tokenAddress, amount) =>
       data: {
         method: 'withdrawToken',
         params: { _tokenAddress: tokenAddress, _amount: toLoop(amount) },
+      },
+    })
+  );
+
+export const sendOrderEvent = (
+  id,
+  address,
+  tokenGet,
+  getAmount,
+  tokenGive,
+  giveAmount
+) =>
+  iconexEvent(
+    REQUEST_JSON_RPC,
+    generateJsonRpcParam(id, SEND_TRANSACTION, {
+      ...txCallDefault,
+      from: address,
+      to: ICONDELTA_ADDRESS,
+      timestamp: `0x${(new Date().getTime() * 1000).toString(16)}`,
+      data: {
+        method: 'order',
+        params: {
+          _tokenGet: tokenGet,
+          _getAmount: toLoop(getAmount),
+          _tokenGive: tokenGive,
+          _giveAmount: toLoop(giveAmount),
+          _nonce: generateNonce(),
+        },
       },
     })
   );

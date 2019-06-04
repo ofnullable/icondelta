@@ -39,9 +39,16 @@ import {
   RESPONSE_JSON_RPC,
 } from '../reducers/iconex';
 import { CHANGE_TOKEN } from '../reducers/tokens';
+import {
+  LOAD_BUY_ORDER_REQUEST_ID,
+  LOAD_SELL_ORDER_REQUEST_ID,
+  LOAD_BUY_ORDER_SUCCESS,
+  LOAD_SELL_ORDER_SUCCESS,
+} from '../reducers/order';
 
 export const token = state => state.tokens.selectedToken;
-export const jsonRpcIds = state => state.iconex.jsonRpcIds;
+export const iconexState = state => state.iconex.jsonRpcIds;
+export const orderState = state => state.order.jsonRpcIds;
 
 function dispatchGetIcxBalance(address) {
   const networkIcxId = generateJsonRpcId();
@@ -79,7 +86,7 @@ function dispatchGetTokenBalance(address, tokenAddress) {
 }
 
 function* getBalance({ payload, tokenAddress }) {
-  const icxId = dispatchGetIcxBalance(payload);
+  const icxId = yield dispatchGetIcxBalance(payload);
   yield put({
     type: ICX_BALANCE_REQUEST,
     id: icxId[0],
@@ -104,10 +111,14 @@ function* watchResponseAddress() {
 }
 
 function* getBalanceOnlyToken({ address, token }) {
-  const id = dispatchGetTokenBalance(address, token.address);
+  const tokenId = yield dispatchGetTokenBalance(address, token.address);
   yield put({
     type: TOKEN_BALANCE_REQUEST,
-    id,
+    id: tokenId[0],
+  });
+  yield put({
+    type: DEPOSITED_TOKEN_BALANCE_REQUEST,
+    id: tokenId[1],
   });
 }
 
@@ -116,26 +127,47 @@ function* watchChangeToken() {
 }
 
 function* checkRpcId(action) {
-  const ids = yield select(jsonRpcIds);
+  const iconexIds = yield select(iconexState);
+  const orderIds = yield select(orderState);
   const { payload } = action;
-  const { name } = yield select(token);
+  const { name, address } = yield select(token);
 
-  console.log('check saga', ids, payload);
-  switch (ids[payload.id]) {
+  console.log('check saga', iconexIds, payload);
+  switch (orderIds[payload.id]) {
+    case LOAD_BUY_ORDER_REQUEST_ID:
+      yield put({
+        type: LOAD_BUY_ORDER_SUCCESS,
+        id: payload.id,
+        orders: payload.result,
+        address,
+      });
+      return;
+    case LOAD_SELL_ORDER_REQUEST_ID:
+      yield put({
+        type: LOAD_SELL_ORDER_SUCCESS,
+        id: payload.id,
+        orders: payload.result,
+        address,
+      });
+      return;
+    default:
+      break;
+  }
+  switch (iconexIds[payload.id]) {
     case ICX_BALANCE_REQUEST_ID:
       yield put({
         type: ICX_BALANCE_SUCCESS,
         id: payload.id,
         balance: payload.result,
       });
-      break;
+      return;
     case DEPOSITED_ICX_BALANCE_REQUEST_ID:
       yield put({
         type: DEPOSITED_ICX_BALANCE_SUCCESS,
         id: payload.id,
         balance: payload.result,
       });
-      break;
+      return;
     case TOKEN_BALANCE_REQUEST_ID:
       yield put({
         type: TOKEN_BALANCE_SUCCESS,
@@ -143,7 +175,7 @@ function* checkRpcId(action) {
         balance: payload.result,
         name,
       });
-      break;
+      return;
     case DEPOSITED_TOKEN_BALANCE_REQUEST_ID:
       yield put({
         type: DEPOSITED_TOKEN_BALANCE_SUCCESS,
@@ -151,33 +183,33 @@ function* checkRpcId(action) {
         balance: payload.result,
         name,
       });
-      break;
+      return;
     case ICX_DEPOSIT_REQUEST_ID:
       yield put({
         type: ICX_DEPOSIT_SUCCESS,
         id: payload.id,
       });
-      break;
+      return;
     case TOKEN_DEPOSIT_REQUEST_ID:
       yield put({
         type: TOKEN_DEPOSIT_SUCCESS,
         id: payload.id,
         name,
       });
-      break;
+      return;
     case ICX_WITHDRAW_REQUEST_ID:
       yield put({
         type: ICX_WITHDRAW_SUCCESS,
         id: payload.id,
       });
-      break;
+      return;
     case TOKEN_WITHDRAW_REQUEST_ID:
       yield put({
         type: TOKEN_WITHDRAW_SUCCESS,
         id: payload.id,
         name,
       });
-      break;
+      return;
     default:
       break;
   }

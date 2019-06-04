@@ -10,6 +10,6 @@ export const toDecimal = value => Number(value, 10);
 export const toLoop = value => toHexString(value * 10 ** 18);
 
 export const toIcx = value => {
-  const result = toDecimal(value / 10 ** 18).toFixed(8);
+  const result = (toDecimal(value) / 10 ** 18).toFixed(18);
   return Number(result) || 0;
 };

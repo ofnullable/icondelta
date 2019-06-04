@@ -4,18 +4,23 @@ import { Table } from 'antd';
 
 const UserBalance = memo(() => {
   const { selectedToken } = useSelector(state => state.tokens);
-  const { deposited, undeposited } = useSelector(state => state.iconex);
+  const {
+    depositedIcx,
+    undepositedIcx,
+    depositedToken,
+    undepositedToken,
+  } = useSelector(state => state.iconex);
 
   const tableData = [
     {
       name: 'ICX',
-      icondelta: deposited.icx,
-      wallet: undeposited.icx,
+      icondelta: depositedIcx,
+      wallet: undepositedIcx,
     },
     {
       name: selectedToken.symbol,
-      icondelta: deposited.token[selectedToken.name],
-      wallet: undeposited.token[selectedToken.name],
+      icondelta: depositedToken[selectedToken.name],
+      wallet: undepositedToken[selectedToken.name],
     },
   ];
   return (
