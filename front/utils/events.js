@@ -30,7 +30,7 @@ export const REQUEST_ADDRESS = 'REQUEST_ADDRESS';
 export const REQUEST_JSON_RPC = 'REQUEST_JSON-RPC';
 
 export const iconexEvent = (type, payload) => {
-  // console.log('payload', payload);
+  console.log('payload', payload);
   if (window && window.CustomEvent) {
     return new CustomEvent('ICONEX_RELAY_REQUEST', {
       detail: { type, payload: payload || null },

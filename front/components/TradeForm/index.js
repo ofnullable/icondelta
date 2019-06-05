@@ -48,28 +48,26 @@ export default memo(() => {
         matchOrder = sellingOrders.filter(
           o =>
             o.get_amount / o.give_amount === Number(price) &&
-            toLoop(o.get_amount - o.order_fill) >= Number(total)
+            toLoop(o.give_amount - o.order_fill) >= Number(amount)
         );
       } else {
         matchOrder = buyingOrders.filter(
           o =>
             o.give_amount / o.get_amount === Number(price) &&
-            toLoop(o.give_amount - o.order_fill) >= Number(total)
+            toLoop(o.get_amount - o.order_fill) >= Number(amount)
         );
       }
 
       if (matchOrder && matchOrder.length) {
-        const tradeId = generateJsonRpcId();
-
         window.dispatchEvent(
-          tradeEvent(tradeId, matchOrder[0], {
+          tradeEvent(genId, matchOrder[0], {
             address,
-            amount: total,
+            amount,
           })
         );
         dispatch({
           type: TRADE_ORDER_REQUEST,
-          id: tradeId,
+          id: genId,
         });
         return;
       }

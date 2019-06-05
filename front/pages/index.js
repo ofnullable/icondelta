@@ -25,7 +25,7 @@ const Home = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // didmount
+    console.log('useEffect');
     const eventHandler = e => {
       const { type, payload } = e.detail;
       dispatch({
@@ -44,7 +44,6 @@ const Home = () => {
     if (!address) {
       window.dispatchEvent(getAddressEvent());
     }
-
     const ids = _requestOrderList();
     dispatch({
       type: LOAD_BUY_ORDER_REQUEST,

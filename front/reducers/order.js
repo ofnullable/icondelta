@@ -50,12 +50,11 @@ export default (state = initialState, action) => {
           action.orders &&
           action.orders
             .filter(
-              o =>
-                o.token_get === action.address && o.order_fill < o.give_amount
+              o => o.token_get === action.address && o.order_fill < o.get_amount
             )
             .sort(
               (o1, o2) =>
-                o2.get_amount / o2.give_amount - o1.get_amount / o1.give_amount
+                o1.give_amount / o1.get_amount - o2.give_amount / o2.get_amount
             );
         draft.buyingOrders = targetOrders;
         break;
@@ -65,15 +64,13 @@ export default (state = initialState, action) => {
         const targetOrders =
           action.orders &&
           action.orders
-            .filter(o => {
-              console.log(o.order_fill, o.get_amount);
-              return (
-                o.token_give === action.address && o.order_fill < o.get_amount
-              );
-            })
+            .filter(
+              o =>
+                o.token_give === action.address && o.order_fill < o.give_amount
+            )
             .sort(
               (o1, o2) =>
-                o1.give_amount / o1.get_amount - o2.give_amount / o2.get_amount
+                o2.get_amount / o2.give_amount - o1.get_amount / o1.give_amount
             );
         draft.sellingOrders = targetOrders;
         break;
