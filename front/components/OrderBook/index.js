@@ -27,7 +27,7 @@ export default () => {
   return (
     <>
       <TextColoredList
-        bigfont
+        bigfont='true'
         color='black'
         grid={{ gutter: 0, column: 3 }}
         dataSource={data}

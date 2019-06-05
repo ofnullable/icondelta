@@ -23,6 +23,7 @@ const UserBalance = memo(() => {
       wallet: undepositedToken[selectedToken.name],
     },
   ];
+
   return (
     <Table
       size='middle'

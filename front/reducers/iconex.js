@@ -81,8 +81,8 @@ export default (state = initialState, action) => {
         break;
       }
       case ICX_BALANCE_SUCCESS: {
-        draft.jsonRpcIds[action.id] && delete draft.jsonRpcIds[action.id];
-        draft.undepositedIcx = toIcx(action.balance);
+        delete draft.jsonRpcIds[action.id];
+        draft.undepositedIcx = toIcx(action.balance) || 0;
         break;
       }
       case DEPOSITED_ICX_BALANCE_REQUEST: {
@@ -92,8 +92,8 @@ export default (state = initialState, action) => {
         break;
       }
       case DEPOSITED_ICX_BALANCE_SUCCESS: {
-        draft.jsonRpcIds[action.id] && delete draft.jsonRpcIds[action.id];
-        draft.depositedIcx = toIcx(action.balance);
+        delete draft.jsonRpcIds[action.id];
+        draft.depositedIcx = toIcx(action.balance) || 0;
         break;
       }
       case TOKEN_BALANCE_REQUEST: {
@@ -103,8 +103,8 @@ export default (state = initialState, action) => {
         break;
       }
       case TOKEN_BALANCE_SUCCESS: {
-        draft.jsonRpcIds[action.id] && delete draft.jsonRpcIds[action.id];
-        draft.undepositedToken[action.name] = toIcx(action.balance);
+        delete draft.jsonRpcIds[action.id];
+        draft.undepositedToken[action.name] = toIcx(action.balance) || 0;
         break;
       }
       case DEPOSITED_TOKEN_BALANCE_REQUEST: {
@@ -114,8 +114,8 @@ export default (state = initialState, action) => {
         break;
       }
       case DEPOSITED_TOKEN_BALANCE_SUCCESS: {
-        draft.jsonRpcIds[action.id] && delete draft.jsonRpcIds[action.id];
-        draft.depositedToken[action.name] = toIcx(action.balance);
+        delete draft.jsonRpcIds[action.id];
+        draft.depositedToken[action.name] = toIcx(action.balance) || 0;
         break;
       }
       case ICX_DEPOSIT_REQUEST: {
@@ -125,6 +125,13 @@ export default (state = initialState, action) => {
         draft.jsonRpcIds[action.id] = ICX_DEPOSIT_REQUEST_ID;
         break;
       }
+      case ICX_DEPOSIT_SUCCESS: {
+        delete draft.jsonRpcIds[action.id];
+        draft.depositedIcx += toIcx(draft.icxDepositAmount);
+        draft.undepositedIcx -= toIcx(draft.icxDepositAmount);
+        draft.icxDepositAmount = 0;
+        break;
+      }
       case TOKEN_DEPOSIT_REQUEST: {
         const id = findId(draft, TOKEN_DEPOSIT_REQUEST_ID);
         delete draft.jsonRpcIds[id];
@@ -132,15 +139,8 @@ export default (state = initialState, action) => {
         draft.jsonRpcIds[action.id] = TOKEN_DEPOSIT_REQUEST_ID;
         break;
       }
-      case ICX_DEPOSIT_SUCCESS: {
-        draft.jsonRpcIds[action.id] && delete draft.jsonRpcIds[action.id];
-        draft.depositedIcx += toIcx(draft.icxDepositAmount);
-        draft.undepositedIcx -= toIcx(draft.icxDepositAmount);
-        draft.icxDepositAmount = 0;
-        break;
-      }
       case TOKEN_DEPOSIT_SUCCESS: {
-        draft.jsonRpcIds[action.id] && delete draft.jsonRpcIds[action.id];
+        delete draft.jsonRpcIds[action.id];
         draft.depositedToken[action.name] += toIcx(draft.tokenDepositAmount);
         draft.undepositedToken[action.name] -= toIcx(draft.tokenDepositAmount);
         draft.tokenDepositAmount = 0;
@@ -153,18 +153,18 @@ export default (state = initialState, action) => {
         draft.jsonRpcIds[action.id] = ICX_WITHDRAW_REQUEST_ID;
         break;
       }
-      case TOKEN_WITHDRAW_REQUEST: {
-        const id = findId(draft, TOKEN_WITHDRAW_REQUEST_ID);
-        delete draft.jsonRpcIds[id];
-        draft.tokenWithdrawAmount = action.tokenAmount;
-        draft.jsonRpcIds[action.id] = TOKEN_WITHDRAW_REQUEST_ID;
-        break;
-      }
       case ICX_WITHDRAW_SUCCESS: {
         delete draft.jsonRpcIds[action.id];
         draft.depositedIcx -= toIcx(draft.icxWithdrawAmount);
         draft.undepositedIcx += toIcx(draft.icxWithdrawAmount);
         draft.icxWithdrawAmount = 0;
+        break;
+      }
+      case TOKEN_WITHDRAW_REQUEST: {
+        const id = findId(draft, TOKEN_WITHDRAW_REQUEST_ID);
+        delete draft.jsonRpcIds[id];
+        draft.tokenWithdrawAmount = action.tokenAmount;
+        draft.jsonRpcIds[action.id] = TOKEN_WITHDRAW_REQUEST_ID;
         break;
       }
       case TOKEN_WITHDRAW_SUCCESS: {

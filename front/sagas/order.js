@@ -1,50 +1,46 @@
-import { all, takeEvery, fork, put } from 'redux-saga/effects';
-
-import { generateJsonRpcId } from '../utils/jsonrpc';
-import { getIcxBalanceEvent, getTokenBalanceEvent } from '../utils/events';
+import { all, takeEvery, fork, put, select } from 'redux-saga/effects';
+import { RESPONSE_JSON_RPC } from '../reducers/iconex';
 import {
-  RESPONSE_ADDRESS,
-  ICX_BALANCE_REQUEST,
-  TOKEN_BALANCE_REQUEST,
-} from '../reducers/iconex';
+  LOAD_BUY_ORDER_REQUEST_ID,
+  LOAD_SELL_ORDER_REQUEST_ID,
+  LOAD_BUY_ORDER_SUCCESS,
+  LOAD_SELL_ORDER_SUCCESS,
+} from '../reducers/order';
 
-function getIcxBalance(payload) {
-  const id = generateJsonRpcId();
-  const getIcxBalance = getIcxBalanceEvent(id, payload);
+export const token = state => state.tokens.selectedToken;
+export const orderRequests = state => state.order.jsonRpcIds;
 
-  window.dispatchEvent(getIcxBalance);
-  return id;
-}
+function* checkRpcId(action) {
+  const orderIds = yield select(orderRequests);
+  const { address } = yield select(token);
+  const { payload } = action;
 
-function getTokenBalance(payload, tokenAddress) {
-  const id = generateJsonRpcId();
-  const getTokenBalance = getTokenBalanceEvent(id, payload, tokenAddress);
-
-  window.dispatchEvent(getTokenBalance);
-  return id;
-}
-
-function* getBalance({ payload, tokenAddress }) {
-  try {
-    const icxId = yield getIcxBalance(payload);
-    yield put({
-      type: ICX_BALANCE_REQUEST,
-      id: icxId,
-    });
-    const tokenId = yield getTokenBalance(payload, tokenAddress);
-    yield put({
-      type: TOKEN_BALANCE_REQUEST,
-      id: tokenId,
-    });
-  } catch (e) {
-    console.error(e);
+  switch (orderIds[payload.id]) {
+    case LOAD_BUY_ORDER_REQUEST_ID:
+      yield put({
+        type: LOAD_BUY_ORDER_SUCCESS,
+        id: payload.id,
+        orders: payload.result,
+        address,
+      });
+      return;
+    case LOAD_SELL_ORDER_REQUEST_ID:
+      yield put({
+        type: LOAD_SELL_ORDER_SUCCESS,
+        id: payload.id,
+        orders: payload.result,
+        address,
+      });
+      return;
+    default:
+      break;
   }
 }
 
-function* watchChangeToken() {
-  yield takeEvery(RESPONSE_ADDRESS, getBalance);
+function* watchJsonRpcResponse() {
+  yield takeEvery(RESPONSE_JSON_RPC, checkRpcId);
 }
 
 export default function*() {
-  yield all([fork(watchChangeToken)]);
+  yield all([fork(watchJsonRpcResponse)]);
 }

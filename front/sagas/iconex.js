@@ -1,11 +1,4 @@
-import {
-  all,
-  takeLatest,
-  takeEvery,
-  fork,
-  put,
-  select,
-} from 'redux-saga/effects';
+import { all, takeEvery, fork, put, select } from 'redux-saga/effects';
 
 import { generateJsonRpcId } from '../utils/jsonrpc';
 import {
@@ -39,16 +32,10 @@ import {
   RESPONSE_JSON_RPC,
 } from '../reducers/iconex';
 import { CHANGE_TOKEN } from '../reducers/tokens';
-import {
-  LOAD_BUY_ORDER_REQUEST_ID,
-  LOAD_SELL_ORDER_REQUEST_ID,
-  LOAD_BUY_ORDER_SUCCESS,
-  LOAD_SELL_ORDER_SUCCESS,
-} from '../reducers/order';
 
 export const token = state => state.tokens.selectedToken;
-export const iconexState = state => state.iconex.jsonRpcIds;
-export const orderState = state => state.order.jsonRpcIds;
+export const iconexRequests = state => state.iconex.jsonRpcIds;
+export const orderRequests = state => state.order.jsonRpcIds;
 
 function dispatchGetIcxBalance(address) {
   const networkIcxId = generateJsonRpcId();
@@ -85,7 +72,8 @@ function dispatchGetTokenBalance(address, tokenAddress) {
   return [networkTokenId, depositedTokenId];
 }
 
-function* getBalance({ payload, tokenAddress }) {
+function* getBalance({ payload }) {
+  const selectedToken = yield select(token);
   const icxId = yield dispatchGetIcxBalance(payload);
   yield put({
     type: ICX_BALANCE_REQUEST,
@@ -95,7 +83,7 @@ function* getBalance({ payload, tokenAddress }) {
     type: DEPOSITED_ICX_BALANCE_REQUEST,
     id: icxId[1],
   });
-  const tokenId = dispatchGetTokenBalance(payload, tokenAddress);
+  const tokenId = yield dispatchGetTokenBalance(payload, selectedToken.address);
   yield put({
     type: TOKEN_BALANCE_REQUEST,
     id: tokenId[0],
@@ -123,36 +111,20 @@ function* getBalanceOnlyToken({ address, token }) {
 }
 
 function* watchChangeToken() {
-  yield takeLatest(CHANGE_TOKEN, getBalanceOnlyToken);
+  yield takeEvery(CHANGE_TOKEN, getBalanceOnlyToken);
 }
 
 function* checkRpcId(action) {
-  const iconexIds = yield select(iconexState);
-  const orderIds = yield select(orderState);
+  const iconexIds = yield select(iconexRequests);
+  const orderIds = yield select(orderRequests);
+  const { name } = yield select(token);
   const { payload } = action;
-  const { name, address } = yield select(token);
 
-  // console.log('check saga', iconexIds, payload);
-  switch (orderIds[payload.id]) {
-    case LOAD_BUY_ORDER_REQUEST_ID:
-      yield put({
-        type: LOAD_BUY_ORDER_SUCCESS,
-        id: payload.id,
-        orders: payload.result,
-        address,
-      });
-      return;
-    case LOAD_SELL_ORDER_REQUEST_ID:
-      yield put({
-        type: LOAD_SELL_ORDER_SUCCESS,
-        id: payload.id,
-        orders: payload.result,
-        address,
-      });
-      return;
-    default:
-      break;
-  }
+  const ids = { ...iconexIds, ...orderIds };
+  console.log('check saga', payload);
+  console.log('Response for:', ids[payload.id]);
+
+  if (orderIds[payload.id]) return;
   switch (iconexIds[payload.id]) {
     case ICX_BALANCE_REQUEST_ID:
       yield put({
