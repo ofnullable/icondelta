@@ -4,8 +4,8 @@ import { Table } from 'antd';
 import { CHANGE_TOKEN } from '../../reducers/tokens';
 
 const TokenList = ({ searchText }) => {
-  const { tokenList } = useSelector(state => state.tokens);
   const { address } = useSelector(state => state.iconex);
+  const { tokenList } = useSelector(state => state.tokens);
   const dispatch = useDispatch();
 
   const setList = () => {

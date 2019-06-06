@@ -25,7 +25,6 @@ const Home = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log('useEffect');
     const eventHandler = e => {
       const { type, payload } = e.detail;
       dispatch({
@@ -41,20 +40,23 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    if (!address) {
-      window.dispatchEvent(getAddressEvent());
-    }
-    const ids = _requestOrderList();
-    dispatch({
-      type: LOAD_BUY_ORDER_REQUEST,
-      id: ids[0],
-      token: selectedToken.address,
-    });
-    dispatch({
-      type: LOAD_SELL_ORDER_REQUEST,
-      id: ids[1],
-      token: selectedToken.address,
-    });
+    window.onload = () => {
+      if (!address) {
+        window.dispatchEvent(getAddressEvent());
+      }
+
+      const ids = _requestOrderList();
+      dispatch({
+        type: LOAD_BUY_ORDER_REQUEST,
+        id: ids[0],
+        token: selectedToken.address,
+      });
+      dispatch({
+        type: LOAD_SELL_ORDER_REQUEST,
+        id: ids[1],
+        token: selectedToken.address,
+      });
+    };
   }, [selectedToken]);
 
   const _requestOrderList = () => {

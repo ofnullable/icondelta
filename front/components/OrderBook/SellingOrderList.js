@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { Card, List } from 'antd';
 import { toIcx } from '../../utils/formatter';
 import { TextColoredList } from './index';
 
-const SellingOrderList = () => {
+const SellingOrderList = memo(() => {
   const { sellingOrders } = useSelector(state => state.order);
   return (
     <TextColoredList
@@ -12,9 +12,10 @@ const SellingOrderList = () => {
       grid={{ gutter: 0, column: 3 }}
       dataSource={sellingOrders}
       rowKey='hashed_data'
-      renderItem={item => {
-        const amount = toIcx(item.give_amount - item.order_fill);
-        const price = (item.get_amount / item.give_amount).toFixed(9);
+      renderItem={o => {
+        const amount = toIcx(o.give_amount - o.order_fill);
+        const price = (o.get_amount / o.give_amount).toFixed(9);
+        console.log(amount, price, amount * price);
         return (
           <>
             <List.Item>
@@ -31,6 +32,6 @@ const SellingOrderList = () => {
       }}
     />
   );
-};
+});
 
 export default SellingOrderList;
