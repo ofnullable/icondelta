@@ -10,7 +10,7 @@ export const initialState = {
   tokenList: [
     {
       name: 'AC3',
-      address: 'cx9ab3078e72c8d9017194d17b34b1a47b661945ca',
+      address: 'cx12f393e1ddc8b5555c86c24d6f396c4c6ca37024',
       symbol: 'AC3',
       currentPrice: 0.5,
     },
@@ -72,10 +72,6 @@ export const initialState = {
 };
 
 export const CHANGE_TOKEN = 'TOKEN/CHANGE_TOKEN';
-
-export const LOAD_TOKEN_HISTORY_REQUEST = 'TOKEN/LOAD_TOKEN_HISTORY_REQUEST';
-export const LOAD_TOKEN_HISTORY_SUCCESS = 'TOKEN/LOAD_TOKEN_HISTORY_SUCCESS';
-export const LOAD_TOKEN_HISTORY_FAILURE = 'TOKEN/LOAD_TOKEN_HISTORY_FAILURE';
 
 export default (state = initialState, action) => {
   return produce(state, draft => {

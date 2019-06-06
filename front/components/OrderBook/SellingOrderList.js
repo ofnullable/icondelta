@@ -12,19 +12,23 @@ const SellingOrderList = () => {
       grid={{ gutter: 0, column: 3 }}
       dataSource={sellingOrders}
       rowKey='hashed_data'
-      renderItem={item => (
-        <>
-          <List.Item>
-            <Card>{toIcx(item.give_amount)}</Card>
-          </List.Item>
-          <List.Item>
-            <Card>{(item.get_amount / item.give_amount).toFixed(9)}</Card>
-          </List.Item>
-          <List.Item>
-            <Card>{toIcx(item.get_amount).toFixed(9)}</Card>
-          </List.Item>
-        </>
-      )}
+      renderItem={item => {
+        const amount = toIcx(item.give_amount - item.order_fill);
+        const price = (item.get_amount / item.give_amount).toFixed(9);
+        return (
+          <>
+            <List.Item>
+              <Card>{amount}</Card>
+            </List.Item>
+            <List.Item>
+              <Card>{price}</Card>
+            </List.Item>
+            <List.Item>
+              <Card>{(amount * price).toFixed(9)}</Card>
+            </List.Item>
+          </>
+        );
+      }}
     />
   );
 };

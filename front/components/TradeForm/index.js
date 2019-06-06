@@ -2,10 +2,18 @@ import React, { memo, useState, useCallback, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Form, Button, Menu, InputNumber, Input } from 'antd';
 
-import { toCurrency } from '../../utils/formatter';
-import { getAddressEvent, sendOrderEvent } from '../../utils/events';
+import { toCurrency, toLoop } from '../../utils/formatter';
+import {
+  getAddressEvent,
+  sendOrderEvent,
+  tradeEvent,
+} from '../../utils/events';
 import { generateJsonRpcId } from '../../utils/jsonrpc';
-import { BUY_ORDER_REQUEST, SELL_ORDER_REQUEST } from '../../reducers/order';
+import {
+  BUY_ORDER_REQUEST,
+  SELL_ORDER_REQUEST,
+  TRADE_ORDER_REQUEST,
+} from '../../reducers/order';
 
 export default memo(() => {
   const [tradeType, setTradeType] = useState('buy');
@@ -28,6 +36,9 @@ export default memo(() => {
       if (!price || !amount) {
         alert('fields cannot be blank');
       }
+      if (Number(price) < 1e-9) {
+        alert(`Can not less than ${(1e-9).toFixed(9)}`);
+      }
 
       const genId = generateJsonRpcId();
 
@@ -36,19 +47,28 @@ export default memo(() => {
       if (tradeType === 'buy') {
         matchOrder = sellingOrders.filter(
           o =>
-            toIcx(o.get_amount / o.give_amount) === price &&
-            toIcx(o.get_amount - o.order_fill) >= amount
+            o.get_amount / o.give_amount === Number(price) &&
+            toLoop(o.give_amount - o.order_fill) >= Number(amount)
         );
       } else {
         matchOrder = buyingOrders.filter(
           o =>
-            toIcx(o.giveAmount / o.getAmount) === price &&
-            toIcx(o.giveAmount - o.order_fill) >= amount
+            o.give_amount / o.get_amount === Number(price) &&
+            toLoop(o.get_amount - o.order_fill) >= Number(amount)
         );
       }
 
-      if (matchOrder.length) {
-        // trade logic
+      if (matchOrder && matchOrder.length) {
+        window.dispatchEvent(
+          tradeEvent(genId, matchOrder[0], {
+            address,
+            amount,
+          })
+        );
+        dispatch({
+          type: TRADE_ORDER_REQUEST,
+          id: genId,
+        });
         return;
       }
 
@@ -86,7 +106,7 @@ export default memo(() => {
         id: genId,
       });
     },
-    [price, amount, total]
+    [price, amount, total, sellingOrders, buyingOrders]
   );
 
   const handleMenuClick = useCallback(

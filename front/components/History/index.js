@@ -4,12 +4,12 @@ import { Menu, Table } from 'antd';
 
 export default () => {
   const { orderBook } = useSelector(state => state.order);
-  const { tradeHistory } = useSelector(state => state.trade);
+  // const { tradeHistory } = useSelector(state => state.trade);
   const [data, setData] = useState(orderBook);
 
   const handleMenuClick = useCallback(
     e => {
-      setData(e.key === 'order' ? orderBook : tradeHistory);
+      setData(e.key === 'order' ? orderBook : []);
     },
     [data]
   );
