@@ -182,8 +182,6 @@ function* checkRpcId(action) {
         name,
       });
       return;
-    default:
-      break;
   }
 }
 

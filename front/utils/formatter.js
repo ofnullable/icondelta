@@ -1,5 +1,5 @@
 export const toCurrency = value =>
-  `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  value > 1 ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') : value;
 
 export const toNumber = value => Number(value.replace(/,/gi, ''));
 

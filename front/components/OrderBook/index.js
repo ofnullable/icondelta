@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, memo } from 'react';
 import styled from 'styled-components';
 import { List, Card } from 'antd';
 import SellingOrderList from './SellingOrderList';
@@ -21,16 +21,19 @@ export const TextColoredList = styled(List)`
   }
 `;
 
-const data = [{ title: 'Amount' }, { title: 'Price' }, { title: 'Total' }];
-
-export default () => {
+export default memo(() => {
+  const titles = useRef([
+    { title: 'Amount' },
+    { title: 'Price' },
+    { title: 'Total' },
+  ]);
   return (
     <>
       <TextColoredList
         bigfont='true'
         color='black'
         grid={{ gutter: 0, column: 3 }}
-        dataSource={data}
+        dataSource={titles.current}
         renderItem={item => (
           <List.Item key='amount'>
             <Card>{item.title}</Card>
@@ -41,4 +44,4 @@ export default () => {
       <BuyingOrderList />
     </>
   );
-};
+});

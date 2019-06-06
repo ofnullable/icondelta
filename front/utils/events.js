@@ -198,7 +198,7 @@ export const sendOrderEvent = (
     })
   );
 
-export const tradeEvent = (id, makerOrder, taker) =>
+export const tradeEvent = (id, matchOrder, taker) =>
   iconexEvent(
     REQUEST_JSON_RPC,
     generateJsonRpcParam(id, SEND_TRANSACTION, {
@@ -209,12 +209,12 @@ export const tradeEvent = (id, makerOrder, taker) =>
       data: {
         method: 'trade',
         params: {
-          _tokenGet: makerOrder.token_get,
-          _getAmount: makerOrder.get_amount,
-          _tokenGive: makerOrder.token_give,
-          _giveAmount: makerOrder.give_amount,
-          _nonce: makerOrder.nonce,
-          _orderMaker: makerOrder.order_maker,
+          _tokenGet: matchOrder.token_get,
+          _getAmount: matchOrder.get_amount,
+          _tokenGive: matchOrder.token_give,
+          _giveAmount: matchOrder.give_amount,
+          _nonce: matchOrder.nonce,
+          _orderMaker: matchOrder.order_maker,
           _takerOrderAmount: toLoop(taker.amount),
         },
       },

@@ -32,8 +32,6 @@ function* checkRpcId(action) {
         address,
       });
       return;
-    default:
-      break;
   }
 }
 

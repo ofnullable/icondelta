@@ -58,7 +58,9 @@ export default memo(() => {
         );
       }
 
+      // TODO: check send what for amount
       if (matchOrder && matchOrder.length) {
+        console.log('trade with', matchOrder[0]);
         window.dispatchEvent(
           tradeEvent(genId, matchOrder[0], {
             address,
