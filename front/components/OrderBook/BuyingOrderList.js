@@ -13,15 +13,15 @@ const BuyingOrderList = memo(() => {
       dataSource={buyingOrders}
       rowKey='hashed_data'
       renderItem={o => {
-        const amount = toIcx(o.get_amount - o.order_fill);
-        const price = (o.give_amount / o.get_amount).toFixed(9);
+        const amount = o.get_amount - o.order_fill;
+        const price = o.give_amount / o.get_amount;
         return (
           <>
             <List.Item>
-              <Card>{amount}</Card>
+              <Card>{toIcx(amount)}</Card>
             </List.Item>
             <List.Item>
-              <Card>{price}</Card>
+              <Card>{price.toFixed(9)}</Card>
             </List.Item>
             <List.Item>
               <Card>{(amount * price).toFixed(9)}</Card>

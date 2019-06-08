@@ -5,7 +5,7 @@ import { toIcx } from '../../utils/formatter';
 import { TextColoredList } from './index';
 
 const SellingOrderList = memo(() => {
-  const { sellingOrders } = useSelector(state => state.order);
+  const sellingOrders = useSelector(state => state.order.sellingOrders);
   return (
     <TextColoredList
       color='red'
@@ -13,19 +13,19 @@ const SellingOrderList = memo(() => {
       dataSource={sellingOrders}
       rowKey='hashed_data'
       renderItem={o => {
-        const amount = toIcx(o.give_amount - o.order_fill);
-        const price = (o.get_amount / o.give_amount).toFixed(9);
-        console.log(amount, price, amount * price);
+        const price = (o.get_amount - o.order_fill) / o.give_amount;
+        const total = o.get_amount - o.order_fill;
+        const amount = toIcx(total / price);
         return (
           <>
             <List.Item>
               <Card>{amount}</Card>
             </List.Item>
             <List.Item>
-              <Card>{price}</Card>
+              <Card>{price.toFixed(9)}</Card>
             </List.Item>
             <List.Item>
-              <Card>{(amount * price).toFixed(9)}</Card>
+              <Card>{toIcx(total).toFixed(9)}</Card>
             </List.Item>
           </>
         );

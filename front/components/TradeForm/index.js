@@ -25,7 +25,7 @@ export default memo(() => {
   const { selectedToken } = useSelector(state => state.tokens);
   const { sellingOrders, buyingOrders } = useSelector(state => state.order);
   const dispatch = useDispatch();
-  const icxAddress = useRef('cx0000000000000000000000000000000000000000');
+  const icxAddress = 'cx0000000000000000000000000000000000000000';
 
   const applyOrder = useCallback(
     e => {
@@ -36,9 +36,10 @@ export default memo(() => {
       if (!price || !amount) {
         alert('fields cannot be blank');
       }
-      if (Number(price) < 1e-9) {
-        alert(`Can not less than ${(1e-9).toFixed(9)}`);
-      }
+
+      // if (Number(price) < 1e-9) {
+      //   alert(`Can not less than ${(1e-9).toFixed(9)}`);
+      // }
 
       const genId = generateJsonRpcId();
 
@@ -48,7 +49,7 @@ export default memo(() => {
         matchOrder = sellingOrders.filter(
           o =>
             o.get_amount / o.give_amount === Number(price) &&
-            toLoop(o.give_amount - o.order_fill) >= Number(amount)
+            toLoop(o.get_amount - o.order_fill) >= Number(total)
         );
       } else {
         matchOrder = buyingOrders.filter(
@@ -58,13 +59,14 @@ export default memo(() => {
         );
       }
 
-      // TODO: check send what for amount
       if (matchOrder && matchOrder.length) {
+        // buy => getToken / sell => getICX
+        const takerOrdered = tradeType === 'buy' ? total : amount;
         console.log('trade with', matchOrder[0]);
         window.dispatchEvent(
           tradeEvent(genId, matchOrder[0], {
             address,
-            amount,
+            amount: takerOrdered,
           })
         );
         dispatch({
@@ -126,10 +128,10 @@ export default memo(() => {
       if (!_checkAddress()) return;
       setPrice(e.target.value);
       if (amount) {
-        setTotal(e.target.value * amount);
+        setTotal(toCurrency(e.target.value * amount));
       }
     },
-    [price, amount, address]
+    [price, amount, total, address]
   );
 
   const changeAmount = useCallback(
@@ -137,10 +139,11 @@ export default memo(() => {
       if (!_checkAddress()) return;
       setAmount(e.target.value);
       if (price) {
-        setTotal(price * e.target.value);
+        console.log(price * e.target.value);
+        setTotal(toCurrency(price * e.target.value));
       }
     },
-    [price, amount, address]
+    [price, amount, total, address]
   );
 
   const _checkAddress = () => {
@@ -177,18 +180,20 @@ export default memo(() => {
         />
         <Input
           style={{ margin: '10px 0', width: '100%' }}
-          placeholder='Amount to buy'
+          placeholder={`Amount to ${tradeType}`}
           min={0}
           value={amount}
           onChange={changeAmount}
+          addonAfter={selectedToken.symbol}
         />
-        <InputNumber
+        <Input
           readOnly
-          formatter={toCurrency}
+          // formatter={toCurrency}
           style={{ margin: '10px 0', width: '100%' }}
           placeholder='Total'
           min={0}
           value={total}
+          addonAfter='ICX'
         />
         <Button
           htmlType='submit'

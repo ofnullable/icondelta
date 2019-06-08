@@ -22,18 +22,14 @@ export const TextColoredList = styled(List)`
 `;
 
 export default memo(() => {
-  const titles = useRef([
-    { title: 'Amount' },
-    { title: 'Price' },
-    { title: 'Total' },
-  ]);
+  const titles = [{ title: 'Amount' }, { title: 'Price' }, { title: 'Total' }];
   return (
     <>
       <TextColoredList
         bigfont='true'
         color='black'
         grid={{ gutter: 0, column: 3 }}
-        dataSource={titles.current}
+        dataSource={titles}
         renderItem={item => (
           <List.Item key='amount'>
             <Card>{item.title}</Card>

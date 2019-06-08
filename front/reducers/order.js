@@ -50,7 +50,9 @@ export default (state = initialState, action) => {
           action.orders &&
           action.orders
             .filter(
-              o => o.token_get === action.address && o.order_fill < o.get_amount
+              o =>
+                o.token_get === action.address &&
+                Number(o.order_fill) < Number(o.get_amount)
             )
             .sort(
               (o1, o2) =>
@@ -66,7 +68,8 @@ export default (state = initialState, action) => {
           action.orders
             .filter(
               o =>
-                o.token_give === action.address && o.order_fill < o.give_amount
+                o.token_give === action.address &&
+                Number(o.order_fill) < Number(o.get_amount)
             )
             .sort(
               (o1, o2) =>
