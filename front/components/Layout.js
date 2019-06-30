@@ -5,7 +5,7 @@ import { Menu, Icon } from 'antd';
 const Layout = ({ children }) => {
   return (
     <div>
-      <Menu mode='horizontal' selectedKeys={['trade']}>
+      <Menu mode='horizontal'>
         <Menu.Item key='home'>
           <Link href='/'>
             <a>
@@ -31,11 +31,13 @@ const Layout = ({ children }) => {
             </a>
           </Link>
         </Menu.Item>
-        <Menu.Item key='trade'>
-          <Link href='/'>
-            <a>Trade</a>
-          </Link>
-        </Menu.Item>
+        {/* 
+          <Menu.Item key='trade'>
+            <Link href='/'>
+              <a>Trade</a>
+            </Link>
+          </Menu.Item> 
+        */}
         <Menu.Item key='howto' style={{ float: 'right', marginRight: '10px' }}>
           <a
             href='https://www.notion.so/How-to-Guide-5bc85e598dba4cb599b365d0b95f82d4'

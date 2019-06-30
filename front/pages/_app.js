@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import createSagaMiddleware from 'redux-saga';
 import withReduxSaga from 'next-redux-saga';
 
-import reducers from '../reducers';
+import reducers from '../redux/reducers';
 import sagas from '../sagas';
 import Layout from '../components/Layout';
 
@@ -24,6 +24,7 @@ const IconDelta = ({ Component, store, pageProps }) => {
               'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no',
           },
           { 'http-equiv': 'X-UA-Compatible', content: 'IE=edge' },
+          { title: 'icondelta' },
           {
             name: 'description',
             content: ' Decentralized Exchange on ICON Network ',

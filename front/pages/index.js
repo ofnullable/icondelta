@@ -7,17 +7,13 @@ import OrderBook from '../components/OrderBook';
 import History from '../components/History';
 import TokenBar from '../components/TokenBar';
 import TradeForm from '../components/TradeForm';
-import { ICONEX_RELAY_RESPONSE } from '../reducers/iconex';
-import {
-  LOAD_BUY_ORDER_REQUEST,
-  LOAD_SELL_ORDER_REQUEST,
-} from '../reducers/order';
 import { generateJsonRpcId } from '../utils/jsonrpc';
 import {
   getBuyOrderListEvent,
   getSellOrderListEvent,
   getAddressEvent,
 } from '../utils/events';
+import actionTypes from '../redux/actionTypes';
 
 const Home = () => {
   const { address } = useSelector(state => state.iconex);
@@ -33,9 +29,12 @@ const Home = () => {
       });
     };
 
-    window.addEventListener(ICONEX_RELAY_RESPONSE, eventHandler);
+    window.addEventListener(actionTypes.ICONEX_RELAY_RESPONSE, eventHandler);
     return () => {
-      window.removeEventListener(ICONEX_RELAY_RESPONSE, eventHandler);
+      window.removeEventListener(
+        actionTypes.ICONEX_RELAY_RESPONSE,
+        eventHandler
+      );
     };
   }, []);
 
@@ -47,12 +46,12 @@ const Home = () => {
 
       const ids = _requestOrderList();
       dispatch({
-        type: LOAD_BUY_ORDER_REQUEST,
+        type: actionTypes.LOAD_BUY_ORDER_REQUEST,
         id: ids[0],
         token: selectedToken.address,
       });
       dispatch({
-        type: LOAD_SELL_ORDER_REQUEST,
+        type: actionTypes.LOAD_SELL_ORDER_REQUEST,
         id: ids[1],
         token: selectedToken.address,
       });

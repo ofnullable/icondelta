@@ -1,4 +1,5 @@
 import produce from 'immer';
+import actionTypes from '../actionTypes';
 
 export const initialState = {
   selectedToken: {
@@ -73,12 +74,10 @@ export const initialState = {
   ],
 };
 
-export const CHANGE_TOKEN = 'TOKEN/CHANGE_TOKEN';
-
 export default (state = initialState, action) => {
   return produce(state, draft => {
     switch (action.type) {
-      case CHANGE_TOKEN:
+      case actionTypes.CHANGE_TOKEN:
         draft.selectedToken = action.token;
         break;
       default:
