@@ -17,14 +17,13 @@ app.prepare().then(() => {
   server.use(express.urlencoded({ extended: true }));
 
   server.get('/', (req, res) => {
-    app.render(req, res, page, { symbol: 'AC3' });
+    app.render(req, res, '/', { symbol: 'AC3' });
   });
 
   server.get('/:symbol', (req, res) => {
     const symbol = req.params.symbol || 'AC3';
     const page = '/';
     app.render(req, res, page, { symbol });
-    // return handle(req, res);
   });
 
   server.get('*', (req, res) => {
