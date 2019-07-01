@@ -3,12 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Form, Input, Button } from 'antd';
 
 import {
-  ICX_DEPOSIT_REQUEST,
-  ICX_WITHDRAW_REQUEST,
-  TOKEN_DEPOSIT_REQUEST,
-  TOKEN_WITHDRAW_REQUEST,
-} from '../../reducers/iconex';
-import {
   getAddressEvent,
   depositIcxEvent,
   withdrawIcxEvent,
@@ -16,6 +10,7 @@ import {
   withdrawTokenEvent,
 } from '../../utils/events';
 import { generateJsonRpcId } from '../../utils/jsonrpc';
+import actionTypes from '../../redux/actionTypes';
 
 const BalanceForm = ({ actionType }) => {
   const [icxAmount, setIcxAmount] = useState('');
@@ -94,7 +89,7 @@ const BalanceForm = ({ actionType }) => {
 
     window.dispatchEvent(event);
     dispatch({
-      type: ICX_DEPOSIT_REQUEST,
+      type: actionTypes.ICX_DEPOSIT_REQUEST,
       id,
       icxAmount,
     });
@@ -106,7 +101,7 @@ const BalanceForm = ({ actionType }) => {
 
     window.dispatchEvent(event);
     dispatch({
-      type: ICX_WITHDRAW_REQUEST,
+      type: actionTypes.ICX_WITHDRAW_REQUEST,
       id,
       icxAmount,
     });
@@ -123,7 +118,7 @@ const BalanceForm = ({ actionType }) => {
 
     window.dispatchEvent(event);
     dispatch({
-      type: TOKEN_DEPOSIT_REQUEST,
+      type: actionTypes.TOKEN_DEPOSIT_REQUEST,
       id,
       tokenAmount,
     });
@@ -139,7 +134,7 @@ const BalanceForm = ({ actionType }) => {
 
     window.dispatchEvent(event);
     dispatch({
-      type: TOKEN_WITHDRAW_REQUEST,
+      type: actionTypes.TOKEN_WITHDRAW_REQUEST,
       id,
       tokenAmount,
     });

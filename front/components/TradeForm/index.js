@@ -1,6 +1,6 @@
 import React, { memo, useState, useCallback, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Form, Button, Menu, InputNumber, Input } from 'antd';
+import { Form, Button, Menu, Input } from 'antd';
 
 import { toCurrency, toLoop } from '../../utils/formatter';
 import {
@@ -9,11 +9,7 @@ import {
   tradeEvent,
 } from '../../utils/events';
 import { generateJsonRpcId } from '../../utils/jsonrpc';
-import {
-  BUY_ORDER_REQUEST,
-  SELL_ORDER_REQUEST,
-  TRADE_ORDER_REQUEST,
-} from '../../reducers/order';
+import actionTypes from '../../redux/actionTypes';
 
 export default memo(() => {
   const [tradeType, setTradeType] = useState('buy');
@@ -70,7 +66,7 @@ export default memo(() => {
           })
         );
         dispatch({
-          type: TRADE_ORDER_REQUEST,
+          type: actionTypes.TRADE_ORDER_REQUEST,
           id: genId,
         });
         return;
@@ -85,13 +81,13 @@ export default memo(() => {
         getAmount = amount;
         tokenGive = icxAddress.current;
         giveAmount = total;
-        actionName = BUY_ORDER_REQUEST;
+        actionName = actionTypes.BUY_ORDER_REQUEST;
       } else {
         tokenGet = icxAddress.current;
         getAmount = total;
         tokenGive = selectedToken.address;
         giveAmount = amount;
-        actionName = SELL_ORDER_REQUEST;
+        actionName = actionTypes.SELL_ORDER_REQUEST;
       }
 
       window.dispatchEvent(

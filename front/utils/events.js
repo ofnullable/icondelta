@@ -1,5 +1,5 @@
 import {
-  generateJsonRpcParam,
+  makeJsonRpcParam,
   SEND_QUERY,
   SEND_TRANSACTION,
   GET_ICX_BALANCE,
@@ -43,13 +43,13 @@ export const getAddressEvent = () => iconexEvent(REQUEST_ADDRESS);
 export const getIcxBalanceEvent = (id, address) =>
   iconexEvent(
     REQUEST_JSON_RPC,
-    generateJsonRpcParam(id, GET_ICX_BALANCE, { address })
+    makeJsonRpcParam(id, GET_ICX_BALANCE, { address })
   );
 
 export const getDepositedIcxBalanceEvent = (id, address) =>
   iconexEvent(
     REQUEST_JSON_RPC,
-    generateJsonRpcParam(id, SEND_QUERY, {
+    makeJsonRpcParam(id, SEND_QUERY, {
       from: address,
       to: ICONDELTA_ADDRESS,
       dataType: 'call',
@@ -63,7 +63,7 @@ export const getDepositedIcxBalanceEvent = (id, address) =>
 export const getTokenBalanceEvent = (id, address, tokenAddress) =>
   iconexEvent(
     REQUEST_JSON_RPC,
-    generateJsonRpcParam(id, SEND_QUERY, {
+    makeJsonRpcParam(id, SEND_QUERY, {
       from: address,
       to: tokenAddress,
       dataType: 'call',
@@ -77,7 +77,7 @@ export const getTokenBalanceEvent = (id, address, tokenAddress) =>
 export const getDepositedTokenBalanceEvent = (id, address, tokenAddress) =>
   iconexEvent(
     REQUEST_JSON_RPC,
-    generateJsonRpcParam(id, SEND_QUERY, {
+    makeJsonRpcParam(id, SEND_QUERY, {
       from: address,
       to: ICONDELTA_ADDRESS,
       dataType: 'call',
@@ -91,7 +91,7 @@ export const getDepositedTokenBalanceEvent = (id, address, tokenAddress) =>
 export const getBuyOrderListEvent = id =>
   iconexEvent(
     REQUEST_JSON_RPC,
-    generateJsonRpcParam(id, SEND_QUERY, {
+    makeJsonRpcParam(id, SEND_QUERY, {
       from: DEFAULT_WALLET_ADDRESS,
       to: ICONDELTA_ADDRESS,
       dataType: 'call',
@@ -104,7 +104,7 @@ export const getBuyOrderListEvent = id =>
 export const getSellOrderListEvent = id =>
   iconexEvent(
     REQUEST_JSON_RPC,
-    generateJsonRpcParam(id, SEND_QUERY, {
+    makeJsonRpcParam(id, SEND_QUERY, {
       from: DEFAULT_WALLET_ADDRESS,
       to: ICONDELTA_ADDRESS,
       dataType: 'call',
@@ -117,7 +117,7 @@ export const getSellOrderListEvent = id =>
 export const depositIcxEvent = (id, address, amount) => {
   return iconexEvent(
     REQUEST_JSON_RPC,
-    generateJsonRpcParam(id, SEND_TRANSACTION, {
+    makeJsonRpcParam(id, SEND_TRANSACTION, {
       ...txCallDefault,
       from: address,
       to: ICONDELTA_ADDRESS,
@@ -131,7 +131,7 @@ export const depositIcxEvent = (id, address, amount) => {
 export const withdrawIcxEvent = (id, address, amount) =>
   iconexEvent(
     REQUEST_JSON_RPC,
-    generateJsonRpcParam(id, SEND_TRANSACTION, {
+    makeJsonRpcParam(id, SEND_TRANSACTION, {
       ...txCallDefault,
       from: address,
       to: ICONDELTA_ADDRESS,
@@ -143,7 +143,7 @@ export const withdrawIcxEvent = (id, address, amount) =>
 export const depositTokenEvent = (id, address, tokenAddress, amount) =>
   iconexEvent(
     REQUEST_JSON_RPC,
-    generateJsonRpcParam(id, SEND_TRANSACTION, {
+    makeJsonRpcParam(id, SEND_TRANSACTION, {
       ...txCallDefault,
       from: address,
       to: tokenAddress,
@@ -158,7 +158,7 @@ export const depositTokenEvent = (id, address, tokenAddress, amount) =>
 export const withdrawTokenEvent = (id, address, tokenAddress, amount) =>
   iconexEvent(
     REQUEST_JSON_RPC,
-    generateJsonRpcParam(id, SEND_TRANSACTION, {
+    makeJsonRpcParam(id, SEND_TRANSACTION, {
       ...txCallDefault,
       from: address,
       to: ICONDELTA_ADDRESS,
@@ -180,7 +180,7 @@ export const sendOrderEvent = (
 ) =>
   iconexEvent(
     REQUEST_JSON_RPC,
-    generateJsonRpcParam(id, SEND_TRANSACTION, {
+    makeJsonRpcParam(id, SEND_TRANSACTION, {
       ...txCallDefault,
       from: address,
       to: ICONDELTA_ADDRESS,
@@ -201,7 +201,7 @@ export const sendOrderEvent = (
 export const tradeEvent = (id, matchOrder, taker) =>
   iconexEvent(
     REQUEST_JSON_RPC,
-    generateJsonRpcParam(id, SEND_TRANSACTION, {
+    makeJsonRpcParam(id, SEND_TRANSACTION, {
       ...txCallDefault,
       from: taker.address,
       to: ICONDELTA_ADDRESS,

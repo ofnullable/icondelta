@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Table } from 'antd';
-import { CHANGE_TOKEN } from '../../reducers/tokens';
+import actionTypes from '../../redux/actionTypes';
 
 const TokenList = ({ searchText }) => {
   const { address } = useSelector(state => state.iconex);
@@ -23,11 +23,12 @@ const TokenList = ({ searchText }) => {
   const onRow = token => {
     return {
       onClick() {
-        dispatch({
-          type: CHANGE_TOKEN,
-          address,
-          token,
-        });
+        console.log(token);
+        // dispatch({
+        //   type: actionTypes.CHANGE_TOKEN,
+        //   address,
+        //   token,
+        // });
       },
     };
   };

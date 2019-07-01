@@ -1,11 +1,5 @@
 import { all, takeEvery, fork, put, select } from 'redux-saga/effects';
-import { RESPONSE_JSON_RPC } from '../reducers/iconex';
-import {
-  LOAD_BUY_ORDER_REQUEST_ID,
-  LOAD_SELL_ORDER_REQUEST_ID,
-  LOAD_BUY_ORDER_SUCCESS,
-  LOAD_SELL_ORDER_SUCCESS,
-} from '../reducers/order';
+import actionTypes from '../redux/actionTypes';
 
 export const token = state => state.tokens.selectedToken;
 export const orderRequests = state => state.order.jsonRpcIds;
@@ -16,17 +10,17 @@ function* checkRpcId(action) {
   const { payload } = action;
 
   switch (orderIds[payload.id]) {
-    case LOAD_BUY_ORDER_REQUEST_ID:
+    case actionTypes.LOAD_BUY_ORDER_REQUEST_ID:
       yield put({
-        type: LOAD_BUY_ORDER_SUCCESS,
+        type: actionTypes.LOAD_BUY_ORDER_SUCCESS,
         id: payload.id,
         orders: payload.result,
         address,
       });
       return;
-    case LOAD_SELL_ORDER_REQUEST_ID:
+    case actionTypes.LOAD_SELL_ORDER_REQUEST_ID:
       yield put({
-        type: LOAD_SELL_ORDER_SUCCESS,
+        type: actionTypes.LOAD_SELL_ORDER_SUCCESS,
         id: payload.id,
         orders: payload.result,
         address,
@@ -36,7 +30,7 @@ function* checkRpcId(action) {
 }
 
 function* watchJsonRpcResponse() {
-  yield takeEvery(RESPONSE_JSON_RPC, checkRpcId);
+  yield takeEvery(actionTypes.RESPONSE_JSON_RPC, checkRpcId);
 }
 
 export default function*() {
