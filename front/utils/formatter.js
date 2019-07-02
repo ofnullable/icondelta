@@ -1,15 +1,26 @@
-export const toCurrency = value =>
-  value > 999 ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',') : value;
+import BigNumber from 'bignumber.js';
 
-export const toNumber = value => Number(value.replace(/,/gi, ''));
+export const toStringWithCommas = (i, round) => {
+  if (!i) return 0;
 
-export const toHexString = value => `0x${Number(value).toString(16)}`;
+  if (typeof i === 'string') {
+    i = i.replace(/,/g, '');
+  }
+  if (round >= 0) {
+    i = new BigNumber(i).toFixed(round);
+  } else {
+    i = new BigNumber(i).toFixed(9);
+  }
 
-export const toDecimal = value => Number(value, 10);
+  return withCommas(i);
+};
 
-export const toLoop = value => toHexString((value * 10 ** 18).toFixed());
+export const toNumber = str => {};
 
-export const toIcx = value => {
-  const result = (toDecimal(value) / 10 ** 18).toFixed(18);
-  return Number(result) || 0;
+const withCommas = i => {
+  if (!i) return 0;
+
+  let parts = i.split('.');
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return parts.join('.');
 };

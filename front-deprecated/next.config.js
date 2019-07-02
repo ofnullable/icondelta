@@ -3,40 +3,35 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 });
 const webpack = require('webpack');
 const CompressionPlugin = require('compression-webpack-plugin');
-const withSass = require('@zeit/next-sass');
 
-const config = withBundleAnalyzer({
-  webpack: config => {
+module.exports = withBundleAnalyzer({
+  webpack(config) {
     const prod = process.env.NODE_ENV === 'production';
     const plugins = [
       ...config.plugins,
       new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /^\.\/ko$/),
     ];
-
     if (prod) {
       plugins.push(new CompressionPlugin()); // main.js.gz
     } else {
-      // console.log('config:', config);
+      console.log('config:', config);
     }
-
-    config.node = {
-      fs: 'empty',
-    };
-
     return {
       ...config,
       mode: prod ? 'production' : 'development',
       devtool: prod ? 'hidden-source-map' : 'eval',
+      module: {
+        ...config.module,
+        rules: [
+          ...config.module.rules,
+          {
+            loader: 'webpack-ant-icon-loader',
+            enforce: 'pre',
+            include: [require.resolve('@ant-design/icons/lib/dist')],
+          },
+        ],
+      },
       plugins,
     };
   },
-});
-
-module.exports = withSass({
-  cssModules: true,
-  cssLoaderOptions: {
-    importLoaders: 1,
-    localIdentName: '[local]___[hash:base64:5]',
-  },
-  config,
 });

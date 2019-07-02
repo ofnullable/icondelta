@@ -1,0 +1,14 @@
+@import '_variables.scss';
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  border: none;
+  color: $c-white;
+  font-family: $font-family;
+  background-color: $c-background;
+}

@@ -1,7 +1,5 @@
 import { combineReducers } from 'redux';
 
-import iconex from './iconex';
-import tokens from './tokens';
-import order from './order';
+import address from './address';
 
-export default combineReducers({ iconex, tokens, order });
+export default combineReducers({ address });
