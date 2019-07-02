@@ -16,10 +16,6 @@ app.prepare().then(() => {
   server.use(express.json());
   server.use(express.urlencoded({ extended: true }));
 
-  server.get('/', (req, res) => {
-    app.render(req, res, '/', { symbol: 'AC3' });
-  });
-
   server.get('/:symbol', (req, res) => {
     const symbol = req.params.symbol || 'AC3';
     const page = '/';

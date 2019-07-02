@@ -16,7 +16,7 @@ const config = withBundleAnalyzer({
     if (prod) {
       plugins.push(new CompressionPlugin()); // main.js.gz
     } else {
-      console.log('config:', config);
+      // console.log('config:', config);
     }
 
     config.node = {
@@ -32,4 +32,11 @@ const config = withBundleAnalyzer({
   },
 });
 
-module.exports = withSass({ cssModules: true, ...config });
+module.exports = withSass({
+  cssModules: true,
+  cssLoaderOptions: {
+    importLoaders: 1,
+    localIdentName: '[local]___[hash:base64:5]',
+  },
+  config,
+});
