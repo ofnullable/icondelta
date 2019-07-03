@@ -1,7 +1,15 @@
 import BigNumber from 'bignumber.js';
 
-export const toStringWithCommas = (i, round) => {
+const WITH_COMMAS = i => {
   if (!i) return 0;
+
+  let parts = i.split('.');
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return parts.join('.');
+};
+
+export const toStringWithCommas = (i, round) => {
+  if (!i) return '0';
 
   if (typeof i === 'string') {
     i = i.replace(/,/g, '');
@@ -12,15 +20,12 @@ export const toStringWithCommas = (i, round) => {
     i = new BigNumber(i).toFixed(9);
   }
 
-  return withCommas(i);
+  return WITH_COMMAS(i);
 };
 
-export const toNumber = str => {};
-
-const withCommas = i => {
-  if (!i) return 0;
-
-  let parts = i.split('.');
-  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  return parts.join('.');
+export const toNumber = str => {
+  if (!str) return 0;
+  return Number(str.replace(/,/gi, ''));
 };
+
+export const toHexString = value => value;

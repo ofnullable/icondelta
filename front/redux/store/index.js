@@ -3,8 +3,7 @@ import createSagaMiddleware from 'redux-saga';
 
 import reducer from '../reducers';
 import saga from '../sagas';
-
-const isProd = process.env.NODE_ENV === 'production';
+import { isProd } from '../../utils/const';
 
 export default (initialState, options) => {
   const sagaMiddleware = createSagaMiddleware();

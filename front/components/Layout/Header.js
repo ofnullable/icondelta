@@ -1,14 +1,13 @@
 import React from 'react';
 import Link from 'next/link';
 
-import './Header.scss';
-
 const Header = () => (
-  <nav>
+  <header>
     <ul>
       <li>
-        <Link href='/'>
+        <Link href='/AC3'>
           <a>
+            <i className='material-icons'>autorenew</i>
             <h1>ICONDELTA</h1>
           </a>
         </Link>
@@ -24,7 +23,7 @@ const Header = () => (
         </li>
       </ul>
     </ul>
-  </nav>
+  </header>
 );
 
 export default Header;

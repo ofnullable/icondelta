@@ -1,18 +1,18 @@
 import React from 'react';
 
 import Head from './Head';
-import Header from './Header/Header';
+import Header from './Header';
 import Footer from './Footer';
 
-const Layout = ({ children }) => {
+import './style.scss';
+
+export default ({ children }) => {
   return (
     <div>
-      <Head title='ICONDELTA' />
+      <Head />
       <Header />
-      {children}
+      <main>{children}</main>
       <Footer />
     </div>
   );
 };
-
-export default Layout;
