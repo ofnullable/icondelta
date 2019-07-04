@@ -1,6 +1,6 @@
 import React from 'react';
 
-import HomeContainer from '../containers/Home/HomeContainer';
+import HomeContainer from '../containers/Home';
 import AT from '../redux/actionTypes';
 
 import '../styles/index.scss';
@@ -10,11 +10,14 @@ const Home = ({}) => {
 };
 
 Home.getInitialProps = async context => {
-  console.log('context - query', context.query);
+  // TODO: Load user balance,
+  const token = context.query.symbol;
   context.store.dispatch({
     type: AT.LOAD_BALANCE_REQUEST,
-    token: context.query.symbol,
+    address: '',
+    token,
   });
+  return { token };
 };
 
 export default Home;

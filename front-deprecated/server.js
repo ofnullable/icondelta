@@ -30,7 +30,7 @@ app.prepare().then(() => {
     return handle(req, res);
   });
 
-  const port = 3020;
+  const port = 3030;
   server.listen(port, () => {
     console.log(`Next, Express server running on port ${port}!`);
   });

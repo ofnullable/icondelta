@@ -1,5 +1,10 @@
-import { all, call } from 'redux-saga/effects';
+import { all, fork } from 'redux-saga/effects';
+import axios from 'axios';
 
-export default function* sagas() {
-  yield all([]);
+axios.defaults.baseURL = 'http://localhost:8000/api';
+
+import wallet from './wallet';
+
+export default function*() {
+  yield all([fork(wallet)]);
 }

@@ -1,0 +1,44 @@
+@import '../../styles/_variables.scss';
+@import '../../styles/mixin.scss';
+
+header {
+  text-align: center;
+  overflow: hidden;
+  & a {
+    color: inherit;
+    vertical-align: text-bottom;
+    text-decoration: none;
+    font-size: 13px;
+    & > h1 {
+      margin: 0;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    & > i {
+      -webkit-animation: spin 1s infinite linear;
+      animation: spin 1s infinite linear;
+      color: $c-blue;
+      margin-right: 0.2em;
+      vertical-align: middle;
+      font-size: 2.5em !important;
+    }
+  }
+  & ul {
+    padding: 0 16px;
+    display: flex;
+    justify-content: space-between;
+    & li {
+      display: inline-block;
+      vertical-align: middle;
+      padding: 6px;
+    }
+  }
+}
+main {
+  width: 90%;
+  margin: 0 auto;
+}
+footer {
+  text-align: center;
+  color: #fff;
+}

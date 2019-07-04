@@ -3,6 +3,7 @@ import withRedux from 'next-redux-wrapper';
 import withReduxSaga from 'next-redux-saga';
 import { Provider } from 'react-redux';
 
+import AT from '../redux/actionTypes';
 import store from '../redux/store';
 import Layout from '../components/Layout';
 
@@ -24,10 +25,11 @@ IconDelta.getInitialProps = async ({ ctx, Component }) => {
     res.writeHead(302, { Location: '/AC3' });
     res.end();
   }
-  const symbol = req.url.substring(1);
 
-  if (!state.token) {
-    console.log('?');
+  if (!state.wallet.address) {
+    ctx.store.dispatch({
+      type: AT.LOAD_ADDRESS_REQUEST,
+    });
   }
 
   let pageProps = {};

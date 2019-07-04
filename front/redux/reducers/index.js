@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 
-import address from './address';
+import wallet from './wallet';
+import token from './token';
 
-export default combineReducers({ address });
+export default combineReducers({ wallet, token });
