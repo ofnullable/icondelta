@@ -5,12 +5,10 @@ const Header = () => (
   <header>
     <ul>
       <li>
-        <Link href='/AC3'>
-          <a>
-            <i className='material-icons'>autorenew</i>
-            <h1>ICONDELTA</h1>
-          </a>
-        </Link>
+        <a>
+          <i className='material-icons'>autorenew</i>
+          <h1>ICONDELTA</h1>
+        </a>
       </li>
       <ul>
         <li>

@@ -2,12 +2,16 @@ const router = require('express').Router();
 
 router.get('/', async (req, res, next) => {
   try {
-    const sessionAddress = req.session.address;
-    if (sessionAddress) {
-      res.json({ address: req.session.address });
+    const session = req.session;
+    const cookie = {};
+    console.log(req.sessionID, session);
+    if (cookie.address) {
+      res.json({ address: cookie.address });
       return;
     }
-    return res.status(404).json({ status: 404, message: 'Address not found.' });
+    return res
+      .status(401)
+      .json({ status: 401, message: `You didn't sent wallet address!` });
   } catch (e) {
     console.error(e);
     next(e);
@@ -16,8 +20,13 @@ router.get('/', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
+    console.log(req.sessionID, req.session);
     const address = req.body.address;
-    req.session.address = address;
+    const session = req.session;
+
+    session.address = { address };
+    req.signedCookies.address = address;
+
     return res.json({ address });
   } catch (e) {
     console.error(e);

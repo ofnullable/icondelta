@@ -2,7 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const expressSession = require('express-session');
+const session = require('express-session');
 const hpp = require('hpp');
 const helmet = require('helmet');
 
@@ -36,10 +36,10 @@ if (prod) {
 
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(
-  expressSession({
+  session({
     name: process.env.EXPRESS_SESSION_NAME,
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     secret: process.env.COOKIE_SECRET,
     cookie: {
       httpOnly: true,

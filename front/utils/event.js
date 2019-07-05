@@ -1,32 +1,24 @@
 import AT from '../redux/actionTypes';
-import { isProd } from './const';
+import { isServer, isProd } from './const';
 
-const DEFAULT_STEP_LIMIT = '0x550001';
-const VERSION = '0x3';
-const NID = isProd ? '0x1' : '0x3'; // '0x1';
+const nid = isProd ? '0x1' : '0x3';
+const version = '0x3';
+const stepLimit = '0x550001';
 
 const TX_DEFAULT_PARAMETER = {
-  version: VERSION,
-  nid: NID,
-  stepLimit: DEFAULT_STEP_LIMIT,
+  version,
+  nid,
+  stepLimit,
   dataType: 'call',
 };
 
-const EVENT_HANDLER = e => {
-  const { type, payload } = e.detail;
-  dispatch({
-    type,
-    payload,
-  });
-};
+export const addIconexEventListner = handler =>
+  window.addEventListener(AT.ICONEX_RELAY_RESPONSE, handler);
 
-export const addIconexEventListner = () =>
-  window.addEventListener(AT.ICONEX_RELAY_RESPONSE, EVENT_HANDLER);
+export const removeIconexEventListner = handler =>
+  window.removeEventListener(AT.ICONEX_RELAY_RESPONSE, handler);
 
-export const removeIconexEventListner = () =>
-  window.removeEventListener(AT.ICONEX_RELAY_RESPONSE, EVENT_HANDLER);
-
-const ICONEX_EVENT = (type, payload) => {
+const iconexEvent = (type, payload) => {
   if (typeof type === 'object' && !payload) {
     // type이 Object고, 두번째 argument가 없는 경우 type을 지정하지 않았다고 가정한다. 지정하지 않은 경우 JSON-RPC 요청.
     payload = type;
@@ -40,7 +32,7 @@ const ICONEX_EVENT = (type, payload) => {
   }
 };
 
-const DISPATCH_EVENT = (...events) => {
+const dispatchEvent = (...events) => {
   events.map(e => {
     if (!e instanceof CustomEvent) throw new Error();
     window.dispatchEvent(e);
@@ -60,4 +52,4 @@ export const makeEventId = () => {
 };
 
 export const requestAddress = () =>
-  DISPATCH_EVENT(ICONEX_EVENT('REQUEST_ADDRESS'));
+  !isServer && dispatchEvent(iconexEvent('REQUEST_ADDRESS'));

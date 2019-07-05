@@ -2,7 +2,7 @@
 import AT from '../actionTypes';
 
 const INITIAL_STATE = {
-  wallet: '',
+  address: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -14,7 +14,7 @@ export default (state = INITIAL_STATE, action) => {
     case AT.LOAD_ADDRESS_SUCCESS:
       return {
         ...state,
-        wallet: action.address,
+        address: action.address,
       };
     default:
       return {

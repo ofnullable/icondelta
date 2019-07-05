@@ -1,13 +1,13 @@
 import { fork, put, all, takeEvery, select } from 'redux-saga/effects';
 
-import { generateJsonRpcId } from '../utils/jsonrpc';
+import { generateJsonRpcId } from '../../utils/jsonrpc';
 import {
   getIcxBalanceEvent,
   getTokenBalanceEvent,
   getDepositedIcxBalanceEvent,
   getDepositedTokenBalanceEvent,
-} from '../utils/events';
-import AT from '../redux/actionTypes';
+} from '../../utils/events';
+import AT from '../actionTypes';
 
 export const token = state => state.tokens.selectedToken;
 export const iconexRequests = state => state.iconex.jsonRpcIds;
