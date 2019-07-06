@@ -1,19 +1,21 @@
 import { all, fork, put, call, takeLatest } from 'redux-saga/effects';
 
 import AT from '../actionTypes';
+import storage from '../../utils/storage';
 
 export default function*() {
-  yield all([fork(watchResponseAddress), fork(watchResponseEvent)]);
+  yield all([fork(watchAddressResponse), fork(watchEventResponse)]);
 }
 
-function* watchResponseAddress() {
-  yield takeLatest(AT.RESPONSE_ADDRESS, responseAddress);
+function* watchAddressResponse() {
+  yield takeLatest(AT.RESPONSE_ADDRESS, setAddress);
 }
 
-function* responseAddress({ payload }) {
+function* setAddress({ payload }) {
   try {
+    yield storage.set('address', payload);
     yield put({
-      type: AT.GET_ADDRESS_SUCCESS,
+      type: AT.LOAD_ADDRESS_SUCCESS,
       address: payload,
     });
   } catch (e) {
@@ -21,11 +23,11 @@ function* responseAddress({ payload }) {
   }
 }
 
-function* watchResponseEvent() {
-  yield takeLatest(AT.RESPONSE_JSON_RPC, responseEvent);
+function* watchEventResponse() {
+  yield takeLatest(AT.RESPONSE_JSON_RPC, dispatchAction);
 }
 
-function* responseEvent() {
+function* dispatchAction() {
   try {
   } catch (e) {
     console.error(e);

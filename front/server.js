@@ -20,7 +20,6 @@ app.prepare().then(() => {
   server.use(cookieParser(process.env.COOKIE_SECRET));
   server.use(
     session({
-      name: process.env.EXPRESS_SESSION_NAME,
       resave: false,
       saveUninitialized: false,
       secret: process.env.COOKIE_SECRET,
@@ -35,7 +34,6 @@ app.prepare().then(() => {
   server.use(express.urlencoded({ extended: true }));
 
   server.get('/:symbol', (req, res) => {
-    console.log('symbol router session id:', req.sessionID);
     const symbol = req.params.symbol || 'AC3';
     return app.render(req, res, '/index', { symbol });
   });
@@ -44,7 +42,6 @@ app.prepare().then(() => {
     const { pathname } = parse(req.url);
 
     if (pathname === '/') {
-      console.log('* router session id: ', req.sessionID);
       return res.redirect('/AC3');
     }
     return handle(req, res);

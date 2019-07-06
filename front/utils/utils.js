@@ -11,7 +11,7 @@ export const changeState = (type, step, state, target, action) => {
 
 const changeObjectState = (step, state, target, action) => {
   switch (step) {
-    case REDUX_STEP.SUCCESS:
+    case REDUX_STEP.REQUEST:
       return {
         ...state,
         [target]: {
@@ -48,7 +48,7 @@ const changeObjectState = (step, state, target, action) => {
 
 const changeArrayState = (step, state, target, action) => {
   switch (step) {
-    case REDUX_STEP.SUCCESS:
+    case REDUX_STEP.REQUEST:
       return {
         ...state,
         [target]: {

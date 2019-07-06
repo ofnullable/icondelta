@@ -34,7 +34,9 @@ const Home = () => {
   useEffect(() => {
     window.onload = () => {
       if (!address) {
-        requestAddress();
+        dispatch({
+          type: AT.LOAD_ADDRESS_REQUEST,
+        });
       }
     };
   }, [address]);
@@ -42,20 +44,20 @@ const Home = () => {
 };
 
 Home.getInitialProps = async context => {
-  // TODO: Load user balance,
+  const store = context.store;
+
+  store.dispatch({
+    type: AT.LOAD_TOKEN_LIST_REQUEST,
+  });
+
   const token = context.query.symbol;
   const address = context.store.getState().wallet.address;
 
   if (address) {
-    console.log('address returns truthy');
-    context.store.dispatch({
+    store.dispatch({
       type: AT.LOAD_BALANCE_REQUEST,
       address,
       token,
-    });
-  } else {
-    context.store.dispatch({
-      type: AT.LOAD_ADDRESS_REQUEST,
     });
   }
 };

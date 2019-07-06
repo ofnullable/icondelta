@@ -1,11 +1,10 @@
-// import produce from 'immer';
 import AT from '../actionTypes';
 
-const INITIAL_STATE = {
+const initialState = {
   address: '',
 };
 
-export default (state = INITIAL_STATE, action) => {
+export default (state = initialState, action) => {
   switch (action.type) {
     case AT.LOAD_ADDRESS_REQUEST:
       return {
