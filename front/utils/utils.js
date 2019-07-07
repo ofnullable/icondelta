@@ -20,12 +20,11 @@ const changeObjectState = (step, state, target, action) => {
         },
       };
     case REDUX_STEP.SUCCESS: {
-      const { data } = action;
       return {
         ...state,
         [target]: {
           ...state[target],
-          data: data || {},
+          data: action.data || {},
           isProceeding: false,
         },
       };
@@ -57,12 +56,11 @@ const changeArrayState = (step, state, target, action) => {
         },
       };
     case REDUX_STEP.SUCCESS: {
-      const { data } = action;
       return {
         ...state,
         [target]: {
           ...state[target],
-          data: data || [],
+          data: action.data || [],
           isProceeding: false,
         },
       };

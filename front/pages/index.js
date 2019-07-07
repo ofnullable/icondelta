@@ -6,11 +6,9 @@ import AT from '../redux/actionTypes';
 import {
   addIconexEventListner,
   removeIconexEventListner,
-  requestAddress,
 } from '../utils/event';
 
 import '../styles/index.scss';
-import { isServer } from '../utils/const';
 
 const Home = () => {
   const address = useSelector(state => state.wallet.address);
@@ -37,6 +35,12 @@ const Home = () => {
         dispatch({
           type: AT.LOAD_ADDRESS_REQUEST,
         });
+      } else {
+        store.dispatch({
+          type: AT.LOAD_BALANCE_REQUEST,
+          address,
+          token,
+        });
       }
     };
   }, [address]);
@@ -45,21 +49,14 @@ const Home = () => {
 
 Home.getInitialProps = async context => {
   const store = context.store;
+  const symbol = context.query.symbol;
 
   store.dispatch({
     type: AT.LOAD_TOKEN_LIST_REQUEST,
+    symbol,
   });
 
-  const token = context.query.symbol;
-  const address = context.store.getState().wallet.address;
-
-  if (address) {
-    store.dispatch({
-      type: AT.LOAD_BALANCE_REQUEST,
-      address,
-      token,
-    });
-  }
+  return { symbol };
 };
 
 export default Home;

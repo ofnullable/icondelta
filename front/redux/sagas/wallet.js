@@ -1,11 +1,14 @@
 import { all, fork, put, call, takeLatest } from 'redux-saga/effects';
 
 import AT from '../actionTypes';
-import { requestAddress } from '../../utils/event';
+import { requestAddress, loadBalances } from '../../utils/event';
 import storage from '../../utils/storage';
 
 export default function*() {
-  yield all([fork(watchLoadAddressRequest)]);
+  yield all([
+    fork(watchLoadAddressRequest),
+    fork(watchLoadTokenBalanceRequest),
+  ]);
 }
 
 function* watchLoadAddressRequest() {
@@ -22,4 +25,13 @@ function* loadAddress() {
   } else {
     requestAddress();
   }
+}
+
+function* watchLoadTokenBalanceRequest() {
+  yield takeLatest(AT.LOAD_BALANCE_REQUEST, loadTokenBalance);
+}
+
+function* loadTokenBalance({ token, address }) {
+  const eventIds = loadBalances(token, address);
+  console.log(eventIds);
 }

@@ -33,11 +33,12 @@ const iconexEvent = (type, payload) => {
 };
 
 const dispatchEvent = (...events) => {
-  events.map(e => {
-    if (!e instanceof CustomEvent) throw new Error();
-    window.dispatchEvent(e);
-  });
-  return [...events];
+  !isServer &&
+    events.forEach(e => {
+      if (!e instanceof CustomEvent)
+        throw new Error('Can not dispatch event for ', e);
+      window.dispatchEvent(e);
+    });
 };
 
 export const makeEventId = () => {
@@ -52,4 +53,61 @@ export const makeEventId = () => {
 };
 
 export const requestAddress = () =>
-  !isServer && dispatchEvent(iconexEvent('REQUEST_ADDRESS'));
+  dispatchEvent(iconexEvent('REQUEST_ADDRESS'));
+
+const loadIcxBalance = (id, address) =>
+  iconexEvent(
+    REQUEST_JSON_RPC,
+    makeJsonRpcParam(id, GET_ICX_BALANCE, { address })
+  );
+
+const loadDepositedIcxBalance = (id, address) =>
+  iconexEvent(
+    REQUEST_JSON_RPC,
+    makeJsonRpcParam(id, SEND_QUERY, {
+      from: address,
+      to: ICONDELTA_ADDRESS,
+      dataType: 'call',
+      data: {
+        method: BALANCE_OF,
+        params: { _address: address },
+      },
+    })
+  );
+
+const loadTokenBalance = (id, address, tokenAddress) =>
+  iconexEvent(
+    REQUEST_JSON_RPC,
+    makeJsonRpcParam(id, SEND_QUERY, {
+      from: address,
+      to: tokenAddress,
+      dataType: 'call',
+      data: {
+        method: BALANCE_OF,
+        params: { _owner: address },
+      },
+    })
+  );
+
+const loadDepositedTokenBalance = (id, address, tokenAddress) =>
+  iconexEvent(
+    REQUEST_JSON_RPC,
+    makeJsonRpcParam(id, SEND_QUERY, {
+      from: address,
+      to: ICONDELTA_ADDRESS,
+      dataType: 'call',
+      data: {
+        method: TOKEN_BALANCE_OF,
+        params: { _tokenAddress: tokenAddress, _address: address },
+      },
+    })
+  );
+
+export const loadBalances = (token, address) => {
+  return {
+    icxId: makeEventId(),
+    depositedIcxId: makeEventId(),
+    tokenId: makeEventId(),
+    depositedTokenId: makeEventId(),
+  };
+};
