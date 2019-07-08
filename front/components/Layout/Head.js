@@ -32,14 +32,8 @@ const Head = () => (
     <link rel='icon' sizes='192x192' href='/static/touch-icon.png' />
     <link rel='apple-touch-icon' href='/static/touch-icon.png' />
     <link rel='mask-icon' href='/static/favicon-mask.svg' color='#343a40' />
-    <link
-      rel='stylesheet'
-      href='https://fonts.googleapis.com/icon?family=Material+Icons'
-    />
-    <link
-      rel='stylesheet'
-      href='https://unpkg.com/firacode@1.206.0/distr/fira_code.css'
-    />
+    <link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons' />
+    <link rel='stylesheet' href='https://unpkg.com/firacode@1.206.0/distr/fira_code.css' />
 
     {process.env.NODE_ENV === 'production' && (
       <script src='https://polyfill.io/v3/polyfill.min.js?features=es6,es7,es8,es9,NodeList.prototype.forEach&flags=gated' />

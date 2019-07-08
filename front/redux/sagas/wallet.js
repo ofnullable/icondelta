@@ -1,14 +1,14 @@
-import { all, fork, put, call, takeLatest } from 'redux-saga/effects';
+import { all, fork, put, call, takeLatest, select } from 'redux-saga/effects';
 
 import AT from '../actionTypes';
 import { requestAddress, loadBalances } from '../../utils/event';
 import storage from '../../utils/storage';
+import { reverseObject } from '../../utils/utils';
+
+const token = state => state.token.currentToken.data;
 
 export default function*() {
-  yield all([
-    fork(watchLoadAddressRequest),
-    fork(watchLoadTokenBalanceRequest),
-  ]);
+  yield all([fork(watchLoadAddressRequest), fork(watchLoadTokenBalanceRequest)]);
 }
 
 function* watchLoadAddressRequest() {
@@ -22,6 +22,10 @@ function* loadAddress() {
       type: AT.LOAD_ADDRESS_SUCCESS,
       address,
     });
+    yield put({
+      type: AT.LOAD_BALANCE_REQUEST,
+      address,
+    });
   } else {
     requestAddress();
   }
@@ -31,7 +35,12 @@ function* watchLoadTokenBalanceRequest() {
   yield takeLatest(AT.LOAD_BALANCE_REQUEST, loadTokenBalance);
 }
 
-function* loadTokenBalance({ token, address }) {
-  const eventIds = loadBalances(token, address);
-  console.log(eventIds);
+function* loadTokenBalance({ address }) {
+  const currentToken = yield select(token);
+  const eventIds = yield loadBalances(address, currentToken.address);
+
+  yield put({
+    type: AT.JSON_RPC_REQUEST,
+    ids: reverseObject(eventIds),
+  });
 }

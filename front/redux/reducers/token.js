@@ -14,13 +14,7 @@ export default (state = initialState, action) => {
     case AT.LOAD_TOKEN_LIST_SUCCESS:
       return changeState('ARR', REDUX_STEP.SUCCESS, state, 'tokenList', action);
     case AT.CHANGE_TOKEN:
-      return changeState(
-        'OBJ',
-        REDUX_STEP.SUCCESS,
-        state,
-        'currentToken',
-        action.data
-      );
+      return changeState('OBJ', REDUX_STEP.SUCCESS, state, 'currentToken', action);
     default:
       return {
         ...state,

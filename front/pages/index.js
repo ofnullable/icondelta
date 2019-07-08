@@ -1,17 +1,16 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import HomeContainer from '../containers/Home';
+import BalanceContainer from '../containers/Balance';
+import OrderBookContainer from '../containers/OrderBook';
 import AT from '../redux/actionTypes';
-import {
-  addIconexEventListner,
-  removeIconexEventListner,
-} from '../utils/event';
 
 import '../styles/index.scss';
+import { addIconexEventListner, removeIconexEventListner } from '../utils/event';
 
 const Home = () => {
   const address = useSelector(state => state.wallet.address);
+  const currentToken = useSelector(state => state.token.currentToken);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -43,8 +42,14 @@ const Home = () => {
         });
       }
     };
-  }, [address]);
-  return <HomeContainer />;
+  }, [currentToken]);
+
+  return (
+    <>
+      <BalanceContainer />
+      <OrderBookContainer />
+    </>
+  );
 };
 
 Home.getInitialProps = async context => {
@@ -55,8 +60,6 @@ Home.getInitialProps = async context => {
     type: AT.LOAD_TOKEN_LIST_REQUEST,
     symbol,
   });
-
-  return { symbol };
 };
 
 export default Home;

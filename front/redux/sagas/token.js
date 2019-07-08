@@ -24,6 +24,6 @@ function* loadTokens({ symbol }) {
       data: currentToken,
     });
   } catch (e) {
-    console.error(e.response.data);
+    console.error(e.response);
   }
 }
