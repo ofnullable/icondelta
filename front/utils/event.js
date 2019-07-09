@@ -1,38 +1,36 @@
 import AT from '../redux/actionTypes';
-import { isProd } from './const';
+import { isServer, SCORE_ADDRESS } from './const';
 
-const DEFAULT_STEP_LIMIT = '0x550001';
-const VERSION = '0x3';
-const NID = isProd ? '0x1' : '0x3'; // '0x1';
+// event payload - method
+const SEND_QUERY = 'icx_call';
+const GET_ICX_BALANCE = 'icx_getBalance';
+const SEND_TRANSACTION = 'icx_sendTransaction';
 
-const TX_DEFAULT_PARAMETER = {
-  version: VERSION,
-  nid: NID,
-  stepLimit: DEFAULT_STEP_LIMIT,
-  dataType: 'call',
-};
+// event payload - params - data - method
+const BALANCE_OF = 'balanceOf';
+const TOKEN_BALANCE_OF = 'tokenBalanceOf';
 
-const EVENT_HANDLER = e => {
+export const addIconexEventListner = handler =>
+  window.addEventListener(AT.ICONEX_RELAY_RESPONSE, handler, false);
+
+export const removeIconexEventListner = handler =>
+  window.removeEventListener(AT.ICONEX_RELAY_RESPONSE, handler, false);
+
+export const eventHandler = dispatch => e => {
   const { type, payload } = e.detail;
+  console.log('Event handler - type:', type, 'payload:', payload);
   dispatch({
     type,
     payload,
   });
 };
 
-export const addIconexEventListner = () =>
-  window.addEventListener(AT.ICONEX_RELAY_RESPONSE, EVENT_HANDLER);
-
-export const removeIconexEventListner = () =>
-  window.removeEventListener(AT.ICONEX_RELAY_RESPONSE, EVENT_HANDLER);
-
-const ICONEX_EVENT = (type, payload) => {
+const iconexEvent = (type, payload) => {
   if (typeof type === 'object' && !payload) {
     // type이 Object고, 두번째 argument가 없는 경우 type을 지정하지 않았다고 가정한다. 지정하지 않은 경우 JSON-RPC 요청.
     payload = type;
     type = 'REQUEST_JSON-RPC';
   }
-  console.log('Event payload:', payload);
 
   if (window && window.CustomEvent) {
     const detail = { type, payload };
@@ -40,15 +38,15 @@ const ICONEX_EVENT = (type, payload) => {
   }
 };
 
-const DISPATCH_EVENT = (...events) => {
-  events.map(e => {
-    if (!e instanceof CustomEvent) throw new Error();
-    window.dispatchEvent(e);
-  });
-  return [...events];
+const dispatchEvents = (...events) => {
+  !isServer &&
+    events.forEach(e => {
+      if (!e instanceof CustomEvent) throw new Error('Can not dispatch event for ' + e.toString());
+      window.dispatchEvent(e);
+    });
 };
 
-export const makeEventId = () => {
+const makeEventId = () => {
   if (window && window.crypto && window.crypto.getRandomValues && Uint32Array) {
     var o = new Uint32Array(1);
     window.crypto.getRandomValues(o);
@@ -59,5 +57,104 @@ export const makeEventId = () => {
   }
 };
 
-export const requestAddress = () =>
-  DISPATCH_EVENT(ICONEX_EVENT('REQUEST_ADDRESS'));
+const makeEventPayload = ({ id, method, params = {} }) => {
+  return {
+    jsonrpc: '2.0',
+    id,
+    method,
+    params: params,
+  };
+};
+
+export const requestAddress = () => dispatchEvents(iconexEvent('REQUEST_ADDRESS'));
+
+const loadIcxBalance = (id, address) =>
+  iconexEvent(makeEventPayload({ id, method: GET_ICX_BALANCE, params: { address } }));
+
+const loadDepositedIcxBalance = (id, address) =>
+  iconexEvent(
+    makeEventPayload({
+      id,
+      method: SEND_QUERY,
+      params: {
+        from: address,
+        to: SCORE_ADDRESS,
+        dataType: 'call',
+        data: {
+          method: BALANCE_OF,
+          params: { _address: address },
+        },
+      },
+    })
+  );
+
+const loadTokenBalance = (id, address, tokenAddress) =>
+  iconexEvent(
+    makeEventPayload({
+      id,
+      method: SEND_QUERY,
+      params: {
+        from: address,
+        to: tokenAddress,
+        dataType: 'call',
+        data: {
+          method: BALANCE_OF,
+          params: { _owner: address },
+        },
+      },
+    })
+  );
+
+const loadDepositedTokenBalance = (id, address, tokenAddress) =>
+  iconexEvent(
+    makeEventPayload({
+      id,
+      method: SEND_QUERY,
+      params: {
+        from: address,
+        to: SCORE_ADDRESS,
+        dataType: 'call',
+        data: {
+          method: TOKEN_BALANCE_OF,
+          params: { _tokenAddress: tokenAddress, _address: address },
+        },
+      },
+    })
+  );
+
+export const loadBalances = (address, tokenAddress) => {
+  const ids = {
+    [AT.ICX_BALANCE_REQUEST_ID]: makeEventId(),
+    [AT.DEPOSITED_ICX_BALANCE_REQUEST_ID]: makeEventId(),
+    [AT.TOKEN_BALANCE_REQUEST_ID]: makeEventId(),
+    [AT.DEPOSITED_TOKEN_BALANCE_REQUEST_ID]: makeEventId(),
+  };
+
+  dispatchEvents(
+    loadIcxBalance(ids[AT.ICX_BALANCE_REQUEST_ID], address),
+    loadDepositedIcxBalance(ids[AT.DEPOSITED_ICX_BALANCE_REQUEST_ID], address),
+    loadTokenBalance(ids[AT.TOKEN_BALANCE_REQUEST_ID], address, tokenAddress),
+    loadDepositedTokenBalance(ids[AT.DEPOSITED_TOKEN_BALANCE_REQUEST_ID], address, tokenAddress)
+  );
+  return ids;
+};
+
+export const depositIcx = (amount, address) => {
+  const id = makeEventId();
+  return id;
+};
+
+export const withdrawIcx = (amount, address) => {
+  const id = makeEventId();
+  return id;
+};
+
+export const depositToken = (amount, address, tokenAddress) => {
+  const id = makeEventId();
+  return id;
+};
+
+export const withdrawToken = (amount, address, tokenAddress) => {
+  const id = makeEventId();
+  return id;
+};

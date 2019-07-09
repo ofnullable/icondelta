@@ -7,16 +7,14 @@ const withSass = require('@zeit/next-sass');
 
 const config = withBundleAnalyzer({
   webpack: config => {
-    const prod = process.env.NODE_ENV === 'production';
+    const isProd = process.env.NODE_ENV === 'production';
     const plugins = [
       ...config.plugins,
       new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /^\.\/ko$/),
     ];
 
-    if (prod) {
+    if (isProd) {
       plugins.push(new CompressionPlugin()); // main.js.gz
-    } else {
-      // console.log('config:', config);
     }
 
     config.node = {
@@ -25,8 +23,8 @@ const config = withBundleAnalyzer({
 
     return {
       ...config,
-      mode: prod ? 'production' : 'development',
-      devtool: prod ? 'hidden-source-map' : 'eval',
+      mode: isProd ? 'production' : 'development',
+      devtool: isProd ? 'hidden-source-map' : 'eval',
       plugins,
     };
   },

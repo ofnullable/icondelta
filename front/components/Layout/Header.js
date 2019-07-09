@@ -1,27 +1,26 @@
 import React from 'react';
-import Link from 'next/link';
+
+import { header_item } from './style.scss';
 
 const Header = () => (
   <header>
     <ul>
       <li>
-        <Link href='/AC3'>
-          <a>
-            <i className='material-icons'>autorenew</i>
-            <h1>ICONDELTA</h1>
-          </a>
-        </Link>
+        <div className={header_item}>
+          <i className='material-icons'>autorenew</i>
+          <h1>ICONDELTA</h1>
+        </div>
       </li>
-      <ul>
-        <li>
-          <a
-            href='https://www.notion.so/How-to-Guide-5bc85e598dba4cb599b365d0b95f82d4'
-            target='_blank'
-          >
-            How can i use?
-          </a>
-        </li>
-      </ul>
+      <li>
+        <a
+          className={header_item}
+          href='https://www.notion.so/How-to-Guide-5bc85e598dba4cb599b365d0b95f82d4'
+          target='_blank'
+        >
+          <i className='material-icons'>help_outline</i>
+          How can i use?
+        </a>
+      </li>
     </ul>
   </header>
 );

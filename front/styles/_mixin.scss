@@ -18,3 +18,11 @@
     transform: rotate(359deg);
   }
 }
+
+@mixin transition($attribute) {
+  -webkit-transition: $attribute;
+  -moz-transition: $attribute;
+  -ms-transition: $attribute;
+  -o-transition: $attribute;
+  transition: $attribute;
+}

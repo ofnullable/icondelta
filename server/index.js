@@ -2,14 +2,14 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const expressSession = require('express-session');
+const session = require('express-session');
 const hpp = require('hpp');
 const helmet = require('helmet');
 
 require('dotenv').config();
 
 // routers
-const address = require('./routes/address');
+const token = require('./routes/tokens');
 
 const app = express();
 const prod = process.env.NODE_ENV === 'production';
@@ -36,10 +36,10 @@ if (prod) {
 
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(
-  expressSession({
+  session({
     name: process.env.EXPRESS_SESSION_NAME,
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     secret: process.env.COOKIE_SECRET,
     cookie: {
       httpOnly: true,
@@ -53,7 +53,7 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/api/address', address);
+app.use('/api/tokens', token);
 
 app.listen(8000, () => {
   console.log('Server is running on localhost:8000');

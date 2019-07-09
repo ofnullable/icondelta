@@ -1,17 +1,8 @@
 import { REDUX_STEP } from './const';
 
-export const changeState = (type, step, state, target, action) => {
-  switch (type) {
-    case 'ARR':
-      return changeArrayState(step, state, target, action);
-    case 'OBJ':
-      return changeObjectState(step, state, target, action);
-  }
-};
-
 const changeObjectState = (step, state, target, action) => {
   switch (step) {
-    case REDUX_STEP.SUCCESS:
+    case REDUX_STEP.REQUEST:
       return {
         ...state,
         [target]: {
@@ -20,12 +11,11 @@ const changeObjectState = (step, state, target, action) => {
         },
       };
     case REDUX_STEP.SUCCESS: {
-      const { data } = action;
       return {
         ...state,
         [target]: {
           ...state[target],
-          data: data || {},
+          data: action.data || {},
           isProceeding: false,
         },
       };
@@ -48,7 +38,7 @@ const changeObjectState = (step, state, target, action) => {
 
 const changeArrayState = (step, state, target, action) => {
   switch (step) {
-    case REDUX_STEP.SUCCESS:
+    case REDUX_STEP.REQUEST:
       return {
         ...state,
         [target]: {
@@ -57,12 +47,11 @@ const changeArrayState = (step, state, target, action) => {
         },
       };
     case REDUX_STEP.SUCCESS: {
-      const { data } = action;
       return {
         ...state,
         [target]: {
           ...state[target],
-          data: data || [],
+          data: action.data || [],
           isProceeding: false,
         },
       };
@@ -81,4 +70,19 @@ const changeArrayState = (step, state, target, action) => {
     default:
       return state;
   }
+};
+
+export const changeState = (type, step, state, target, action) => {
+  switch (type) {
+    case 'ARR':
+      return changeArrayState(step, state, target, action);
+    case 'OBJ':
+      return changeObjectState(step, state, target, action);
+  }
+};
+
+export const reverseObject = obj => {
+  const result = {};
+  Object.keys(obj).forEach(k => (result[obj[k]] = k));
+  return result;
 };

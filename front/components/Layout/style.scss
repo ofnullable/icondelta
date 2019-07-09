@@ -1,38 +1,44 @@
 @import '../../styles/_variables.scss';
-@import '../../styles/mixin.scss';
+@import '../../styles/_mixin.scss';
 
 header {
   text-align: center;
   overflow: hidden;
-  & a {
-    color: inherit;
-    vertical-align: text-bottom;
-    text-decoration: none;
-    font-size: 13px;
-    & > h1 {
-      margin: 0;
-      display: inline-block;
-      vertical-align: middle;
-    }
-    & > i {
-      -webkit-animation: spin 1s infinite linear;
-      animation: spin 1s infinite linear;
-      color: $c-blue;
-      margin-right: 0.2em;
-      vertical-align: middle;
-      font-size: 2.5em !important;
-    }
-  }
   & ul {
+    list-style: none;
     padding: 0 16px;
     display: flex;
     justify-content: space-between;
-    & li {
-      display: inline-block;
-      vertical-align: middle;
-      padding: 6px;
-    }
   }
+}
+.header_item {
+  @include transition(all 0.3s ease);
+  height: 100%;
+  display: flex;
+  padding: 5px 15px;
+  align-items: center;
+  color: inherit;
+  font-size: 13px;
+  text-decoration: none;
+  & > h1 {
+    margin: 0;
+    font-size: 1.7em;
+  }
+  & > i {
+    margin-right: 0.2em;
+    font-size: 16px !important;
+  }
+}
+div.header_item {
+  & > i {
+    -webkit-animation: spin 1s infinite linear;
+    animation: spin 1s infinite linear;
+    color: $blue;
+    font-size: 2.5em !important;
+  }
+}
+a.header_item:hover {
+  background-color: $background-light;
 }
 main {
   width: 90%;

@@ -1,15 +1,38 @@
+@import '_mixin.scss';
 @import '_variables.scss';
 @import '_nomalize.scss';
+
 html,
 body {
   height: 100%;
+  font-size: 14px;
 }
 
 body {
   margin: 0;
   padding: 0;
   border: none;
-  color: $c-white;
+  color: $white;
   font-family: $font-family;
-  background-color: $c-background;
+  background-color: $window-background;
+}
+
+input {
+  display: inline-block;
+  line-height: 1.5;
+  padding: 3px 10px;
+  border-radius: 4px;
+  border: 1px solid $border-color;
+}
+
+button {
+  @include transition(all 0.3s ease);
+  cursor: pointer;
+  display: inline-block;
+  color: inherit;
+  line-height: 1.5;
+  padding: 3px 15px;
+  border: 1px solid;
+  border-radius: 4px;
+  text-align: center;
 }
