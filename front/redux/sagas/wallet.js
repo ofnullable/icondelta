@@ -5,8 +5,9 @@ import {
   requestAddress,
   loadBalances,
   depositIcx,
-  withdrawToken,
   withdrawIcx,
+  depositToken,
+  withdrawToken,
 } from '../../utils/event';
 import storage from '../../utils/storage';
 import { reverseObject } from '../../utils/utils';
@@ -16,7 +17,7 @@ const getToken = state => state.token.currentToken.data;
 
 const getDetails = function*() {
   return {
-    address: yield select(getAddress),
+    address: yield select(getAddress) || storage.get('address'),
     token: yield select(getToken),
   };
 };

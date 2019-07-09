@@ -7,11 +7,15 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case AT.JSON_RPC_REQUEST:
-      const idArray = Object.keys(action.ids);
       return {
         requestIds: {
           ...action.ids,
         },
+      };
+    case AT.RESPONSE_COMPLETE:
+      delete state.requestIds[action.id];
+      return {
+        ...state,
       };
     default:
       return {

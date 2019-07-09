@@ -41,10 +41,7 @@ export const iconexEvent = (type, payload) => {
 export const getAddressEvent = () => iconexEvent(REQUEST_ADDRESS);
 
 export const getIcxBalanceEvent = (id, address) =>
-  iconexEvent(
-    REQUEST_JSON_RPC,
-    makeJsonRpcParam(id, GET_ICX_BALANCE, { address })
-  );
+  iconexEvent(REQUEST_JSON_RPC, makeJsonRpcParam(id, GET_ICX_BALANCE, { address }));
 
 export const getDepositedIcxBalanceEvent = (id, address) =>
   iconexEvent(
@@ -170,14 +167,7 @@ export const withdrawTokenEvent = (id, address, tokenAddress, amount) =>
     })
   );
 
-export const sendOrderEvent = (
-  id,
-  address,
-  tokenGet,
-  getAmount,
-  tokenGive,
-  giveAmount
-) =>
+export const sendOrderEvent = (id, address, tokenGet, getAmount, tokenGive, giveAmount) =>
   iconexEvent(
     REQUEST_JSON_RPC,
     makeJsonRpcParam(id, SEND_TRANSACTION, {

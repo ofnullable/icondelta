@@ -5,30 +5,30 @@ import AT from '../../redux/actionTypes';
 
 import { wrapper, primary, danger } from './BalanceInput.scss';
 import { toNumber } from '../../utils/formatter';
+import storage from '../../utils/storage';
 
 const BalanceForm = ({ type, token }) => {
   const [amount, setAmount] = useState('');
   const [name] = useState(token ? token.symbol : 'ICX');
 
-  const address = useSelector(state => state.wallet.address);
+  const address = useSelector(state => state.wallet.address || storage.get('address'));
   const dispatch = useDispatch();
 
   const handleInputChange = e => {
-    const parsed = toNumber(e.target.value);
-    if (isNaN(parsed)) {
-      alert('Only numbers can be enterd.');
-      return;
-    }
-    setAmount(parsed);
+    setAmount(e.target.value);
   };
 
   const handleSubmit = ({ keyCode }) => {
     if (!amount) {
       return;
     }
+    if (!/[0-9]*\.?[0-9]+/.test(amount)) {
+      alert('Only numbers can be enterd.');
+      return;
+    }
     if (!keyCode || (keyCode && keyCode === 13)) {
       const params = {
-        amount,
+        amount: Number(amount),
         address,
       };
       if (type === 'Deposit') {

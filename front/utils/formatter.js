@@ -32,13 +32,13 @@ export const toNumber = value => {
 };
 
 export const toHexString = value => {
-  const parsed = Number(value);
+  const parsed = new BigNumber(value);
   if (isNaN(parsed)) return '0x0';
   return `0x${parsed.toString(16)}`;
 };
 
 export const toLoop = val => {
-  const parts = val.toString().split('.');
+  return toHexString(val * 10 ** 18);
 };
 
 export const toIcx = (value, round = 9) => {

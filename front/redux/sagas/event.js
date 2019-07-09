@@ -33,7 +33,7 @@ function* watchEventResponse() {
 function* dispatchAction({ payload }) {
   try {
     const ids = yield select(getRequestIds);
-    // const currentToken = yield select(getCurrentToken);
+    // const token = yield select(getCurrentToken);
 
     console.log('Response for', ids[payload.id]);
 
@@ -44,28 +44,28 @@ function* dispatchAction({ payload }) {
           type: AT.LOAD_ICX_BALANCE_SUCCESS,
           balance: payload.result,
         });
-        return;
       case AT.DEPOSITED_ICX_BALANCE_REQUEST_ID:
         yield put({
           type: AT.LOAD_DEPOSITED_ICX_BALANCE_SUCCESS,
           balance: payload.result,
         });
-        return;
       case AT.TOKEN_BALANCE_REQUEST_ID:
         yield put({
           type: AT.LOAD_TOKEN_BALANCE_SUCCESS,
           balance: payload.result,
         });
-        return;
       case AT.DEPOSITED_TOKEN_BALANCE_REQUEST_ID:
         yield put({
           type: AT.LOAD_DEPOSITED_TOKEN_BALANCE_SUCCESS,
           balance: payload.result,
         });
-        return;
 
       // response for deposit, withdraw
       default:
+        yield put({
+          type: AT.RESPONSE_COMPLETE,
+          id: payload.id,
+        });
         return;
     }
   } catch (e) {

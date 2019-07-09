@@ -1,5 +1,6 @@
 import AT from '../redux/actionTypes';
-import { isServer, SCORE_ADDRESS } from './const';
+import { SCORE_ADDRESS } from './const';
+import { toLoop } from './formatter';
 
 // event payload - method
 const SEND_QUERY = 'icx_call';
@@ -11,10 +12,10 @@ const BALANCE_OF = 'balanceOf';
 const TOKEN_BALANCE_OF = 'tokenBalanceOf';
 
 export const addIconexEventListner = handler =>
-  window.addEventListener(AT.ICONEX_RELAY_RESPONSE, handler, false);
+  window.addEventListener(AT.ICONEX_RELAY_RESPONSE, handler);
 
 export const removeIconexEventListner = handler =>
-  window.removeEventListener(AT.ICONEX_RELAY_RESPONSE, handler, false);
+  window.removeEventListener(AT.ICONEX_RELAY_RESPONSE, handler);
 
 export const eventHandler = dispatch => e => {
   const { type, payload } = e.detail;
@@ -39,11 +40,10 @@ const iconexEvent = (type, payload) => {
 };
 
 const dispatchEvents = (...events) => {
-  !isServer &&
-    events.forEach(e => {
-      if (!e instanceof CustomEvent) throw new Error('Can not dispatch event for ' + e.toString());
-      window.dispatchEvent(e);
-    });
+  events.forEach(e => {
+    if (!e instanceof CustomEvent) throw new Error('Can not dispatch event for ' + e.toString());
+    window.dispatchEvent(e);
+  });
 };
 
 const makeEventId = () => {
@@ -58,6 +58,7 @@ const makeEventId = () => {
 };
 
 const makeEventPayload = ({ id, method, params = {} }) => {
+  console.log(params);
   return {
     jsonrpc: '2.0',
     id,
@@ -65,8 +66,6 @@ const makeEventPayload = ({ id, method, params = {} }) => {
     params: params,
   };
 };
-
-export const requestAddress = () => dispatchEvents(iconexEvent('REQUEST_ADDRESS'));
 
 const loadIcxBalance = (id, address) =>
   iconexEvent(makeEventPayload({ id, method: GET_ICX_BALANCE, params: { address } }));
@@ -122,6 +121,68 @@ const loadDepositedTokenBalance = (id, address, tokenAddress) =>
     })
   );
 
+const depositIcxEvent = (id, amount, address) =>
+  iconexEvent(
+    makeEventPayload({
+      id,
+      method: SEND_TRANSACTION,
+      params: {
+        from: address,
+        to: SCORE_ADDRESS,
+        value: toLoop(amount),
+        timestamp: `0x${(new Date().getTime() * 1000).toString(16)}`,
+        data: { method: 'deposit' },
+      },
+    })
+  );
+
+const withdrawIcxEvent = (id, amount, address) =>
+  iconexEvent(
+    makeEventPayload({
+      id,
+      method: SEND_TRANSACTION,
+      params: {
+        from: address,
+        to: SCORE_ADDRESS,
+        timestamp: `0x${(new Date().getTime() * 1000).toString(16)}`,
+        data: { method: 'withdraw', params: { _amount: toLoop(amount) } },
+      },
+    })
+  );
+
+const depostiTokenEvent = (id, amount, address, tokenAddress) =>
+  iconexEvent(
+    makeEventPayload({
+      id,
+      method: SEND_TRANSACTION,
+      params: {
+        from: address,
+        to: tokenAddress,
+        timestamp: `0x${(new Date().getTime() * 1000).toString(16)}`,
+        data: { method: 'transfer', params: { _to: SCORE_ADDRESS, _amount: toLoop(amount) } },
+      },
+    })
+  );
+
+const withdrawTokenEvent = (id, amount, address, tokenAddress) =>
+  iconexEvent(
+    makeEventPayload({
+      id,
+      method: SEND_TRANSACTION,
+      params: {
+        from: address,
+        to: SCORE_ADDRESS,
+        timestamp: `0x${(new Date().getTime() * 1000).toString(16)}`,
+        data: {
+          method: 'withdrawToken',
+          params: { _tokenAddress: tokenAddress, _amount: toLoop(amount) },
+        },
+      },
+    })
+  );
+
+export const requestAddress = () => dispatchEvents(iconexEvent('REQUEST_ADDRESS'));
+
 export const loadBalances = (address, tokenAddress) => {
   const ids = {
     [AT.ICX_BALANCE_REQUEST_ID]: makeEventId(),
@@ -141,20 +202,24 @@ export const loadBalances = (address, tokenAddress) => {
 
 export const depositIcx = (amount, address) => {
   const id = makeEventId();
+  dispatchEvents(depositIcxEvent(id, amount, address));
   return id;
 };
 
 export const withdrawIcx = (amount, address) => {
   const id = makeEventId();
+  dispatchEvents(withdrawIcxEvent(id, amount, address));
   return id;
 };
 
 export const depositToken = (amount, address, tokenAddress) => {
   const id = makeEventId();
+  dispatchEvents(depostiTokenEvent(id, amount, address, tokenAddress));
   return id;
 };
 
 export const withdrawToken = (amount, address, tokenAddress) => {
   const id = makeEventId();
+  dispatchEvents(withdrawTokenEvent(id, amount, address, tokenAddress));
   return id;
 };

@@ -4,22 +4,23 @@ import { useSelector, useDispatch } from 'react-redux';
 import BalanceContainer from '../containers/Balance';
 import OrderBookContainer from '../containers/OrderBook';
 import AT from '../redux/actionTypes';
-
-import '../styles/index.scss';
+import storage from '../utils/storage';
 import { addIconexEventListner, removeIconexEventListner, eventHandler } from '../utils/event';
 
+import '../styles/index.scss';
+
 const Home = () => {
-  const address = useSelector(state => state.wallet.address);
-  const currentToken = useSelector(state => state.token.currentToken);
+  const address = useSelector(state => state.wallet.address || storage.get('address'));
+  const token = useSelector(state => state.token.currentToken.data);
   const dispatch = useDispatch();
 
   useEffect(() => {
     addIconexEventListner(eventHandler(dispatch));
-    return () => removeIconexEventListner(eventHandler(dispatch));
+    return () => removeIconexEventListner();
   }, []);
 
   useEffect(() => {
-    window.onload = async () => {
+    window.onload = () => {
       if (address) {
         dispatch({
           type: AT.LOAD_BALANCE_REQUEST,
@@ -31,7 +32,7 @@ const Home = () => {
         });
       }
     };
-  }, [currentToken]);
+  }, [token]);
 
   return (
     <>
