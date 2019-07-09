@@ -18,10 +18,7 @@ function dispatchGetIcxBalance(address) {
   const networkIcxEvent = getIcxBalanceEvent(networkIcxId, address);
 
   const depositedIcxId = generateJsonRpcId();
-  const depositedIcxEvent = getDepositedIcxBalanceEvent(
-    depositedIcxId,
-    address
-  );
+  const depositedIcxEvent = getDepositedIcxBalanceEvent(depositedIcxId, address);
 
   window.dispatchEvent(networkIcxEvent);
   window.dispatchEvent(depositedIcxEvent);
@@ -30,11 +27,7 @@ function dispatchGetIcxBalance(address) {
 
 function dispatchGetTokenBalance(address, tokenAddress) {
   const networkTokenId = generateJsonRpcId();
-  const networkTokenEvent = getTokenBalanceEvent(
-    networkTokenId,
-    address,
-    tokenAddress
-  );
+  const networkTokenEvent = getTokenBalanceEvent(networkTokenId, address, tokenAddress);
 
   const depositedTokenId = generateJsonRpcId();
   const depositedTokenEvent = getDepositedTokenBalanceEvent(
@@ -166,9 +159,5 @@ function* watchJsonRpcResponse() {
 }
 
 export default function*() {
-  yield all([
-    fork(watchResponseAddress),
-    fork(watchChangeToken),
-    fork(watchJsonRpcResponse),
-  ]);
+  yield all([fork(watchResponseAddress), fork(watchChangeToken), fork(watchJsonRpcResponse)]);
 }

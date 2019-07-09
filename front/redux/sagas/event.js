@@ -3,7 +3,8 @@ import { all, fork, put, call, takeLatest, select } from 'redux-saga/effects';
 import AT from '../actionTypes';
 import storage from '../../utils/storage';
 
-const requestIds = state => state.event.requestIds;
+const getRequestIds = state => state.event.requestIds;
+const getCurrentToken = state => state.token.currentToken.data;
 
 export default function*() {
   yield all([fork(watchAddressResponse), fork(watchEventResponse)]);
@@ -31,10 +32,39 @@ function* watchEventResponse() {
 
 function* dispatchAction({ payload }) {
   try {
-    const ids = yield select(requestIds);
+    const ids = yield select(getRequestIds);
+    // const currentToken = yield select(getCurrentToken);
+
+    console.log('Response for', ids[payload.id]);
+
     switch (ids[payload.id]) {
-      case AT.ICX_BALANCE_REQUEST_ID: {
-      }
+      // response for get balance requests
+      case AT.ICX_BALANCE_REQUEST_ID:
+        yield put({
+          type: AT.LOAD_ICX_BALANCE_SUCCESS,
+          balance: payload.result,
+        });
+        return;
+      case AT.DEPOSITED_ICX_BALANCE_REQUEST_ID:
+        yield put({
+          type: AT.LOAD_DEPOSITED_ICX_BALANCE_SUCCESS,
+          balance: payload.result,
+        });
+        return;
+      case AT.TOKEN_BALANCE_REQUEST_ID:
+        yield put({
+          type: AT.LOAD_TOKEN_BALANCE_SUCCESS,
+          balance: payload.result,
+        });
+        return;
+      case AT.DEPOSITED_TOKEN_BALANCE_REQUEST_ID:
+        yield put({
+          type: AT.LOAD_DEPOSITED_TOKEN_BALANCE_SUCCESS,
+          balance: payload.result,
+        });
+        return;
+
+      // response for deposit, withdraw
       default:
         return;
     }

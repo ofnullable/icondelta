@@ -1,31 +1,50 @@
 import BigNumber from 'bignumber.js';
 
-const WITH_COMMAS = i => {
-  if (!i) return 0;
+const withComma = value => {
+  if (!value) return 0;
 
-  let parts = i.split('.');
+  let parts = value.split('.');
   parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   return parts.join('.');
 };
 
-export const toStringWithCommas = (i, round) => {
-  if (!i) return '0';
+export const toStringWithCommas = (value, round) => {
+  if (!value) return '0';
 
-  if (typeof i === 'string') {
-    i = i.replace(/,/g, '');
+  if (typeof value === 'string') {
+    value = value.replace(/,/g, '');
   }
-  if (round >= 0) {
-    i = new BigNumber(i).toFixed(round);
+  if (round && round >= 0) {
+    value = new BigNumber(value).toFixed(round);
   } else {
-    i = new BigNumber(i).toFixed(9);
+    value = new BigNumber(value).toFixed(9);
   }
 
-  return WITH_COMMAS(i);
+  return withComma(value);
 };
 
-export const toNumber = str => {
-  if (!str) return 0;
-  return Number(str.replace(/,/gi, ''));
+export const toNumber = value => {
+  if (!value) return 0;
+  if (typeof value === 'string') {
+    value = value.replace(/,/gi, '');
+  }
+  return new BigNumber(value).toNumber();
 };
 
-export const toHexString = value => value;
+export const toHexString = value => {
+  const parsed = Number(value);
+  if (isNaN(parsed)) return '0x0';
+  return `0x${parsed.toString(16)}`;
+};
+
+export const toLoop = val => {
+  const parts = val.toString().split('.');
+};
+
+export const toIcx = (value, round = 9) => {
+  if (!value) return 0;
+  if (typeof value === 'string') {
+    value = toNumber(value);
+  }
+  return new BigNumber(value).dividedBy(10 ** 18).toFixed(round);
+};

@@ -1,11 +1,15 @@
 @import '~open-color/open-color';
+@import './_mixin.scss';
 
-$c-background: $oc-gray-8;
-$c-white: $oc-gray-1;
-$c-blue: $oc-blue-5;
-$c-primary: $oc-green-5;
-$c-secondery: $oc-yellow-3;
-$c-danger: $oc-red-6;
+$window-background: $oc-gray-9;
+$background: $oc-gray-8;
+$background-light: $oc-gray-7;
+$border-color: $oc-gray-5;
+$white: $oc-gray-1;
+$blue: $oc-blue-5;
+$primary: $oc-green-4;
+$secondery: $oc-yellow-3;
+$danger: $oc-red-6;
 
-$font-family: 'Fira Code', -apple-system, BlinkMacSystemFont, Avenir Next,
-  Avenir, Helvetica, sans-serif;
+$font-family: 'Fira Code', -apple-system, BlinkMacSystemFont, Avenir Next, Avenir, Helvetica,
+  sans-serif;

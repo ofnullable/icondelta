@@ -6,7 +6,7 @@ import OrderBookContainer from '../containers/OrderBook';
 import AT from '../redux/actionTypes';
 
 import '../styles/index.scss';
-import { addIconexEventListner, removeIconexEventListner } from '../utils/event';
+import { addIconexEventListner, removeIconexEventListner, eventHandler } from '../utils/event';
 
 const Home = () => {
   const address = useSelector(state => state.wallet.address);
@@ -14,31 +14,20 @@ const Home = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const handler = e => {
-      const { type, payload } = e.detail;
-      console.log(type, payload);
-      dispatch({
-        type,
-        payload,
-      });
-    };
-
-    addIconexEventListner(handler);
-
-    return () => removeIconexEventListner();
+    addIconexEventListner(eventHandler(dispatch));
+    return () => removeIconexEventListner(eventHandler(dispatch));
   }, []);
 
   useEffect(() => {
-    window.onload = () => {
-      if (!address) {
+    window.onload = async () => {
+      if (address) {
         dispatch({
-          type: AT.LOAD_ADDRESS_REQUEST,
-        });
-      } else {
-        store.dispatch({
           type: AT.LOAD_BALANCE_REQUEST,
           address,
-          token,
+        });
+      } else {
+        dispatch({
+          type: AT.LOAD_ADDRESS_REQUEST,
         });
       }
     };

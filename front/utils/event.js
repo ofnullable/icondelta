@@ -11,12 +11,12 @@ const BALANCE_OF = 'balanceOf';
 const TOKEN_BALANCE_OF = 'tokenBalanceOf';
 
 export const addIconexEventListner = handler =>
-  window.addEventListener(AT.ICONEX_RELAY_RESPONSE, handler);
+  window.addEventListener(AT.ICONEX_RELAY_RESPONSE, handler, false);
 
 export const removeIconexEventListner = handler =>
-  window.removeEventListener(AT.ICONEX_RELAY_RESPONSE, handler);
+  window.removeEventListener(AT.ICONEX_RELAY_RESPONSE, handler, false);
 
-export const eventHandler = e => {
+export const eventHandler = dispatch => e => {
   const { type, payload } = e.detail;
   console.log('Event handler - type:', type, 'payload:', payload);
   dispatch({
@@ -57,12 +57,12 @@ const makeEventId = () => {
   }
 };
 
-const makeEventPayload = ({ id, method, params }) => {
+const makeEventPayload = ({ id, method, params = {} }) => {
   return {
     jsonrpc: '2.0',
     id,
     method,
-    params: params || null,
+    params: params,
   };
 };
 
@@ -133,9 +133,28 @@ export const loadBalances = (address, tokenAddress) => {
   dispatchEvents(
     loadIcxBalance(ids[AT.ICX_BALANCE_REQUEST_ID], address),
     loadDepositedIcxBalance(ids[AT.DEPOSITED_ICX_BALANCE_REQUEST_ID], address),
-    loadTokenBalance([AT.TOKEN_BALANCE_REQUEST_ID], address, tokenAddress),
+    loadTokenBalance(ids[AT.TOKEN_BALANCE_REQUEST_ID], address, tokenAddress),
     loadDepositedTokenBalance(ids[AT.DEPOSITED_TOKEN_BALANCE_REQUEST_ID], address, tokenAddress)
   );
-
   return ids;
+};
+
+export const depositIcx = (amount, address) => {
+  const id = makeEventId();
+  return id;
+};
+
+export const withdrawIcx = (amount, address) => {
+  const id = makeEventId();
+  return id;
+};
+
+export const depositToken = (amount, address, tokenAddress) => {
+  const id = makeEventId();
+  return id;
+};
+
+export const withdrawToken = (amount, address, tokenAddress) => {
+  const id = makeEventId();
+  return id;
 };
