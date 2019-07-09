@@ -10,7 +10,7 @@ import { addIconexEventListner, removeIconexEventListner, eventHandler } from '.
 import '../styles/index.scss';
 
 const Home = () => {
-  const address = useSelector(state => state.wallet.address || storage.get('address'));
+  const address = useSelector(state => state.wallet.address);
   const token = useSelector(state => state.token.currentToken.data);
   const dispatch = useDispatch();
 

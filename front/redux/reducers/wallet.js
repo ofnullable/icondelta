@@ -1,10 +1,11 @@
 import BigNumber from 'bignumber.js';
 
 import AT from '../actionTypes';
+import storage from '../../utils/storage';
 import { toIcx } from '../../utils/formatter';
 
 const initialState = {
-  address: '',
+  address: storage.get('address'),
 
   deposited: {
     icx: 0,

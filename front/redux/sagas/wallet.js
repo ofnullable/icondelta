@@ -17,7 +17,7 @@ const getToken = state => state.token.currentToken.data;
 
 const getDetails = function*() {
   return {
-    address: yield select(getAddress) || storage.get('address'),
+    address: yield select(getAddress),
     token: yield select(getToken),
   };
 };

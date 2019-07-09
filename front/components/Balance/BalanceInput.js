@@ -11,7 +11,7 @@ const BalanceForm = ({ type, token }) => {
   const [amount, setAmount] = useState('');
   const [name] = useState(token ? token.symbol : 'ICX');
 
-  const address = useSelector(state => state.wallet.address || storage.get('address'));
+  const address = useSelector(state => state.wallet.address);
   const dispatch = useDispatch();
 
   const handleInputChange = e => {
