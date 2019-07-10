@@ -1,0 +1,13 @@
+@import 'styles/_variables.scss';
+
+.wrapper {
+  //   float: right;
+  //   width: 24%;
+  //   height: 100%;
+  //   margin-left: 1%;
+  grid-column: 4;
+  grid-row: 1 / -1;
+  padding: 15px;
+  border-radius: 2px;
+  background-color: $background;
+}

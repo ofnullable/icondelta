@@ -1,12 +1,11 @@
 @import 'styles/_variables.scss';
 
 .wrapper {
-  // float: left;
-  // width: 50%;
-  // height: 59%;
-  // margin-bottom: 1%;
-  grid-column: 2 / 4;
-  grid-row: 1 / 12;
+  //   float: left;
+  //   width: 24%;
+  //   margin-right: 1%;
+  grid-column: 1;
+  grid-row: 10 / -1;
   padding: 15px;
   border-radius: 2px;
   background-color: $background;

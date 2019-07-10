@@ -7,9 +7,9 @@ const UserBalance = ({ token, deposited, undeposited }) => {
     <table className={wrapper}>
       <thead>
         <tr>
-          <th width='30%'>name</th>
-          <th width='35%'>wallet</th>
-          <th width='35%'>score</th>
+          <th width='20%'>name</th>
+          <th width='40%'>wallet</th>
+          <th width='40%'>score</th>
         </tr>
       </thead>
       <tbody>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import BalanceInput from './BalanceInput';
 
-import { active } from './index.scss';
+import { wrapper, active } from './index.scss';
 
 const Balance = ({ address, token }) => {
   const [type, setType] = useState('Deposit');
@@ -12,7 +12,7 @@ const Balance = ({ address, token }) => {
   };
 
   return (
-    <div>
+    <div className={wrapper}>
       <menu className={type === 'Deposit' ? active : ''} onClick={handleMenuClick}>
         Deposit
       </menu>

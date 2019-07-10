@@ -1,9 +1,13 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import AT from '../redux/actionTypes';
 import Balance from '../components/Balance';
 import OrderList from '../components/OrderList';
+import TokenList from '../components/TokenList';
+import TradeForm from '../components/TradeForm';
+import History from '../components/History';
+
+import AT from '../redux/actionTypes';
 import { addIconexEventListner, removeIconexEventListner, eventHandler } from '../utils/event';
 
 import '../styles/index.scss';
@@ -37,9 +41,9 @@ const Home = () => {
     <>
       <Balance />
       <OrderList />
-      <div>tokenList</div>
-      <div>tradeForm</div>
-      <div>history</div>
+      <TokenList />
+      <TradeForm />
+      <History />
     </>
   );
 };

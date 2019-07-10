@@ -1,6 +1,9 @@
 @import 'styles/_variables.scss';
 
 .wrapper {
+  & p {
+    margin: 10px;
+  }
   & input {
     width: 65%;
     margin-right: 5%;
