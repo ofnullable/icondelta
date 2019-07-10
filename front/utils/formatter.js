@@ -41,21 +41,28 @@ export const toNumber = value => {
 };
 
 export const toHexString = value => {
-  const parsed = new BigNumber(value);
-  if (isNaN(parsed)) return '0x0';
-  return `0x${parsed.toString(16)}`;
+  if (!isBigNumber(value)) {
+    value = toBigNumber(value);
+  }
+  if (isNaN(value)) throw new Error('Can not convert hex string');
+  return `0x${value.toString(16)}`;
 };
 
 export const toLoop = value => {
-  return toBigNumber(value)
-    .times(10 ** 18)
-    .toNumber();
+  return toHexString(toBigNumber(value).times(10 ** 18));
 };
 
 export const toIcx = (value, round = 9) => {
   if (!value) return 0;
-  return toBigNumber(value)
+
+  const parsed = toBigNumber(value)
     .dividedBy(10 ** 18)
-    .toNumber();
-  // .toFixed(round);
+    .toString(10);
+
+  const parts = parsed.split('.');
+  if (parts[1] && parts[1].length > 9) {
+    return toBigNumber(parsed).toFixed(round);
+  }
+
+  return parsed.toString(10);
 };

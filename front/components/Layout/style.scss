@@ -2,11 +2,13 @@
 @import '../../styles/_mixin.scss';
 
 header {
+  height: 8%;
   text-align: center;
   overflow: hidden;
   & ul {
+    margin: 0;
+    padding: 16px;
     list-style: none;
-    padding: 0 16px;
     display: flex;
     justify-content: space-between;
   }
@@ -41,6 +43,7 @@ a.header_item:hover {
   background-color: $background-light;
 }
 main {
+  height: 84%;
   width: 90%;
   margin: 0 auto;
   &:after {
@@ -51,6 +54,7 @@ main {
 }
 footer {
   color: #fff;
+  height: 8%;
   text-align: center;
   padding: 15px 25px;
 }

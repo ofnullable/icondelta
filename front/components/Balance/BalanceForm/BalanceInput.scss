@@ -25,7 +25,7 @@
   border-color: $danger;
   &:active,
   &:hover {
-    background-color: darken($primary, 20%);
-    border-color: darken($primary, 20%);
+    background-color: darken($danger, 20%);
+    border-color: darken($danger, 20%);
   }
 }

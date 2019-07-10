@@ -37,6 +37,9 @@ const Home = () => {
     <>
       <Balance />
       <OrderList />
+      <div>tokenList</div>
+      <div>tradeForm</div>
+      <div>history</div>
     </>
   );
 };
@@ -47,6 +50,10 @@ Home.getInitialProps = async context => {
 
   store.dispatch({
     type: AT.LOAD_TOKEN_LIST_REQUEST,
+    symbol,
+  });
+  store.dispatch({
+    type: AT.LOAD_ORDER_LIST_REQUEST,
     symbol,
   });
 };

@@ -10,6 +10,7 @@ require('dotenv').config();
 
 // routers
 const token = require('./routes/tokens');
+const order = require('./routes/orders');
 
 const app = express();
 const prod = process.env.NODE_ENV === 'production';
@@ -54,6 +55,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/tokens', token);
+app.use('/api/orders', order);
 
 app.listen(8000, () => {
   console.log('Server is running on localhost:8000');
