@@ -9,7 +9,7 @@ export default (state = initialState, action) => {
     case AT.JSON_RPC_REQUEST:
       return {
         requestIds: {
-          ...action.ids,
+          ...action.id,
         },
       };
     case AT.RESPONSE_COMPLETE:

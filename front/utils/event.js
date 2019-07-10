@@ -121,10 +121,10 @@ const loadDepositedTokenBalance = (id, address, tokenAddress) =>
     })
   );
 
-const depositIcxEvent = (id, amount, address) =>
+const makeDepositIcxEvent = (amount, address) =>
   iconexEvent(
     makeEventPayload({
-      id,
+      id: makeEventId(),
       method: SEND_TRANSACTION,
       params: {
         from: address,
@@ -136,10 +136,10 @@ const depositIcxEvent = (id, amount, address) =>
     })
   );
 
-const withdrawIcxEvent = (id, amount, address) =>
+const makeWithdrawIcxEvent = (amount, address) =>
   iconexEvent(
     makeEventPayload({
-      id,
+      id: makeEventId(),
       method: SEND_TRANSACTION,
       params: {
         from: address,
@@ -150,10 +150,10 @@ const withdrawIcxEvent = (id, amount, address) =>
     })
   );
 
-const depostiTokenEvent = (id, amount, address, tokenAddress) =>
+const makeDepostiTokenEvent = (amount, address, tokenAddress) =>
   iconexEvent(
     makeEventPayload({
-      id,
+      id: makeEventId(),
       method: SEND_TRANSACTION,
       params: {
         from: address,
@@ -164,10 +164,10 @@ const depostiTokenEvent = (id, amount, address, tokenAddress) =>
     })
   );
 
-const withdrawTokenEvent = (id, amount, address, tokenAddress) =>
+const makeWithdrawTokenEvent = (amount, address, tokenAddress) =>
   iconexEvent(
     makeEventPayload({
-      id,
+      id: makeEventId(),
       method: SEND_TRANSACTION,
       params: {
         from: address,
@@ -200,26 +200,18 @@ export const loadBalances = (address, tokenAddress) => {
   return ids;
 };
 
-export const depositIcx = (amount, address) => {
-  const id = makeEventId();
-  dispatchEvents(depositIcxEvent(id, amount, address));
-  return id;
+export const depositIcxEvent = (amount, address) => {
+  dispatchEvents(makeDepositIcxEvent(amount, address));
 };
 
-export const withdrawIcx = (amount, address) => {
-  const id = makeEventId();
-  dispatchEvents(withdrawIcxEvent(id, amount, address));
-  return id;
+export const withdrawIcxEvent = (amount, address) => {
+  dispatchEvents(makeWithdrawIcxEvent(amount, address));
 };
 
-export const depositToken = (amount, address, tokenAddress) => {
-  const id = makeEventId();
-  dispatchEvents(depostiTokenEvent(id, amount, address, tokenAddress));
-  return id;
+export const depositTokenEvent = (amount, address, tokenAddress) => {
+  dispatchEvents(makeDepostiTokenEvent(amount, address, tokenAddress));
 };
 
-export const withdrawToken = (amount, address, tokenAddress) => {
-  const id = makeEventId();
-  dispatchEvents(withdrawTokenEvent(id, amount, address, tokenAddress));
-  return id;
+export const withdrawTokenEvent = (amount, address, tokenAddress) => {
+  dispatchEvents(makeWithdrawTokenEvent(amount, address, tokenAddress));
 };

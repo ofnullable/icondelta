@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import BalanceContainer from '../containers/Balance';
-import OrderBookContainer from '../containers/OrderBook';
 import AT from '../redux/actionTypes';
-import storage from '../utils/storage';
+import Balance from '../components/Balance';
+import OrderList from '../components/OrderList';
 import { addIconexEventListner, removeIconexEventListner, eventHandler } from '../utils/event';
 
 import '../styles/index.scss';
@@ -36,8 +35,8 @@ const Home = () => {
 
   return (
     <>
-      <BalanceContainer />
-      <OrderBookContainer />
+      <Balance />
+      <OrderList />
     </>
   );
 };

@@ -4,7 +4,7 @@ import AT from '../actionTypes';
 import storage from '../../utils/storage';
 
 const getRequestIds = state => state.event.requestIds;
-const getCurrentToken = state => state.token.currentToken.data;
+const getToken = state => state.token.currentToken.data;
 
 export default function*() {
   yield all([fork(watchAddressResponse), fork(watchEventResponse)]);
@@ -33,7 +33,7 @@ function* watchEventResponse() {
 function* dispatchAction({ payload }) {
   try {
     const ids = yield select(getRequestIds);
-    // const token = yield select(getCurrentToken);
+    // const token = yield select(getToken);
 
     console.log('Response for', ids[payload.id]);
 
@@ -44,30 +44,35 @@ function* dispatchAction({ payload }) {
           type: AT.LOAD_ICX_BALANCE_SUCCESS,
           balance: payload.result,
         });
+        break;
       case AT.DEPOSITED_ICX_BALANCE_REQUEST_ID:
         yield put({
           type: AT.LOAD_DEPOSITED_ICX_BALANCE_SUCCESS,
           balance: payload.result,
         });
+        break;
       case AT.TOKEN_BALANCE_REQUEST_ID:
         yield put({
           type: AT.LOAD_TOKEN_BALANCE_SUCCESS,
           balance: payload.result,
         });
+        break;
       case AT.DEPOSITED_TOKEN_BALANCE_REQUEST_ID:
         yield put({
           type: AT.LOAD_DEPOSITED_TOKEN_BALANCE_SUCCESS,
           balance: payload.result,
         });
+        break;
 
       // response for deposit, withdraw
       default:
-        yield put({
-          type: AT.RESPONSE_COMPLETE,
-          id: payload.id,
-        });
-        return;
+        break;
     }
+    // for remove response id
+    yield put({
+      type: AT.RESPONSE_COMPLETE,
+      id: payload.id,
+    });
   } catch (e) {
     console.error(e);
   }

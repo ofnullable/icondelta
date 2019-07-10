@@ -1,5 +1,17 @@
 import BigNumber from 'bignumber.js';
 
+const isBigNumber = value => {
+  return BigNumber.isBigNumber(value);
+};
+
+const toBigNumber = value => {
+  if (isBigNumber(value)) return value;
+  if (typeof value === 'string') {
+    value = value.replace(/,/gi, '');
+  }
+  return new BigNumber(value.toString());
+};
+
 const withComma = value => {
   if (!value) return 0;
 
@@ -8,17 +20,14 @@ const withComma = value => {
   return parts.join('.');
 };
 
-export const toStringWithCommas = (value, round) => {
+export const toStringWithCommas = (value, round = 9) => {
   if (!value) return '0';
 
   if (typeof value === 'string') {
-    value = value.replace(/,/g, '');
+    value = value.replace(/,/gi, '');
   }
-  if (round && round >= 0) {
-    value = new BigNumber(value).toFixed(round);
-  } else {
-    value = new BigNumber(value).toFixed(9);
-  }
+
+  value = toBigNumber(value).toFixed(round);
 
   return withComma(value);
 };
@@ -28,7 +37,7 @@ export const toNumber = value => {
   if (typeof value === 'string') {
     value = value.replace(/,/gi, '');
   }
-  return new BigNumber(value).toNumber();
+  return toBigNumber(value).toNumber();
 };
 
 export const toHexString = value => {
@@ -37,14 +46,16 @@ export const toHexString = value => {
   return `0x${parsed.toString(16)}`;
 };
 
-export const toLoop = val => {
-  return toHexString(val * 10 ** 18);
+export const toLoop = value => {
+  return toBigNumber(value)
+    .times(10 ** 18)
+    .toNumber();
 };
 
 export const toIcx = (value, round = 9) => {
   if (!value) return 0;
-  if (typeof value === 'string') {
-    value = toNumber(value);
-  }
-  return new BigNumber(value).dividedBy(10 ** 18).toFixed(round);
+  return toBigNumber(value)
+    .dividedBy(10 ** 18)
+    .toNumber();
+  // .toFixed(round);
 };

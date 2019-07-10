@@ -43,8 +43,14 @@ a.header_item:hover {
 main {
   width: 90%;
   margin: 0 auto;
+  &:after {
+    clear: both;
+    content: '';
+    display: block;
+  }
 }
 footer {
-  text-align: center;
   color: #fff;
+  text-align: center;
+  padding: 15px 25px;
 }

@@ -1,0 +1,12 @@
+.wrapper {
+  width: 100%;
+}
+table {
+  color: inherit;
+  text-align: left;
+  table-layout: fixed;
+  & th,
+  & td {
+    padding: 10px;
+  }
+}

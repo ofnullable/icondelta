@@ -1,13 +1,13 @@
-import { all, fork, put, call, takeLatest, select } from 'redux-saga/effects';
+import { all, fork, put, takeLatest, select } from 'redux-saga/effects';
 
 import AT from '../actionTypes';
 import {
   requestAddress,
   loadBalances,
-  depositIcx,
-  withdrawIcx,
-  depositToken,
-  withdrawToken,
+  depositIcxEvent,
+  withdrawIcxEvent,
+  depositTokenEvent,
+  withdrawTokenEvent,
 } from '../../utils/event';
 import storage from '../../utils/storage';
 import { reverseObject } from '../../utils/utils';
@@ -26,10 +26,10 @@ export default function*() {
   yield all([
     fork(watchLoadAddressRequest),
     fork(watchLoadTokenBalanceRequest),
-    fork(watchIcxDepositRequest),
-    fork(watchIcxWithdrawRequest),
-    fork(watchTokenDepositRequest),
-    fork(watchTokenWithdrawRequest),
+    fork(watchDepositIcxRequest),
+    fork(watchWithdrawIcxRequest),
+    fork(watchDepositTokenRequest),
+    fork(watchWithdrawTokenRequest),
   ]);
 }
 
@@ -63,38 +63,38 @@ function* loadTokenBalance({ address }) {
 
   yield put({
     type: AT.JSON_RPC_REQUEST,
-    ids: reverseObject(eventIds),
+    id: reverseObject(eventIds),
   });
 }
 
-function* watchIcxDepositRequest() {
-  yield takeLatest(AT.ICX_DEPOSIT_REQUEST, icxDeposit);
+function* watchDepositIcxRequest() {
+  yield takeLatest(AT.DEPOSIT_ICX_REQUEST, depositIcx);
 }
 
-function* icxDeposit({ amount, address }) {
-  const id = depositIcx(amount, address);
+function* depositIcx({ amount, address }) {
+  const eventId = depositIcxEvent(amount, address);
 }
 
-function* watchIcxWithdrawRequest() {
-  yield takeLatest(AT.ICX_WITHDRAW_REQUEST, icxWithdraw);
+function* watchWithdrawIcxRequest() {
+  yield takeLatest(AT.WITHDRAW_ICX_REQUEST, withdrawIcx);
 }
 
-function* icxWithdraw({ amount, address }) {
-  const id = withdrawIcx(amount, address);
+function* withdrawIcx({ amount, address }) {
+  const eventId = withdrawIcxEvent(amount, address);
 }
 
-function* watchTokenDepositRequest() {
-  yield takeLatest(AT.TOKEN_DEPOSIT_REQUEST, tokenDeposit);
+function* watchDepositTokenRequest() {
+  yield takeLatest(AT.DEPOSIT_TOKEN_REQUEST, depositToken);
 }
 
-function* tokenDeposit({ amount, address, tokenAddress }) {
-  const id = depositToken(amount, address, tokenAddress);
+function* depositToken({ amount, address, tokenAddress }) {
+  const eventId = depositTokenEvent(amount, address, tokenAddress);
 }
 
-function* watchTokenWithdrawRequest() {
-  yield takeLatest(AT.TOKEN_WITHDRAW_REQUEST, tokenWithdraw);
+function* watchWithdrawTokenRequest() {
+  yield takeLatest(AT.WITHDRAW_TOKEN_REQUEST, withdrawToken);
 }
 
-function* tokenWithdraw({ amount, address, tokenAddress }) {
-  const id = withdrawToken(amount, address, tokenAddress);
+function* withdrawToken({ amount, address, tokenAddress }) {
+  const eventId = withdrawTokenEvent(amount, address, tokenAddress);
 }

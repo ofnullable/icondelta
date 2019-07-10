@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
-import AT from '../../redux/actionTypes';
+import AT from '../../../redux/actionTypes';
 
 import { wrapper, primary, danger } from './BalanceInput.scss';
-import { toNumber } from '../../utils/formatter';
-import storage from '../../utils/storage';
+import {
+  depositIcxEvent,
+  depositTokenEvent,
+  withdrawIcxEvent,
+  withdrawTokenEvent,
+} from '../../../utils/event';
 
-const BalanceForm = ({ type, token }) => {
+const BalanceForm = ({ address, type, token }) => {
   const [amount, setAmount] = useState('');
   const [name] = useState(token ? token.symbol : 'ICX');
 
-  const address = useSelector(state => state.wallet.address);
   const dispatch = useDispatch();
 
   const handleInputChange = e => {
@@ -20,42 +23,27 @@ const BalanceForm = ({ type, token }) => {
 
   const handleSubmit = ({ keyCode }) => {
     if (!amount) {
+      alert('Please enter amount!');
       return;
     }
+
     if (!/[0-9]*\.?[0-9]+/.test(amount)) {
       alert('Only numbers can be enterd.');
       return;
     }
+
     if (!keyCode || (keyCode && keyCode === 13)) {
-      const params = {
-        amount: Number(amount),
-        address,
-      };
       if (type === 'Deposit') {
         if (name === 'ICX') {
-          dispatch({
-            type: AT.ICX_DEPOSIT_REQUEST,
-            ...params,
-          });
+          depositIcxEvent(amount, address);
         } else {
-          dispatch({
-            type: AT.TOKEN_DEPOSIT_REQUEST,
-            ...params,
-            tokenAddress: token.address,
-          });
+          depositTokenEvent(amount, address, tokenAddress);
         }
       } else {
         if (name === 'ICX') {
-          dispatch({
-            type: AT.ICX_WITHDRAW_REQUEST,
-            ...params,
-          });
+          withdrawIcxEvent(amount, address);
         } else {
-          dispatch({
-            type: AT.TOKEN_WITHDRAW_REQUEST,
-            ...params,
-            tokenAddress: token.address,
-          });
+          withdrawTokenEvent(amount, address, tokenAddress);
         }
       }
       setAmount('');
