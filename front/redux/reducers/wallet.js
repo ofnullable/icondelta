@@ -1,10 +1,9 @@
-import BigNumber from 'bignumber.js';
-
 import AT from '../actionTypes';
+import storage from '../../utils/storage';
 import { toIcx } from '../../utils/formatter';
 
 const initialState = {
-  address: '',
+  address: storage.get('address'),
 
   deposited: {
     icx: 0,
@@ -28,7 +27,6 @@ export default (state = initialState, action) => {
         address: action.address,
       };
     case AT.LOAD_ICX_BALANCE_SUCCESS:
-      console.log(new BigNumber(action.balance).dividedBy(10 ** 18).toNumber());
       return {
         ...state,
         undeposited: {

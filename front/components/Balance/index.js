@@ -1,29 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 
-import BalanceInput from './BalanceInput';
+import BalanceForm from '../../components/Balance/BalanceForm';
+import UserBalance from '../../components/Balance/UserBalance';
 
-import { wrapper, active } from './index.scss';
+import { wrapper } from './index.scss';
 
 const Balance = () => {
-  const token = useSelector(state => state.token.currentToken.data);
-
-  const [type, setType] = useState('Deposit');
-
-  const handleMenuClick = e => {
-    setType(e.target.innerText);
-  };
+  const address = useSelector(state => state.wallet.address);
+  const currentToken = useSelector(state => state.token.currentToken.data);
+  const deposited = useSelector(state => state.wallet.deposited);
+  const undeposited = useSelector(state => state.wallet.undeposited);
 
   return (
     <div className={wrapper}>
-      <menu className={type === 'Deposit' ? active : ''} onClick={handleMenuClick}>
-        Deposit
-      </menu>
-      <menu className={type !== 'Deposit' ? active : ''} onClick={handleMenuClick}>
-        Withdraw
-      </menu>
-      <BalanceInput type={type} />
-      <BalanceInput type={type} token={token} />
+      <BalanceForm address={address} token={currentToken} />
+      <UserBalance token={currentToken} deposited={deposited} undeposited={undeposited} />
     </div>
   );
 };

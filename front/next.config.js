@@ -33,8 +33,7 @@ const config = withBundleAnalyzer({
 module.exports = withSass({
   cssModules: true,
   cssLoaderOptions: {
-    importLoaders: 1,
-    localIdentName: '[local]___[hash:base64:5]',
+    importLoaders: 2,
   },
   config,
 });

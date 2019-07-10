@@ -1,13 +1,8 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 
 import { wrapper } from './index.scss';
 
-const UserBalance = () => {
-  const token = useSelector(state => state.token.currentToken.data);
-  const deposited = useSelector(state => state.wallet.deposited);
-  const undeposited = useSelector(state => state.wallet.undeposited);
-
+const UserBalance = ({ token, deposited, undeposited }) => {
   return (
     <table className={wrapper}>
       <thead>
