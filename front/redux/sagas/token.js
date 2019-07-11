@@ -15,6 +15,7 @@ function* loadTokens({ symbol }) {
   try {
     const { data } = yield call(loadTokensApi);
     const currentToken = data.find(d => d.symbol === symbol);
+    console.log(data);
     yield put({
       type: AT.LOAD_TOKEN_LIST_SUCCESS,
       data,

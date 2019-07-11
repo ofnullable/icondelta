@@ -1,0 +1,36 @@
+@import 'styles/_variables';
+
+.wrapper {
+  padding: 5px 0 20px;
+  border-bottom: 1px solid $white;
+  & > input {
+    width: 85%;
+    text-align: left;
+    padding: 5px 10px;
+    border-right: none;
+    vertical-align: middle;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  & > input + div {
+    width: 15%;
+    cursor: pointer;
+    padding: 3px 10px;
+    vertical-align: middle;
+    text-align: center;
+    display: inline-block;
+    background-color: $blue;
+    border: 1.5px solid $blue;
+    border-left: none;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    &:hover {
+      border-color: darken($blue, 10%);
+      background-color: darken($blue, 10%);
+    }
+    & > i {
+      font-size: 16px;
+      line-height: 1.5;
+    }
+  }
+}

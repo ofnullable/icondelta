@@ -99,6 +99,16 @@ button {
     @include button($danger);
   }
 }
+table {
+  width: 100%;
+  color: inherit;
+  text-align: left;
+  table-layout: fixed;
+  & th,
+  & td {
+    padding: 12px;
+  }
+}
 footer {
   color: #fff;
   height: 5%;
