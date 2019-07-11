@@ -1,12 +1,5 @@
-@import 'styles/_variables.scss';
+@import 'styles/_mixin';
 
 .wrapper {
-  // float: left;
-  // width: 24%;
-  // margin-right: 1%;
-  grid-column: 1;
-  grid-row: 1 / 10;
-  padding: 15px;
-  border-radius: 2px;
-  background-color: $background;
+  @include wrapper(1, '1 / 11');
 }

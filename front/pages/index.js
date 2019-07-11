@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Balance from '../components/Balance';
 import OrderList from '../components/OrderList';
 import TokenList from '../components/TokenList';
-import TradeForm from '../components/TradeForm';
+import Trade from '../components/Trade';
 import History from '../components/History';
 
 import AT from '../redux/actionTypes';
@@ -42,7 +42,7 @@ const Home = () => {
       <Balance />
       <OrderList />
       <TokenList />
-      <TradeForm />
+      <Trade />
       <History />
     </>
   );

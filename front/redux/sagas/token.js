@@ -20,7 +20,7 @@ function* loadTokens({ symbol }) {
       data,
     });
     yield put({
-      type: AT.CHANGE_TOKEN,
+      type: AT.CHANGE_CURRENT_TOKEN,
       data: currentToken,
     });
   } catch (e) {

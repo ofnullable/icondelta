@@ -8,15 +8,18 @@ const Balance = ({ address, token }) => {
   const [type, setType] = useState('Deposit');
 
   const handleMenuClick = e => {
-    setType(e.target.innerText);
+    if (e.target.className === active) {
+      return;
+    }
+    setType(e.target.className);
   };
 
   return (
     <div className={wrapper}>
-      <menu className={type === 'Deposit' ? active : ''} onClick={handleMenuClick}>
+      <menu className={type === 'Deposit' ? active : 'Deposit'} onClick={handleMenuClick}>
         Deposit
       </menu>
-      <menu className={type !== 'Deposit' ? active : ''} onClick={handleMenuClick}>
+      <menu className={type !== 'Deposit' ? active : 'Withdraw'} onClick={handleMenuClick}>
         Withdraw
       </menu>
       <BalanceInput address={address} type={type} />

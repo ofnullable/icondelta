@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 
-import { wrapper, primary, danger } from './BalanceInput.scss';
 import {
   depositIcxEvent,
   depositTokenEvent,
   withdrawIcxEvent,
   withdrawTokenEvent,
 } from '../../../utils/event';
+
+import { wrapper } from './BalanceInput.scss';
+import { primary, danger } from '../../Layout/style.scss';
 
 const BalanceForm = ({ address, type, token }) => {
   const [amount, setAmount] = useState('');

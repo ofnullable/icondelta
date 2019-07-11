@@ -1,7 +1,7 @@
 @import 'styles/_mixin';
 
 .wrapper {
-  height: 60%;
+  @include wrapper(1, '11 / -1');
 }
 menu {
   @include menu();
