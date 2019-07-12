@@ -101,12 +101,18 @@ button {
 }
 table {
   width: 100%;
-  color: inherit;
   text-align: left;
   table-layout: fixed;
-  & th,
-  & td {
-    padding: 12px;
+  border-collapse: collapse;
+  & thead {
+    border-radius: 15px;
+    background-color: $background-light;
+    & th:first-child {
+      border-radius: 5px 0 0 5px;
+    }
+    & th:last-child {
+      border-radius: 0 5px 5px 0;
+    }
   }
 }
 footer {

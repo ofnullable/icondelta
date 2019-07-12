@@ -1,8 +1,7 @@
 @import 'styles/_variables';
 
 .wrapper {
-  padding: 5px 0 20px;
-  border-bottom: 1px solid $white;
+  padding-bottom: 15px;
   & > input {
     width: 85%;
     text-align: left;

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import Balance from '../components/Balance';
 import OrderList from '../components/OrderList';
-import TokenList from '../components/TokenList';
+import TokenBar from '../components/TokenBar';
 import Trade from '../components/Trade';
 import History from '../components/History';
 
@@ -41,7 +41,7 @@ const Home = () => {
     <>
       <Balance />
       <OrderList />
-      <TokenList />
+      <TokenBar />
       <Trade />
       <History />
     </>
@@ -51,15 +51,14 @@ const Home = () => {
 Home.getInitialProps = async context => {
   const store = context.store;
   const symbol = context.query.symbol;
-
   store.dispatch({
     type: AT.LOAD_TOKEN_LIST_REQUEST,
     symbol,
   });
-  store.dispatch({
-    type: AT.LOAD_ORDER_LIST_REQUEST,
-    symbol,
-  });
+  // store.dispatch({
+  //   type: AT.LOAD_ORDER_LIST_REQUEST,
+  //   symbol,
+  // });
 };
 
 export default Home;

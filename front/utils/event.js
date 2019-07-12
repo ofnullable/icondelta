@@ -2,12 +2,12 @@ import AT from '../redux/actionTypes';
 import { SCORE_ADDRESS } from './const';
 import { toLoop } from './formatter';
 
-// event payload - method
+// event payload - { method }
 const SEND_QUERY = 'icx_call';
 const GET_ICX_BALANCE = 'icx_getBalance';
 const SEND_TRANSACTION = 'icx_sendTransaction';
 
-// event payload - params - data - method
+// event payload - { params: { data: method } }
 const BALANCE_OF = 'balanceOf';
 const TOKEN_BALANCE_OF = 'tokenBalanceOf';
 
@@ -58,12 +58,11 @@ const makeEventId = () => {
 };
 
 const makeEventPayload = ({ id, method, params = {} }) => {
-  console.log(params);
   return {
-    jsonrpc: '2.0',
     id,
     method,
-    params: params,
+    params,
+    jsonrpc: '2.0',
   };
 };
 

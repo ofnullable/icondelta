@@ -1,7 +1,6 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-const { parse } = require('url');
 const next = require('next');
 const morgan = require('morgan');
 
@@ -33,17 +32,18 @@ app.prepare().then(() => {
   server.use(express.json());
   server.use(express.urlencoded({ extended: true }));
 
-  server.get('/:symbol', (req, res) => {
+  server.get('/trade/:symbol', (req, res) => {
     const symbol = req.params.symbol || 'AC3';
-    return app.render(req, res, '/index', { symbol });
+    console.log('symbol: ', symbol);
+    return app.render(req, res, '/trade', { symbol });
   });
 
   server.get('*', (req, res) => {
-    const { pathname } = parse(req.url);
-
+    const pathname = req.url;
     if (pathname === '/') {
-      return res.redirect('/AC3');
+      return res.redirect('/trade/AC3');
     }
+
     return handle(req, res);
   });
 

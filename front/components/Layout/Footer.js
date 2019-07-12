@@ -1,5 +1,4 @@
 import React from 'react';
-import { requestAddressPromise } from '../../utils/event';
 
 const footer = () => {
   return (
