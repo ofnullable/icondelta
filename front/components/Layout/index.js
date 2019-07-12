@@ -8,11 +8,11 @@ import './style.scss';
 
 export default ({ children }) => {
   return (
-    <div>
+    <>
       <Head />
       <Header />
       <main>{children}</main>
       <Footer />
-    </div>
+    </>
   );
 };

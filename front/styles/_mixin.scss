@@ -1,3 +1,4 @@
+@import './variables';
 @-webkit-keyframes spin {
   0% {
     -webkit-transform: rotate(0deg);
@@ -25,4 +26,41 @@
   -ms-transition: $attribute;
   -o-transition: $attribute;
   transition: $attribute;
+}
+
+@mixin wrapper($grid-column, $grid-row) {
+  grid-column: #{$grid-column};
+  grid-row: #{$grid-row};
+  padding: 15px;
+  border-radius: 2px;
+  background-color: $background;
+}
+
+@mixin menu() {
+  @include transition(all 0.3s ease);
+  text-align: center;
+  margin: 0;
+  width: 50%;
+  padding: 15px;
+  cursor: pointer;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  display: inline-block;
+  border-bottom: 1px solid $background;
+
+  &.active,
+  &:hover {
+    background-color: $background-light;
+    border-bottom: 1px solid $white;
+  }
+}
+
+@mixin button($type) {
+  background-color: $type;
+  border-color: $type;
+  &:active,
+  &:hover {
+    background-color: darken($type, 20%);
+    border-color: darken($type, 20%);
+  }
 }

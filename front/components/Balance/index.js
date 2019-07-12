@@ -7,15 +7,13 @@ import UserBalance from '../../components/Balance/UserBalance';
 import { wrapper } from './index.scss';
 
 const Balance = () => {
-  const address = useSelector(state => state.wallet.address);
-  const currentToken = useSelector(state => state.token.currentToken.data);
-  const deposited = useSelector(state => state.wallet.deposited);
-  const undeposited = useSelector(state => state.wallet.undeposited);
+  const { address, deposited, undeposited } = useSelector(state => state.wallet);
+  const token = useSelector(state => state.token.currentToken.data);
 
   return (
     <div className={wrapper}>
-      <BalanceForm address={address} token={currentToken} />
-      <UserBalance token={currentToken} deposited={deposited} undeposited={undeposited} />
+      <BalanceForm address={address} token={token} />
+      <UserBalance token={token} deposited={deposited} undeposited={undeposited} />
     </div>
   );
 };

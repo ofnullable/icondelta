@@ -1,0 +1,5 @@
+@import 'styles/mixin';
+
+.wrapper {
+  @include wrapper(4, '1 / -1');
+}

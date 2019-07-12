@@ -1,31 +1,15 @@
-@import 'styles/_variables.scss';
+@import 'styles/_mixin';
 
 .wrapper {
+  padding: 0.5em 0;
+  & p {
+    margin: 10px;
+  }
   & input {
-    width: 65%;
-    margin-right: 5%;
+    width: calc(70% - 1em);
+    margin-right: 1em;
   }
   & button {
     width: 30%;
-  }
-}
-.primary {
-  color: inherit;
-  background-color: $primary;
-  border-color: $primary;
-  &:active,
-  &:hover {
-    background-color: darken($primary, 20%);
-    border-color: darken($primary, 20%);
-  }
-}
-.danger {
-  color: inherit;
-  background-color: $danger;
-  border-color: $danger;
-  &:active,
-  &:hover {
-    background-color: darken($primary, 20%);
-    border-color: darken($primary, 20%);
   }
 }
