@@ -2,12 +2,25 @@ import React, { useState } from 'react';
 
 import { wrapper, active, disabled } from './index.scss';
 
-const Paginator = ({ page = 1, perPage = 10, total, setPage, handleChange }) => {
+const Paginator = ({ page = 1, perPage = 10, total, setPage }) => {
   const last = Math.ceil(total / perPage);
   const next = page < last ? page + 1 : 0;
 
   const handleClick = page => e => {
-    setPage(page);
+    if (e.target.className === disabled) return false;
+    if (isValidPage(page)) setPage(page);
+  };
+
+  const handleChange = e => {
+    if (isValidPage(e.target.value)) setPage(e.target.value);
+  };
+
+  const isValidPage = value => {
+    if (!value) return false;
+    if (isNaN(value)) return false;
+    if (value < 1) return false;
+    if (value > last) return false;
+    return true;
   };
 
   return (

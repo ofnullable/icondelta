@@ -34,8 +34,7 @@ function* dispatchAction({ payload }) {
   try {
     const ids = yield select(getRequestIds);
     // const token = yield select(getToken);
-
-    console.log('Response for', ids[payload.id]);
+    console.log(`Response for ${ids[payload.id]}`);
 
     switch (ids[payload.id]) {
       // response for get balance requests
@@ -64,7 +63,6 @@ function* dispatchAction({ payload }) {
         });
         break;
 
-      // response for deposit, withdraw
       default:
         break;
     }

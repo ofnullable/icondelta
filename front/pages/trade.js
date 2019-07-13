@@ -12,7 +12,7 @@ import { addIconexEventListner, removeIconexEventListner, eventHandler } from '.
 
 import '../styles/index.scss';
 
-const Home = () => {
+const Home = ({ symbol }) => {
   const address = useSelector(state => state.wallet.address);
   const token = useSelector(state => state.token.currentToken.data);
   const dispatch = useDispatch();
@@ -35,7 +35,7 @@ const Home = () => {
         });
       }
     };
-  }, [token]);
+  }, [symbol]);
 
   return (
     <>
@@ -55,10 +55,11 @@ Home.getInitialProps = async context => {
     type: AT.LOAD_TOKEN_LIST_REQUEST,
     symbol,
   });
-  // store.dispatch({
-  //   type: AT.LOAD_ORDER_LIST_REQUEST,
-  //   symbol,
-  // });
+  store.dispatch({
+    type: AT.LOAD_ORDER_LIST_REQUEST,
+    symbol,
+  });
+  return { symbol };
 };
 
 export default Home;

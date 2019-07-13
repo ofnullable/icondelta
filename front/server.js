@@ -34,7 +34,6 @@ app.prepare().then(() => {
 
   server.get('/trade/:symbol', (req, res) => {
     const symbol = req.params.symbol || 'AC3';
-    console.log('symbol: ', symbol);
     return app.render(req, res, '/trade', { symbol });
   });
 

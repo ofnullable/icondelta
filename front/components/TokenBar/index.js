@@ -32,30 +32,11 @@ const TokenBar = () => {
     setText(e.target.value);
   }, []);
 
-  const handleChange = useCallback(e => {
-    if (isValidPage(e.target.value)) setPage(e.target.value);
-  }, []);
-
-  const isValidPage = value => {
-    if (!value) return false;
-    if (isNaN(value)) return false;
-    if (value < 1) return false;
-    const lastPage = Math.ceil(tokens.length - 1 / 10);
-    if (value > lastPage) return false;
-    return true;
-  };
-
   return (
     <div className={wrapper}>
       <TokenSearchForm handleChange={handleInputChange} />
       <TokenList tokens={getFilterdTokens()} text={text} />
-      <Paginator
-        page={page}
-        perPage={10}
-        total={tokens.length - 1}
-        setPage={setPage}
-        handleChange={handleChange}
-      />
+      <Paginator page={page} perPage={10} total={tokens.length - 1} setPage={setPage} />
     </div>
   );
 };

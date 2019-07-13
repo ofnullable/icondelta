@@ -5,9 +5,6 @@ import TokenInfo from './TokenInfo';
 import { wrapper } from './index.scss';
 
 const TokenList = ({ tokens, text }) => {
-  useEffect(() => {
-    console.log(tokens);
-  }, []);
   return (
     <div className={wrapper}>
       <ul>

@@ -19,7 +19,7 @@ export const removeIconexEventListner = handler =>
 
 export const eventHandler = dispatch => e => {
   const { type, payload } = e.detail;
-  console.log('Event handler - type:', type, 'payload:', payload);
+  // console.log(`Event handler - type:, ${type}, payload:`, payload);
   dispatch({
     type,
     payload,
@@ -28,11 +28,10 @@ export const eventHandler = dispatch => e => {
 
 const iconexEvent = (type, payload) => {
   if (typeof type === 'object' && !payload) {
-    // type이 Object고, 두번째 argument가 없는 경우 type을 지정하지 않았다고 가정한다. 지정하지 않은 경우 JSON-RPC 요청.
     payload = type;
     type = 'REQUEST_JSON-RPC';
   }
-
+  // console.log(`Event payload - type:, ${type}, payload:`, payload);
   if (window && window.CustomEvent) {
     const detail = { type, payload };
     return new CustomEvent('ICONEX_RELAY_REQUEST', { detail });
