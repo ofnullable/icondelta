@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 
 import store from '../redux/store';
 import Layout from '../components/Layout';
+import axios from 'axios';
 
 const IconDelta = ({ Component, store, pageProps }) => {
   return (
@@ -17,6 +18,12 @@ const IconDelta = ({ Component, store, pageProps }) => {
 };
 
 IconDelta.getInitialProps = async ({ ctx, Component }) => {
+  const cookie = ctx.isServer ? ctx.req.headers.cookie : '';
+  if (ctx.isServer && cookie) {
+    axios.defaults.headers.cookie = cookie;
+    axios.defaults.withCredentials = true;
+  }
+
   let pageProps = {};
   if (Component.getInitialProps) {
     pageProps = await Component.getInitialProps(ctx);

@@ -6,7 +6,7 @@ const CompressionPlugin = require('compression-webpack-plugin');
 const withSass = require('@zeit/next-sass');
 
 const config = withBundleAnalyzer({
-  webpack: config => {
+  webpack(config) {
     const isProd = process.env.NODE_ENV === 'production';
     const plugins = [
       ...config.plugins,

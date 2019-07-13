@@ -1,0 +1,35 @@
+@import 'styles/_variables';
+
+.wrapper {
+  width: 100%;
+  text-align: center;
+  & button {
+    color: $blue;
+    padding: 3px 10px;
+    min-width: 32px;
+    background-color: transparent;
+
+    &.disabled {
+      cursor: unset;
+      color: $border-color;
+      border-color: $border-color;
+      &:active {
+        color: $border-color;
+        border-color: $border-color;
+      }
+    }
+  }
+  & > div {
+    display: inline-block;
+    margin: 0 15px;
+    & > input {
+      margin: 0 10px;
+      max-width: 100px;
+      text-align: center;
+    }
+    & > p {
+      margin: 0;
+      display: inline-block;
+    }
+  }
+}

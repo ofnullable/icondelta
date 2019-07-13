@@ -9,6 +9,7 @@ const helmet = require('helmet');
 require('dotenv').config();
 
 // routers
+const address = require('./routes/addresses');
 const token = require('./routes/tokens');
 const order = require('./routes/orders');
 
@@ -54,9 +55,11 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use('/api/address', address);
 app.use('/api/tokens', token);
 app.use('/api/orders', order);
 
-app.listen(8000, () => {
-  console.log('Server is running on localhost:8000');
+const port = process.env.PORT || 8010;
+app.listen(port, () => {
+  console.log(`Server is running on localhost:${port}`);
 });

@@ -1,7 +1,9 @@
-import { all, fork, put, call, takeLatest } from 'redux-saga/effects';
+import { all, fork, put, call, takeLatest, select } from 'redux-saga/effects';
 
 import AT from '../actionTypes';
 import { loadTokensApi } from '../api/request/tokens';
+
+const getTokens = state => state.token.tokens.data;
 
 export default function*() {
   yield all([fork(watchLoadTokensRequest)]);
@@ -14,12 +16,12 @@ function* watchLoadTokensRequest() {
 function* loadTokens({ symbol }) {
   try {
     const { data } = yield call(loadTokensApi);
-    const currentToken = data.find(d => d.symbol === symbol);
-    console.log(data);
     yield put({
       type: AT.LOAD_TOKEN_LIST_SUCCESS,
       data,
     });
+
+    const currentToken = data.find(d => d.symbol === symbol);
     yield put({
       type: AT.CHANGE_CURRENT_TOKEN,
       data: currentToken,

@@ -30,8 +30,8 @@ export const REDUX_STEP = {
 };
 
 export const TX_DEFAULT_PARAMETER = {
-  version: '0x3',
   nid: isProd ? '0x1' : '0x3',
+  version: '0x3',
   stepLimit: '0x100000000',
   dataType: 'call',
 };

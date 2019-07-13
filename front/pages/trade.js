@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import Balance from '../components/Balance';
 import OrderList from '../components/OrderList';
-import TokenList from '../components/TokenList';
+import TokenBar from '../components/TokenBar';
 import Trade from '../components/Trade';
 import History from '../components/History';
 
@@ -12,7 +12,7 @@ import { addIconexEventListner, removeIconexEventListner, eventHandler } from '.
 
 import '../styles/index.scss';
 
-const Home = () => {
+const Home = ({ symbol }) => {
   const address = useSelector(state => state.wallet.address);
   const token = useSelector(state => state.token.currentToken.data);
   const dispatch = useDispatch();
@@ -35,13 +35,13 @@ const Home = () => {
         });
       }
     };
-  }, [token]);
+  }, [symbol]);
 
   return (
     <>
       <Balance />
       <OrderList />
-      <TokenList />
+      <TokenBar />
       <Trade />
       <History />
     </>
@@ -51,7 +51,6 @@ const Home = () => {
 Home.getInitialProps = async context => {
   const store = context.store;
   const symbol = context.query.symbol;
-
   store.dispatch({
     type: AT.LOAD_TOKEN_LIST_REQUEST,
     symbol,
@@ -60,6 +59,7 @@ Home.getInitialProps = async context => {
     type: AT.LOAD_ORDER_LIST_REQUEST,
     symbol,
   });
+  return { symbol };
 };
 
 export default Home;
