@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import Link from 'next/link';
 
 import TokenInfo from './TokenInfo';
 
 import { wrapper } from './index.scss';
 
-const TokenList = ({ tokens, text }) => {
+const TokenList = ({ tokens, symbol }) => {
   return (
     <div className={wrapper}>
       <ul>
@@ -15,16 +16,26 @@ const TokenList = ({ tokens, text }) => {
         </li>
       </ul>
       <ul>
-        {text
-          ? tokens
-              .filter(({ name, symbol }) => {
-                return (
-                  name.toLowerCase().includes(text.toLowerCase()) ||
-                  symbol.toLowerCase().includes(text.toLowerCase())
-                );
-              })
-              .map(t => <TokenInfo key={t.address} token={t} />)
-          : tokens.map(t => <TokenInfo key={t.address} token={t} />)}
+        {tokens.map(t => {
+          if (t.symbol === symbol) {
+            return <TokenInfo key={t.address} token={t} symbol={symbol} />;
+          } else {
+            return (
+              <Link
+                href={{
+                  pathname: `/`,
+                  query: { symbol: t.symbol },
+                }}
+                as={`/${t.symbol}`}
+                key={t.address}
+              >
+                <a>
+                  <TokenInfo token={t} symbol={symbol} />
+                </a>
+              </Link>
+            );
+          }
+        })}
       </ul>
     </div>
   );

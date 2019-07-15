@@ -7,9 +7,10 @@ import Paginator from './Paginator';
 
 import { wrapper } from './index.scss';
 
-const TokenBar = () => {
+const TokenBar = ({ symbol }) => {
   const [text, setText] = useState('');
   const [page, setPage] = useState(1);
+
   const tokens = useSelector(state => state.token.tokens.data);
 
   const getFilterdTokens = () => {
@@ -35,7 +36,7 @@ const TokenBar = () => {
   return (
     <div className={wrapper}>
       <TokenSearchForm handleChange={handleInputChange} />
-      <TokenList tokens={getFilterdTokens()} text={text} />
+      <TokenList tokens={getFilterdTokens()} symbol={symbol} />
       <Paginator page={page} perPage={10} total={tokens.length - 1} setPage={setPage} />
     </div>
   );
