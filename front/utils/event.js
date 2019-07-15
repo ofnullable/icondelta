@@ -1,5 +1,5 @@
 import AT from '../redux/actionTypes';
-import { SCORE_ADDRESS } from './const';
+import { SCORE_ADDRESS, TX_DEFAULT_PARAMETER } from './const';
 import { toLoop } from './formatter';
 
 // event payload - { method }
@@ -125,6 +125,7 @@ const makeDepositIcxEvent = (amount, address) =>
       id: makeEventId(),
       method: SEND_TRANSACTION,
       params: {
+        ...TX_DEFAULT_PARAMETER,
         from: address,
         to: SCORE_ADDRESS,
         value: toLoop(amount),
@@ -140,6 +141,7 @@ const makeWithdrawIcxEvent = (amount, address) =>
       id: makeEventId(),
       method: SEND_TRANSACTION,
       params: {
+        ...TX_DEFAULT_PARAMETER,
         from: address,
         to: SCORE_ADDRESS,
         timestamp: `0x${(new Date().getTime() * 1000).toString(16)}`,
@@ -154,6 +156,7 @@ const makeDepostiTokenEvent = (amount, address, tokenAddress) =>
       id: makeEventId(),
       method: SEND_TRANSACTION,
       params: {
+        ...TX_DEFAULT_PARAMETER,
         from: address,
         to: tokenAddress,
         timestamp: `0x${(new Date().getTime() * 1000).toString(16)}`,
@@ -168,6 +171,7 @@ const makeWithdrawTokenEvent = (amount, address, tokenAddress) =>
       id: makeEventId(),
       method: SEND_TRANSACTION,
       params: {
+        ...TX_DEFAULT_PARAMETER,
         from: address,
         to: SCORE_ADDRESS,
         timestamp: `0x${(new Date().getTime() * 1000).toString(16)}`,

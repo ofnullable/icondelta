@@ -8,11 +8,7 @@ import History from '../components/History';
 import TokenBar from '../components/TokenBar';
 import TradeForm from '../components/TradeForm';
 import { generateJsonRpcId } from '../utils/jsonrpc';
-import {
-  getBuyOrderListEvent,
-  getSellOrderListEvent,
-  getAddressEvent,
-} from '../utils/events';
+import { getBuyOrderListEvent, getSellOrderListEvent, getAddressEvent } from '../utils/events';
 import actionTypes from '../redux/actionTypes';
 
 const Home = () => {
@@ -31,10 +27,7 @@ const Home = () => {
 
     window.addEventListener(actionTypes.ICONEX_RELAY_RESPONSE, eventHandler);
     return () => {
-      window.removeEventListener(
-        actionTypes.ICONEX_RELAY_RESPONSE,
-        eventHandler
-      );
+      window.removeEventListener(actionTypes.ICONEX_RELAY_RESPONSE, eventHandler);
     };
   }, []);
 
@@ -88,9 +81,7 @@ const Home = () => {
         <Col xs={24} md={12} lg={10} style={{ marginTop: '10px' }}>
           <PageHeader
             title={`Order Book - ${selectedToken.symbol}`}
-            subTitle={`${selectedToken.symbol}/ICX - ${
-              selectedToken.currentPrice
-            }`}
+            subTitle={`${selectedToken.symbol}/ICX - ${selectedToken.currentPrice}`}
           />
           <Row gutter={8} style={{ margin: 0 }}>
             <Col xs={24} md={24} lg={24}>

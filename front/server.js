@@ -32,15 +32,15 @@ app.prepare().then(() => {
   server.use(express.json());
   server.use(express.urlencoded({ extended: true }));
 
-  server.get('/trade/:symbol', (req, res) => {
+  server.get('/:symbol', (req, res) => {
     const symbol = req.params.symbol || 'AC3';
-    return app.render(req, res, '/trade', { symbol });
+    return app.render(req, res, '/', { symbol });
   });
 
   server.get('*', (req, res) => {
     const pathname = req.url;
     if (pathname === '/') {
-      return res.redirect('/trade/AC3');
+      return res.redirect('/AC3');
     }
 
     return handle(req, res);

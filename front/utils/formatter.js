@@ -63,6 +63,6 @@ export const toIcx = (value, round = 9) => {
   if (parts[1] && parts[1].length > 9) {
     return toBigNumber(parsed).toFixed(round);
   }
-
+  console.log(parsed);
   return parsed.toString(10);
 };

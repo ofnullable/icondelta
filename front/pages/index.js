@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Balance from '../components/Balance';
-import OrderList from '../components/OrderList';
+import OrderBook from '../components/OrderBook';
 import TokenBar from '../components/TokenBar';
 import Trade from '../components/Trade';
 import History from '../components/History';
@@ -14,7 +14,7 @@ import '../styles/index.scss';
 
 const Home = ({ symbol }) => {
   const address = useSelector(state => state.wallet.address);
-  const token = useSelector(state => state.token.currentToken.data);
+  const { currentToken, tokens } = useSelector(state => state.token);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -24,24 +24,36 @@ const Home = ({ symbol }) => {
 
   useEffect(() => {
     window.onload = () => {
-      if (address) {
-        dispatch({
-          type: AT.LOAD_BALANCE_REQUEST,
-          address,
-        });
-      } else {
-        dispatch({
-          type: AT.LOAD_ADDRESS_REQUEST,
-        });
-      }
+      loadWalletData();
     };
-  }, [symbol]);
+
+    if (symbol !== currentToken.data.symbol) {
+      dispatch({
+        type: AT.CHANGE_CURRENT_TOKEN,
+        data: tokens.data.find(t => t.symbol === symbol),
+      });
+      loadWalletData();
+    }
+  }, [currentToken]);
+
+  const loadWalletData = address => {
+    if (address) {
+      dispatch({
+        type: AT.LOAD_BALANCE_REQUEST,
+        address,
+      });
+    } else {
+      dispatch({
+        type: AT.LOAD_ADDRESS_REQUEST,
+      });
+    }
+  };
 
   return (
     <>
       <Balance />
-      <OrderList />
-      <TokenBar />
+      <OrderBook symbol={symbol} />
+      <TokenBar symbol={symbol} />
       <Trade />
       <History />
     </>
@@ -51,6 +63,7 @@ const Home = ({ symbol }) => {
 Home.getInitialProps = async context => {
   const store = context.store;
   const symbol = context.query.symbol;
+
   store.dispatch({
     type: AT.LOAD_TOKEN_LIST_REQUEST,
     symbol,

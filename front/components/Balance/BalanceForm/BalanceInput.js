@@ -14,20 +14,28 @@ const BalanceForm = ({ address, type, token }) => {
   const [amount, setAmount] = useState('');
 
   const handleInputChange = e => {
+    if (!address) {
+      alert('!!');
+      return;
+    }
     setAmount(e.target.value);
   };
 
   const handleSubmit = ({ keyCode }) => {
+    if (!address) {
+      alert('!!');
+      return;
+    }
     if (!keyCode || (keyCode && keyCode === 13)) {
       if (!amount) {
         alert('Please enter amount!');
         return;
       }
-      if (!/[0-9]*\.?[0-9]+/.test(amount)) {
+      if (isNaN(amount)) {
         alert('Only numbers can be enterd.');
+        setAmount('');
         return;
       }
-
       eventDispatch();
       setAmount('');
     }

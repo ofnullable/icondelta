@@ -9,8 +9,7 @@ export default (initialState, options) => {
   const sagaMiddleware = createSagaMiddleware();
   // const middlewares = [sagaMiddleware];
 
-  const reduxDevtools =
-    !options.isServer && window.__REDUX_DEVTOOLS_EXTENSION__;
+  const reduxDevtools = !options.isServer && window.__REDUX_DEVTOOLS_EXTENSION__;
 
   const enhancer = isProd
     ? compose(applyMiddleware(sagaMiddleware))
