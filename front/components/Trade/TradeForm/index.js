@@ -4,6 +4,12 @@ import { wrapper } from './index.scss';
 import { primary, danger, addon } from '../../Layout/style.scss';
 
 const TradeForm = ({ type, token }) => {
+  const [expires, setExpires] = useState(10000);
+
+  const handleInputChange = e => {
+    setExpires(e.target.value);
+  };
+
   const makeOrder = e => {
     e.preventDefault();
   };
@@ -24,7 +30,7 @@ const TradeForm = ({ type, token }) => {
       </div>
       <div>
         <p>Expires</p>
-        <input required type='text' />
+        <input required type='text' value={expires} onChange={handleInputChange} />
       </div>
       <button className={type === 'Buy' ? primary : danger} type='submit'>
         {type} Order

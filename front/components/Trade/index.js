@@ -7,7 +7,7 @@ import { wrapper, active } from './index.scss';
 
 const Trade = () => {
   const [type, setType] = useState('Buy');
-  const token = useSelector(state => state.token.currentToken.data);
+  const token = useSelector(state => state.token.currentToken);
 
   const handleMenuClick = e => {
     if (e.target.className === active) {

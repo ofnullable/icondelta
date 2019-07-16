@@ -1,10 +1,8 @@
 import React from 'react';
 
-import { active } from './index.scss';
-
-const TokenInfo = ({ token, symbol }) => {
+const TokenInfo = ({ token, className }) => {
   return (
-    <li className={symbol === token.symbol ? active : ''}>
+    <li className={className && className}>
       <div width='34%'>{token.name}</div>
       <div width='33%'>{token.symbol}</div>
       <div width='33%'>{token.currentPrice}</div>

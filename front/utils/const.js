@@ -1,6 +1,8 @@
 export const isServer = typeof window === 'undefined';
 export const isProd = process.env.NODE_ENV === 'production';
 
+export const ICX_ADDRESS = 'cx0000000000000000000000000000000000000000';
+
 export const SCORE_ADDRESS = isProd
   ? 'cxe014be09624aa681f441a632059245279c7bd554'
   : 'cxfd865d6bbfd2931c053e6b105961cd43a3ad9c22';

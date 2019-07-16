@@ -4,7 +4,7 @@ import AT from '../actionTypes';
 import storage from '../../utils/storage';
 
 const getRequestIds = state => state.event.requestIds;
-const getToken = state => state.token.currentToken.data;
+const getToken = state => state.token.currentToken;
 
 export default function*() {
   yield all([fork(watchAddressResponse), fork(watchEventResponse)]);
