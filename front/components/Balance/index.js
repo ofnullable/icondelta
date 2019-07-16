@@ -8,7 +8,7 @@ import { wrapper } from './index.scss';
 
 const Balance = () => {
   const { address, deposited, undeposited } = useSelector(state => state.wallet);
-  const token = useSelector(state => state.token.currentToken.data);
+  const token = useSelector(state => state.token.currentToken);
 
   return (
     <div className={wrapper}>

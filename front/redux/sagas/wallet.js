@@ -13,7 +13,7 @@ import storage from '../../utils/storage';
 import { reverseObject } from '../../utils/utils';
 
 const getAddress = state => state.wallet.address;
-const getToken = state => state.token.currentToken.data;
+const getToken = state => state.token.currentToken;
 
 const getDetails = function*() {
   return {

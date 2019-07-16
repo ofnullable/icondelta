@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 import TokenInfo from './TokenInfo';
 
-import { wrapper } from './index.scss';
+import { wrapper, active } from './index.scss';
 
 const TokenList = ({ tokens, symbol }) => {
   return (
@@ -18,7 +18,7 @@ const TokenList = ({ tokens, symbol }) => {
       <ul>
         {tokens.map(t => {
           if (t.symbol === symbol) {
-            return <TokenInfo key={t.address} token={t} symbol={symbol} />;
+            return <TokenInfo key={t.address} token={t} className={active} />;
           } else {
             return (
               <Link
@@ -30,7 +30,7 @@ const TokenList = ({ tokens, symbol }) => {
                 key={t.address}
               >
                 <a>
-                  <TokenInfo token={t} symbol={symbol} />
+                  <TokenInfo token={t} />
                 </a>
               </Link>
             );

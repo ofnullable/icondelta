@@ -15,7 +15,7 @@ const BalanceForm = ({ address, type, token }) => {
 
   const handleInputChange = e => {
     if (!address) {
-      alert('!!');
+      // requestAddress();
       return;
     }
     setAmount(e.target.value);
@@ -23,7 +23,7 @@ const BalanceForm = ({ address, type, token }) => {
 
   const handleSubmit = ({ keyCode }) => {
     if (!address) {
-      alert('!!');
+      // requestAddress();
       return;
     }
     if (!keyCode || (keyCode && keyCode === 13)) {

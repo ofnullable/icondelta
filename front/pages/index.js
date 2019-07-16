@@ -23,11 +23,9 @@ const Home = ({ symbol }) => {
   }, []);
 
   useEffect(() => {
-    window.onload = () => {
-      loadWalletData();
-    };
+    loadWalletData();
 
-    if (symbol !== currentToken.data.symbol) {
+    if (symbol !== currentToken.symbol) {
       dispatch({
         type: AT.CHANGE_CURRENT_TOKEN,
         data: tokens.data.find(t => t.symbol === symbol),

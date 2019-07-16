@@ -3,16 +3,18 @@
 .wrapper {
   @include wrapper('2 / 4', '1 / 12');
 
-  & div:first-child {
+  & > div:first-child {
     display: inline-block;
     height: 5%;
     width: 100%;
-    margin: 0.5em 0;
+    margin: 7px 0;
     & h1 {
+      display: inline-block;
+      width: 100%;
       margin: 0;
-      font-size: 1em;
+      line-height: 1.2em;
+      font-size: 1.2em;
       font-weight: 700;
-      line-height: 1em;
     }
   }
 }
