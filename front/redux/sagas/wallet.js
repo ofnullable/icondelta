@@ -38,7 +38,7 @@ function* watchLoadAddressRequest() {
 }
 
 function* loadAddress() {
-  const address = yield storage.get('address');
+  const address = storage.get('address');
   if (address) {
     yield put({
       type: AT.LOAD_ADDRESS_SUCCESS,

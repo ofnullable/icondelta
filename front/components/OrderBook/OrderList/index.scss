@@ -10,7 +10,7 @@
     width: 33%;
     padding: 10px;
   }
-  & > li > div:first-child {
+  & > li > div:nth-child(2) {
     width: 34%;
   }
 }

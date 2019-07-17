@@ -12,10 +12,10 @@ const BALANCE_OF = 'balanceOf';
 const TOKEN_BALANCE_OF = 'tokenBalanceOf';
 
 export const addIconexEventListner = handler =>
-  window.addEventListener(AT.ICONEX_RELAY_RESPONSE, handler);
+  window && window.addEventListener(AT.ICONEX_RELAY_RESPONSE, handler);
 
 export const removeIconexEventListner = handler =>
-  window.removeEventListener(AT.ICONEX_RELAY_RESPONSE, handler);
+  window && window.removeEventListener(AT.ICONEX_RELAY_RESPONSE, handler);
 
 export const eventHandler = dispatch => e => {
   const { type, payload } = e.detail;
