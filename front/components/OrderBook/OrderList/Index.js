@@ -5,7 +5,7 @@ import { ICX_ADDRESS } from '../../../utils/const';
 
 import { wrapper } from './index.scss';
 
-const OrderList = ({ orders }) => {
+const OrderList = ({ symbol, orders }) => {
   const sellOrders = orders => {
     let result = [];
     orders.forEach(o => {
@@ -30,9 +30,9 @@ const OrderList = ({ orders }) => {
         <OrderItem key={o.ono} order={o} />
       ))}
       <li>
-        <div>symbol</div>
-        <div>price</div>
-        <div>total</div>
+        <div>{symbol}</div>
+        <div>{`${symbol} / ICX`}</div>
+        <div>ICX</div>
       </li>
       {buyOrders(orders).map(o => (
         <OrderItem key={o.ono} order={o} />

@@ -16,6 +16,9 @@ app.prepare().then(() => {
 
   server.use(morgan('dev'));
 
+  server.use(express.urlencoded({ extended: true }));
+  server.use(express.json());
+
   server.use(cookieParser(process.env.COOKIE_SECRET));
   server.use(
     session({
@@ -28,9 +31,6 @@ app.prepare().then(() => {
       },
     })
   );
-
-  server.use(express.json());
-  server.use(express.urlencoded({ extended: true }));
 
   server.get('/:symbol', (req, res) => {
     const symbol = req.params.symbol || 'AC3';

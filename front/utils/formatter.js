@@ -9,7 +9,7 @@ const toBigNumber = value => {
   if (typeof value === 'string') {
     value = value.replace(/,/gi, '');
   }
-  return new BigNumber(value.toString());
+  return new BigNumber(`${value}`);
 };
 
 const withComma = value => {
@@ -44,7 +44,7 @@ export const toHexString = value => {
   if (!isBigNumber(value)) {
     value = toBigNumber(value);
   }
-  if (isNaN(value)) throw new Error('Can not convert hex string');
+  if (isNaN(value)) throw new Error('Can not convert to hex string');
   return `0x${value.toString(16)}`;
 };
 
@@ -63,6 +63,5 @@ export const toIcx = (value, round = 9) => {
   if (parts[1] && parts[1].length > 9) {
     return toBigNumber(parsed).toFixed(round);
   }
-  console.log(parsed);
   return parsed.toString(10);
 };

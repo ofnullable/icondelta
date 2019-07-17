@@ -11,7 +11,7 @@ const OrderBook = ({ symbol }) => {
       <div>
         <h1>{`Order Book - ${symbol}`}</h1>
       </div>
-      <OrderList orders={orderList.data} />
+      <OrderList symbol={symbol} orders={orderList.data} />
     </div>
   );
 };

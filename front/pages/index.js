@@ -13,26 +13,18 @@ import { addIconexEventListner, removeIconexEventListner, eventHandler } from '.
 import '../styles/index.scss';
 
 const Home = ({ symbol }) => {
-  const address = useSelector(state => state.wallet.address);
-  const { currentToken, tokens } = useSelector(state => state.token);
+  const { address } = useSelector(state => state.wallet);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    addIconexEventListner(eventHandler(dispatch));
-    return () => removeIconexEventListner();
+    const handler = eventHandler(dispatch);
+    addIconexEventListner(handler);
+    return () => removeIconexEventListner(handler);
   }, []);
 
   useEffect(() => {
-    loadWalletData();
-
-    if (symbol !== currentToken.symbol) {
-      dispatch({
-        type: AT.CHANGE_CURRENT_TOKEN,
-        data: tokens.data.find(t => t.symbol === symbol),
-      });
-      loadWalletData();
-    }
-  }, [currentToken]);
+    loadWalletData(address);
+  }, [symbol]);
 
   const loadWalletData = address => {
     if (address) {
