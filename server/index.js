@@ -1,4 +1,7 @@
 const express = require('express');
+const http = require('http');
+const ws = require('ws');
+
 const morgan = require('morgan');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
@@ -59,7 +62,15 @@ app.use('/api/address', address);
 app.use('/api/tokens', token);
 app.use('/api/orders', order);
 
+const server = http.createServer(app);
+const wss = new ws.Server({ server, path: '/ws' });
+
+wss.on('connection', ws => {
+  console.log('connected');
+  ws.send('hi, this is ws server');
+});
+
 const port = process.env.PORT || 8010;
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server is running on localhost:${port}`);
 });

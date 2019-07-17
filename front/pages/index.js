@@ -23,6 +23,19 @@ const Home = ({ symbol }) => {
   }, []);
 
   useEffect(() => {
+    const ws = new WebSocket('ws://localhost:8010/ws');
+    ws.onopen = () => {
+      console.log('socket connected!');
+    };
+
+    ws.onmessage = msg => {
+      console.log(msg);
+    };
+
+    return () => ws.close();
+  }, []);
+
+  useEffect(() => {
     loadWalletData(address);
   }, [symbol]);
 
