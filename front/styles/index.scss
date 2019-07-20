@@ -20,3 +20,7 @@ body {
 body > div {
   height: 100%;
 }
+
+input:read-only {
+  background: $light-gray;
+}

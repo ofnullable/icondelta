@@ -43,9 +43,11 @@ const BalanceForm = ({ address, type, token }) => {
 
   const eventDispatch = () => {
     if (type === 'Deposit') {
+      console.log(type, token, address);
       if (token) {
         depositTokenEvent(amount, address, token.address);
       } else {
+        console.log(type, token, address);
         depositIcxEvent(amount, address);
       }
     } else {

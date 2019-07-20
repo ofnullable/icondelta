@@ -13,7 +13,7 @@ import storage from '../../utils/storage';
 import { reverseObject } from '../../utils/utils';
 
 const getAddress = state => state.wallet.address;
-const getToken = state => state.token.currentToken;
+const getTokens = state => state.token.tokens;
 
 const getDetails = function*() {
   return {
@@ -37,8 +37,8 @@ function* watchLoadAddressRequest() {
   yield takeLatest(AT.LOAD_ADDRESS_REQUEST, loadAddress);
 }
 
-function* loadAddress() {
-  const address = storage.get('address');
+function* loadAddress({ symbol }) {
+  const address = yield storage.get('address');
   if (address) {
     yield put({
       type: AT.LOAD_ADDRESS_SUCCESS,
@@ -47,6 +47,7 @@ function* loadAddress() {
     yield put({
       type: AT.LOAD_BALANCE_REQUEST,
       address,
+      symbol,
     });
   } else {
     requestAddress();
@@ -57,8 +58,9 @@ function* watchLoadTokenBalanceRequest() {
   yield takeLatest(AT.LOAD_BALANCE_REQUEST, loadTokenBalance);
 }
 
-function* loadTokenBalance({ address }) {
-  const currentToken = yield select(getToken);
+function* loadTokenBalance({ address, symbol }) {
+  const tokens = yield select(getTokens);
+  const currentToken = yield tokens.data.find(t => t.symbol === symbol);
   const eventIds = yield loadBalances(address, currentToken.address);
 
   yield put({

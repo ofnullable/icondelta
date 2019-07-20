@@ -1,9 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import { wrapper } from './index.scss';
+import { wrapper, active } from './index.scss';
+import HistoryList from './HistoryList';
 
 const History = () => {
-  return <div className={wrapper}>history</div>;
+  const [type, setType] = useState('Trades');
+
+  const handleMenuClick = e => {
+    if (e.target.className === active) {
+      return;
+    }
+    setType(e.target.className);
+  };
+  return (
+    <div className={wrapper}>
+      <menu className={type === 'Trades' ? active : 'Trades'} onClick={handleMenuClick}>
+        Trades
+      </menu>
+      <menu className={type !== 'Trades' ? active : 'Orders'} onClick={handleMenuClick}>
+        Orders
+      </menu>
+      <HistoryList />
+    </div>
+  );
 };
 
 export default History;

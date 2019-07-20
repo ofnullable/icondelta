@@ -12,10 +12,10 @@ const BALANCE_OF = 'balanceOf';
 const TOKEN_BALANCE_OF = 'tokenBalanceOf';
 
 export const addIconexEventListner = handler =>
-  window && window.addEventListener(AT.ICONEX_RELAY_RESPONSE, handler);
+  window.addEventListener(AT.ICONEX_RELAY_RESPONSE, handler);
 
 export const removeIconexEventListner = handler =>
-  window && window.removeEventListener(AT.ICONEX_RELAY_RESPONSE, handler);
+  window.removeEventListener(AT.ICONEX_RELAY_RESPONSE, handler);
 
 export const eventHandler = dispatch => e => {
   const { type, payload } = e.detail;
@@ -130,7 +130,7 @@ const makeDepositIcxEvent = (amount, address) =>
         to: SCORE_ADDRESS,
         value: toLoop(amount),
         timestamp: `0x${(new Date().getTime() * 1000).toString(16)}`,
-        data: { method: 'deposit' },
+        data: { method: 'deposit', params: {} },
       },
     })
   );

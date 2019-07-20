@@ -2,4 +2,7 @@
 
 .wrapper {
   @include wrapper('2 / 4', '12 / -1');
+  menu {
+    @include menu();
+  }
 }

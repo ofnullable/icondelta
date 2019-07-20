@@ -26,14 +26,14 @@ const OrderList = ({ symbol, orders }) => {
   };
   return (
     <ul className={wrapper}>
-      {sellOrders(orders).map(o => (
-        <OrderItem key={o.ono} order={o} />
-      ))}
       <li>
         <div>{symbol}</div>
         <div>{`${symbol} / ICX`}</div>
         <div>ICX</div>
       </li>
+      {sellOrders(orders).map(o => (
+        <OrderItem key={o.ono} order={o} />
+      ))}
       {buyOrders(orders).map(o => (
         <OrderItem key={o.ono} order={o} />
       ))}
