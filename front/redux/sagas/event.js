@@ -1,4 +1,4 @@
-import { all, fork, put, call, takeLatest, select } from 'redux-saga/effects';
+import { all, fork, put, takeLatest, select } from 'redux-saga/effects';
 
 import AT from '../actionTypes';
 import storage from '../../utils/storage';

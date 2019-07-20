@@ -26,7 +26,7 @@ const TradeForm = ({ type, token }) => {
       </div>
       <div>
         <p>Total</p>
-        <input required type='text' />
+        <input required type='text' readOnly />
       </div>
       <div>
         <p>Expires</p>

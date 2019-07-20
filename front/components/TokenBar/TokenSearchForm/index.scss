@@ -18,14 +18,14 @@
     vertical-align: middle;
     text-align: center;
     display: inline-block;
-    background-color: $blue;
-    border: 1.5px solid $blue;
+    background-color: $secondery;
+    border: 1.5px solid $secondery;
     border-left: none;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
     &:hover {
-      border-color: darken($blue, 10%);
-      background-color: darken($blue, 10%);
+      border-color: darken($secondery, 10%);
+      background-color: darken($secondery, 10%);
     }
     & > i {
       font-size: 16px;

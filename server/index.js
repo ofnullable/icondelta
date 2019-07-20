@@ -68,6 +68,10 @@ const wss = new ws.Server({ server, path: '/ws' });
 wss.on('connection', ws => {
   console.log('connected');
   ws.send('hi, this is ws server');
+
+  ws.on('message', msg => {
+    console.log(JSON.parse(msg));
+  });
 });
 
 const port = process.env.PORT || 8010;

@@ -11,10 +11,12 @@ import AT from '../redux/actionTypes';
 import { addIconexEventListner, removeIconexEventListner, eventHandler } from '../utils/event';
 
 import '../styles/index.scss';
+import { isServer } from '../utils/const';
 
 const Home = ({ symbol }) => {
   const { address } = useSelector(state => state.wallet);
   const dispatch = useDispatch();
+  let ws;
 
   useEffect(() => {
     const handler = eventHandler(dispatch);
@@ -23,14 +25,13 @@ const Home = ({ symbol }) => {
   }, []);
 
   useEffect(() => {
-    const ws = new WebSocket('ws://localhost:8010/ws');
+    ws = new WebSocket('ws://localhost:8010/ws');
     ws.onopen = () => {
       console.log('socket connected!');
+      ws.send(`{"token": "${symbol}"}`);
     };
 
-    ws.onmessage = msg => {
-      console.log(msg);
-    };
+    ws.onmessage = msg => console.log(msg);
 
     return () => ws.close();
   }, []);
@@ -44,10 +45,12 @@ const Home = ({ symbol }) => {
       dispatch({
         type: AT.LOAD_BALANCE_REQUEST,
         address,
+        symbol,
       });
     } else {
       dispatch({
         type: AT.LOAD_ADDRESS_REQUEST,
+        symbol,
       });
     }
   };
