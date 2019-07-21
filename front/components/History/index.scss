@@ -2,7 +2,12 @@
 
 .wrapper {
   @include wrapper('2 / 4', '12 / -1');
+
+  & > div {
+    height: 10%;
+  }
   menu {
     @include menu();
+    padding: 9px;
   }
 }

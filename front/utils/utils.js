@@ -86,3 +86,7 @@ export const reverseObject = obj => {
   Object.keys(obj).forEach(k => (result[obj[k]] = k));
   return result;
 };
+
+export const makeSignature = () => {
+  // TODO: make signature with sha3-256
+};

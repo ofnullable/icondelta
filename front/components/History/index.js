@@ -14,12 +14,15 @@ const History = () => {
   };
   return (
     <div className={wrapper}>
-      <menu className={type === 'Trades' ? active : 'Trades'} onClick={handleMenuClick}>
-        Trades
-      </menu>
-      <menu className={type !== 'Trades' ? active : 'Orders'} onClick={handleMenuClick}>
-        Orders
-      </menu>
+      <div>
+        <menu className={type === 'Trades' ? active : 'Trades'} onClick={handleMenuClick}>
+          Trades
+        </menu>
+        <menu className={type !== 'Trades' ? active : 'Orders'} onClick={handleMenuClick}>
+          Orders
+        </menu>
+      </div>
+      {/* type === 'Trades' ? <TradeHistories /> : <OrderHistories /> */}
       <HistoryList />
     </div>
   );
