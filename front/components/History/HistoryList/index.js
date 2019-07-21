@@ -1,7 +1,9 @@
 import React from 'react';
 
+import { wrapper } from './index.scss';
+
 const HistoryList = () => {
-  return <div>Histories</div>;
+  return <ul className={wrapper}>Histories</ul>;
 };
 
 export default HistoryList;

@@ -3,7 +3,7 @@ import storage from '../../utils/storage';
 import { toIcx } from '../../utils/formatter';
 
 const initialState = {
-  address: storage.get('address'),
+  address: storage.get('address') || null,
 
   deposited: {
     icx: 0,

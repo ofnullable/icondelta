@@ -16,6 +16,7 @@ function* watchAddressResponse() {
 
 function* setAddress({ payload }) {
   yield storage.set('address', payload);
+  const token = yield select(getToken);
   yield put({
     type: AT.LOAD_ADDRESS_SUCCESS,
     address: payload,
@@ -23,6 +24,7 @@ function* setAddress({ payload }) {
   yield put({
     type: AT.LOAD_BALANCE_REQUEST,
     address: payload,
+    symbol: token.symbol,
   });
 }
 

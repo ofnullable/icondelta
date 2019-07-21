@@ -4,7 +4,7 @@ const isBigNumber = value => {
   return BigNumber.isBigNumber(value);
 };
 
-const toBigNumber = value => {
+export const toBigNumber = value => {
   if (isBigNumber(value)) return value;
   if (typeof value === 'string') {
     value = value.replace(/,/gi, '');

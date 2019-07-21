@@ -1,6 +1,6 @@
 const express = require('express');
 const http = require('http');
-const ws = require('ws');
+const socketIo = require('socket.io');
 
 const morgan = require('morgan');
 const cors = require('cors');
@@ -63,15 +63,14 @@ app.use('/api/tokens', token);
 app.use('/api/orders', order);
 
 const server = http.createServer(app);
-const wss = new ws.Server({ server, path: '/ws' });
+const io = socketIo(server);
+// io.origins(['']);
 
-wss.on('connection', ws => {
-  console.log('connected');
-  ws.send('hi, this is ws server');
+io.of('/orders').on('connection', socket => {
+  console.log('socket connected!');
+  console.log(socket.handshake.query.symbol);
 
-  ws.on('message', msg => {
-    console.log(JSON.parse(msg));
-  });
+  socket.on('disconnect', () => console.log('socket disconnected.'));
 });
 
 const port = process.env.PORT || 8010;

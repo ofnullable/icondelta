@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import socket from 'socket.io-client';
 
 import Balance from '../components/Balance';
 import OrderBook from '../components/OrderBook';
@@ -11,12 +12,10 @@ import AT from '../redux/actionTypes';
 import { addIconexEventListner, removeIconexEventListner, eventHandler } from '../utils/event';
 
 import '../styles/index.scss';
-import { isServer } from '../utils/const';
 
 const Home = ({ symbol }) => {
   const { address } = useSelector(state => state.wallet);
   const dispatch = useDispatch();
-  let ws;
 
   useEffect(() => {
     const handler = eventHandler(dispatch);
@@ -25,19 +24,14 @@ const Home = ({ symbol }) => {
   }, []);
 
   useEffect(() => {
-    ws = new WebSocket('ws://localhost:8010/ws');
-    ws.onopen = () => {
-      console.log('socket connected!');
-      ws.send(`{"token": "${symbol}"}`);
-    };
-
-    ws.onmessage = msg => console.log(msg);
-
-    return () => ws.close();
-  }, []);
-
-  useEffect(() => {
     loadWalletData(address);
+
+    const orderSocekt = socket(`http://localhost:8010/orders?symbol=${symbol}`);
+    orderSocekt.on('connect', () => {
+      console.log('socket conneted!');
+    });
+
+    return () => orderSocekt.disconnect();
   }, [symbol]);
 
   const loadWalletData = address => {
@@ -74,10 +68,7 @@ Home.getInitialProps = async context => {
     type: AT.LOAD_TOKEN_LIST_REQUEST,
     symbol,
   });
-  store.dispatch({
-    type: AT.LOAD_ORDER_LIST_REQUEST,
-    symbol,
-  });
+
   return { symbol };
 };
 
