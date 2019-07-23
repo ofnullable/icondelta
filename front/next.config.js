@@ -11,15 +11,12 @@ module.exports = withBundleAnalyzer(
     cssLoaderOptions: {
       importLoaders: 2,
     },
-  }),
-  {
     webpack(config) {
       const isProd = process.env.NODE_ENV === 'production';
       const plugins = [
         ...config.plugins,
         new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /^\.\/ko$/),
       ];
-
       if (isProd) {
         plugins.push(new CompressionPlugin()); // main.js.gz
       }
@@ -27,7 +24,6 @@ module.exports = withBundleAnalyzer(
       config.node = {
         fs: 'empty',
       };
-
       return {
         ...config,
         mode: isProd ? 'production' : 'development',
@@ -35,5 +31,5 @@ module.exports = withBundleAnalyzer(
         plugins,
       };
     },
-  }
+  })
 );
