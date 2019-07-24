@@ -8,6 +8,7 @@ const changeObjectState = (step, state, target, action) => {
         [target]: {
           ...state[target],
           isProceeding: true,
+          error: '',
         },
       };
     case REDUX_STEP.SUCCESS: {
@@ -44,6 +45,7 @@ const changeArrayState = (step, state, target, action) => {
         [target]: {
           ...state[target],
           isProceeding: true,
+          error: '',
         },
       };
     case REDUX_STEP.SUCCESS: {

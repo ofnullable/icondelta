@@ -23,7 +23,7 @@ const History = () => {
         </menu>
       </div>
       {/* type === 'Trades' ? <TradeHistories /> : <OrderHistories /> */}
-      <HistoryList />
+      <HistoryList type={type} />
     </div>
   );
 };

@@ -34,10 +34,14 @@ const Home = ({ symbol }) => {
     return () => orderSocekt.disconnect();
   }, [symbol]);
 
-  const loadWalletData = address => {
+  const loadWalletData = async address => {
     if (address) {
       dispatch({
-        type: AT.LOAD_BALANCE_REQUEST,
+        type: AT.LOAD_ICX_BALANCE_REQUEST,
+        address,
+      });
+      dispatch({
+        type: AT.LOAD_TOKEN_BALANCE_REQUEST,
         address,
         symbol,
       });

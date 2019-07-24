@@ -1,9 +1,8 @@
 import React from 'react';
 import NextHead from 'next/head';
-import { string } from 'prop-types';
 
 const title = ' icondelta ';
-const url = 'http://www.icondelta.ga';
+const url = 'https://www.icondelta.ga';
 const description = 'Decentralized Exchange on ICON Network';
 const ogImage = '';
 
@@ -15,7 +14,7 @@ const Head = () => (
     <meta name='title' content={title} />
     <meta name='description' content={description} />
     <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
-    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <meta name='viewport' content='width=device-width, initial-scale=1, viewport-fit=cover' />
 
     <meta name='twitter:site' content={url} />
     <meta name='twitter:card' content='summary_large_image' />
@@ -40,12 +39,5 @@ const Head = () => (
     )}
   </NextHead>
 );
-
-Head.propTypes = {
-  title: string,
-  description: string,
-  url: string,
-  ogImage: string,
-};
 
 export default Head;
