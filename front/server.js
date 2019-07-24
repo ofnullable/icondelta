@@ -19,6 +19,8 @@ app.prepare().then(() => {
   server.use(express.urlencoded({ extended: true }));
   server.use(express.json());
 
+  server.use('/static', express.static('static'));
+
   server.use(cookieParser(process.env.COOKIE_SECRET));
   server.use(
     session({
@@ -42,7 +44,6 @@ app.prepare().then(() => {
     if (pathname === '/') {
       return res.redirect('/AC3');
     }
-
     return handle(req, res);
   });
 

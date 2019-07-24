@@ -1,18 +1,13 @@
 import AT from '../actionTypes';
 import storage from '../../utils/storage';
-import { toIcx } from '../../utils/formatter';
+import { INITIAL_STATE, REDUX_STEP } from '../../utils/const';
+import { changeState } from '../../utils/utils';
 
 const initialState = {
   address: storage.get('address') || null,
 
-  deposited: {
-    icx: 0,
-    token: 0,
-  },
-  undeposited: {
-    icx: 0,
-    token: 0,
-  },
+  icx: INITIAL_STATE['OBJ'],
+  token: INITIAL_STATE['OBJ'],
 };
 
 export default (state = initialState, action) => {
@@ -26,38 +21,24 @@ export default (state = initialState, action) => {
         ...state,
         address: action.address,
       };
+    case AT.LOAD_ICX_BALANCE_REQUEST:
+      return changeState('OBJ', REDUX_STEP.REQUEST, state, 'icx');
+
+    case AT.LOAD_TOKEN_BALANCE_REQUEST:
+      return changeState('OBJ', REDUX_STEP.REQUEST, state, 'token');
+
     case AT.LOAD_ICX_BALANCE_SUCCESS:
-      return {
-        ...state,
-        undeposited: {
-          ...state['undeposited'],
-          icx: toIcx(action.balance),
-        },
-      };
+      return changeState('OBJ', REDUX_STEP.SUCCESS, state, 'icx', action);
+
     case AT.LOAD_TOKEN_BALANCE_SUCCESS:
-      return {
-        ...state,
-        undeposited: {
-          ...state['undeposited'],
-          token: toIcx(action.balance),
-        },
-      };
-    case AT.LOAD_DEPOSITED_ICX_BALANCE_SUCCESS:
-      return {
-        ...state,
-        deposited: {
-          ...state['deposited'],
-          icx: toIcx(action.balance),
-        },
-      };
-    case AT.LOAD_DEPOSITED_TOKEN_BALANCE_SUCCESS:
-      return {
-        ...state,
-        deposited: {
-          ...state['deposited'],
-          token: toIcx(action.balance),
-        },
-      };
+      return changeState('OBJ', REDUX_STEP.SUCCESS, state, 'token', action);
+
+    case AT.LOAD_ICX_BALANCE_FAILURE:
+      return changeState('OBJ', REDUX_STEP.FAILURE, state, 'icx', action);
+
+    case AT.LOAD_TOKEN_BALANCE_FAILURE:
+      return changeState('OBJ', REDUX_STEP.FAILURE, state, 'token', action);
+
     default:
       return {
         ...state,

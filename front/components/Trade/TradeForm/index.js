@@ -41,6 +41,8 @@ const TradeForm = ({ type, token }) => {
     setAmount(value);
     if (price && value) {
       setTotal(toBigNumber(value).times(price));
+    } else {
+      setTotal(0);
     }
   };
 
@@ -49,6 +51,8 @@ const TradeForm = ({ type, token }) => {
     setPrice(value);
     if (amount && value) {
       setTotal(toBigNumber(value).times(amount));
+    } else {
+      setTotal(0);
     }
   };
 

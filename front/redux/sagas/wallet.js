@@ -1,4 +1,4 @@
-import { all, fork, put, takeLatest, select } from 'redux-saga/effects';
+import { all, fork, put, call, takeLatest, select } from 'redux-saga/effects';
 
 import AT from '../actionTypes';
 import {
@@ -11,6 +11,8 @@ import {
 } from '../../utils/event';
 import storage from '../../utils/storage';
 import { reverseObject } from '../../utils/utils';
+import { getBalance, getIcxBalance, getTokenBalance } from '../api/iconex/wallet';
+import { toIcx } from '../../utils/formatter';
 
 const getAddress = state => state.wallet.address;
 const getTokens = state => state.token.tokens;
@@ -18,13 +20,14 @@ const getTokens = state => state.token.tokens;
 const getDetails = function*() {
   return {
     address: yield select(getAddress),
-    token: yield select(getToken),
+    token: yield select(getTokens),
   };
 };
 
 export default function*() {
   yield all([
     fork(watchLoadAddressRequest),
+    fork(watchLoadIcxBalanceRequest),
     fork(watchLoadTokenBalanceRequest),
     fork(watchDepositIcxRequest),
     fork(watchWithdrawIcxRequest),
@@ -39,13 +42,18 @@ function* watchLoadAddressRequest() {
 
 function* loadAddress({ symbol }) {
   const address = yield storage.get('address');
+
   if (address) {
     yield put({
       type: AT.LOAD_ADDRESS_SUCCESS,
       address,
     });
     yield put({
-      type: AT.LOAD_BALANCE_REQUEST,
+      type: AT.LOAD_ICX_BALANCE_REQUEST,
+      address,
+    });
+    yield put({
+      type: AT.LOAD_TOKEN_BALANCE_REQUEST,
       address,
       symbol,
     });
@@ -54,19 +62,51 @@ function* loadAddress({ symbol }) {
   }
 }
 
+function* watchLoadIcxBalanceRequest() {
+  yield takeLatest(AT.LOAD_ICX_BALANCE_REQUEST, loadIcxBalance);
+}
+
+function* loadIcxBalance({ address }) {
+  try {
+    const balance = yield call(getIcxBalance, address);
+    balance.deposited = toIcx(balance.deposited);
+    balance.undeposited = toIcx(balance.undeposited);
+    yield put({
+      type: AT.LOAD_ICX_BALANCE_SUCCESS,
+      data: balance,
+    });
+  } catch (e) {
+    console.error(e);
+    yield put({
+      type: AT.LOAD_ICX_BALANCE_FAILURE,
+      error: e.split('] ')[1],
+    });
+  }
+}
+
 function* watchLoadTokenBalanceRequest() {
-  yield takeLatest(AT.LOAD_BALANCE_REQUEST, loadTokenBalance);
+  yield takeLatest(AT.LOAD_TOKEN_BALANCE_REQUEST, loadTokenBalance);
 }
 
 function* loadTokenBalance({ address, symbol }) {
-  const tokens = yield select(getTokens);
-  const currentToken = yield tokens.data.find(t => t.symbol === symbol);
-  const eventIds = yield loadBalances(address, currentToken.address);
+  try {
+    const tokens = yield select(getTokens);
+    const currentToken = yield tokens.data.find(t => t.symbol === symbol);
 
-  yield put({
-    type: AT.JSON_RPC_REQUEST,
-    id: reverseObject(eventIds),
-  });
+    const balance = yield call(getTokenBalance, address, currentToken.address);
+    balance.deposited = toIcx(balance.deposited);
+    balance.undeposited = toIcx(balance.undeposited);
+    yield put({
+      type: AT.LOAD_TOKEN_BALANCE_SUCCESS,
+      data: balance,
+    });
+  } catch (e) {
+    console.error(e);
+    yield put({
+      type: AT.LOAD_TOKEN_BALANCE_FAILURE,
+      error: e.split('] ')[1],
+    });
+  }
 }
 
 function* watchDepositIcxRequest() {

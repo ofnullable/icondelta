@@ -64,7 +64,6 @@ app.use('/api/orders', order);
 
 const server = http.createServer(app);
 const io = socketIo(server);
-// io.origins(['']);
 
 io.of('/orders').on('connection', socket => {
   console.log('socket connected!');

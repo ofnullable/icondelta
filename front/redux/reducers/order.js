@@ -3,7 +3,7 @@ import { changeState } from '../../utils/utils';
 import { INITIAL_STATE, REDUX_STEP } from '../../utils/const';
 
 const initialState = {
-  orders: INITIAL_STATE['OBJ'],
+  orders: INITIAL_STATE['ARR'],
 };
 
 export default (state = initialState, action) => {

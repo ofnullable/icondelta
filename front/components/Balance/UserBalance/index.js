@@ -1,8 +1,27 @@
 import React from 'react';
 
-import { wrapper } from './index.scss';
+import { wrapper, error } from './index.scss';
 
-const UserBalance = ({ token, deposited, undeposited }) => {
+const UserBalance = ({ currentToken, icx, token }) => {
+  const renderItem = target => {
+    if (target.isProceeding) {
+      return <td colSpan='2'>Loading</td>;
+    } else if (target.error) {
+      return (
+        <td colSpan='2' className={error}>
+          {target.error}
+        </td>
+      );
+    } else {
+      return (
+        <>
+          <td>{target.data.undeposited || 0}</td>
+          <td>{target.data.deposited || 0}</td>
+        </>
+      );
+    }
+  };
+
   return (
     <table className={wrapper}>
       <thead>
@@ -15,13 +34,11 @@ const UserBalance = ({ token, deposited, undeposited }) => {
       <tbody>
         <tr>
           <td>ICX</td>
-          <td>{undeposited.icx}</td>
-          <td>{deposited.icx}</td>
+          {renderItem(icx)}
         </tr>
         <tr>
-          <td>{token.symbol}</td>
-          <td>{undeposited.token}</td>
-          <td>{deposited.token}</td>
+          <td>{currentToken.symbol}</td>
+          {renderItem(token)}
         </tr>
       </tbody>
     </table>

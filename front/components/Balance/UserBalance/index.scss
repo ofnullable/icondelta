@@ -6,4 +6,10 @@
   & td {
     padding: 12px;
   }
+  & .error {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: red;
+  }
 }
