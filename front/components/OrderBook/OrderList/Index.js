@@ -17,16 +17,7 @@ const OrderList = ({ symbol, orders }) => {
       );
     }
   };
-  return (
-    <ul className={wrapper}>
-      <li>
-        <div>{`${symbol} / ICX`}</div>
-        <div>{symbol}</div>
-        <div>ICX</div>
-      </li>
-      {renderOrders()}
-    </ul>
-  );
+  return <ul className={wrapper}>{renderOrders()}</ul>;
 };
 
 export default OrderList;

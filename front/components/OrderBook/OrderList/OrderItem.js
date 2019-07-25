@@ -2,11 +2,12 @@ import React from 'react';
 
 import { ICX_ADDRESS } from '../../../utils/const';
 
-import { wrapper, sellOrder, buyOrder } from './OrderItem.scss';
+import { wrapper } from './OrderItem.scss';
 
 const OrderItem = ({ order }) => {
+  // TODO: show, hide modal for click event
   return (
-    <li className={[wrapper, sellOrder].join(' ')}>
+    <li className={wrapper}>
       <div>{price}</div>
       <div>{amount}</div>
       <div>{total}</div>

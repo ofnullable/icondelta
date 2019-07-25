@@ -4,27 +4,18 @@ import { useSelector } from 'react-redux';
 import { wrapper } from './index.scss';
 import OrderList from './OrderList/Index';
 
-const OrderBook = ({ symbol, socket }) => {
+const OrderBook = ({ symbol }) => {
   const orderList = useSelector(state => state.order.orders);
-
-  useEffect(() => {
-    console.log(socket);
-    if (socket) {
-      const { order } = socket;
-      order.on('connect', () => {
-        console.log(`socket connect!`);
-
-        order.emit('getOrders', { type: 'buy', offset: 0, count: 10 }, res => {
-          console.log(res);
-        });
-      });
-    }
-  }, [socket]);
 
   return (
     <div className={wrapper}>
       <div>
         <h1>{`Order Book - ${symbol}`}</h1>
+      </div>
+      <div>
+        <span>{`${symbol} / ICX`}</span>
+        <span>{symbol}</span>
+        <span>ICX</span>
       </div>
       <OrderList symbol={symbol} orders={orderList.data} />
     </div>

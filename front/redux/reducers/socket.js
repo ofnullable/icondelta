@@ -1,14 +1,19 @@
 import AT from '../actionTypes';
-import { changeState } from '../../utils/utils';
-import { INITIAL_STATE, REDUX_STEP } from '../../utils/const';
 
 const initialState = {
-  trades: INITIAL_STATE['ARR'],
-  orders: INITIAL_STATE['ARR'],
+  sockets: {},
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case AT.SET_SOCKET:
+      return {
+        ...action.data,
+      };
+    case AT.REMOVE_SOCKET:
+      return {
+        ['sockets']: {},
+      };
     default:
       return {
         ...state,

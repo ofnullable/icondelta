@@ -3,11 +3,28 @@
 .wrapper {
   @include wrapper('2 / 4', '12 / -1');
 
-  & > div {
-    height: 10%;
-  }
   menu {
     @include menu();
     padding: 9px;
+  }
+  & > div:first-child {
+    height: 10%;
+  }
+  & > div {
+    height: 7%;
+  }
+  & ul.menu {
+    display: flex;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    & li {
+      width: 15%;
+      margin: 0 auto;
+      line-height: 1.8;
+      text-align: center;
+      flex: auto;
+    }
   }
 }

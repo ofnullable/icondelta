@@ -41,39 +41,10 @@ function* dispatchAction({ payload }) {
 
     switch (ids[payload.id]) {
       // response for get balance requests
-      case AT.ICX_BALANCE_REQUEST_ID:
-        yield put({
-          type: AT.LOAD_ICX_BALANCE_SUCCESS,
-          balance: payload.result,
-        });
-        break;
-      case AT.DEPOSITED_ICX_BALANCE_REQUEST_ID:
-        yield put({
-          type: AT.LOAD_DEPOSITED_ICX_BALANCE_SUCCESS,
-          balance: payload.result,
-        });
-        break;
-      case AT.TOKEN_BALANCE_REQUEST_ID:
-        yield put({
-          type: AT.LOAD_TOKEN_BALANCE_SUCCESS,
-          balance: payload.result,
-        });
-        break;
-      case AT.DEPOSITED_TOKEN_BALANCE_REQUEST_ID:
-        yield put({
-          type: AT.LOAD_DEPOSITED_TOKEN_BALANCE_SUCCESS,
-          balance: payload.result,
-        });
-        break;
 
       default:
         break;
     }
-    // for remove response id
-    yield put({
-      type: AT.RESPONSE_COMPLETE,
-      id: payload.id,
-    });
   } catch (e) {
     console.error(e);
   }
