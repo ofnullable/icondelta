@@ -3,27 +3,31 @@ import IconService, { HttpProvider, IconBuilder } from 'icon-sdk-js';
 import { isProd } from '../../../utils/const';
 
 const getWalletUrl = () => {
+  let base = '';
   if (isProd) {
     //mainnet
-    return 'https://wallet.icon.foundation';
+    base += 'https://wallet.icon.foundation';
   } else {
     //testnet
-    return 'https://bicon.tracker.solidwallet.io';
+    base += 'https://bicon.net.solidwallet.io';
   }
+  return base + '/api/v3';
 };
 
 const getTrackerUrl = () => {
+  let base = '';
   if (isProd) {
     //mainnet
-    return 'https://tracker.icon.foundation';
+    base += 'https://tracker.icon.foundation';
   } else {
     //testnet
-    return 'https://bicon.tracker.solidwallet.io';
+    base += '	https://bicon.tracker.solidwallet.io';
   }
+  return base + '/api/v3';
 };
 
-const walletHttpProvider = new HttpProvider(`${getWalletUrl()}/api/v3`);
-const trackerHttpProvider = new HttpProvider(`${getTrackerUrl()}/api/v3`);
+const walletHttpProvider = new HttpProvider(`${getWalletUrl()}`);
+const trackerHttpProvider = new HttpProvider(`${getTrackerUrl()}`);
 
 export const walletService = new IconService(walletHttpProvider);
 export const trackerService = new IconService(trackerHttpProvider);
