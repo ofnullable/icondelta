@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import socket from 'socket.io-client';
+import io from 'socket.io-client';
 
 import Balance from '../components/Balance';
 import OrderBook from '../components/OrderBook';
@@ -13,7 +13,10 @@ import { addIconexEventListner, removeIconexEventListner, eventHandler } from '.
 
 import '../styles/index.scss';
 
+const BASE_URL = 'ws://15.164.170.51';
+
 const Home = ({ symbol }) => {
+  const [sockets, setSockets] = useState();
   const { address } = useSelector(state => state.wallet);
   const dispatch = useDispatch();
 
@@ -26,12 +29,23 @@ const Home = ({ symbol }) => {
   useEffect(() => {
     loadWalletData(address);
 
-    const orderSocekt = socket(`http://localhost:8010/orders?symbol=${symbol}`);
-    orderSocekt.on('connect', () => {
-      console.log('socket conneted!');
+    setSockets({
+      order: io(`${BASE_URL}/orders/${symbol}`),
+      trade: io(`${BASE_URL}/trades`),
     });
 
-    return () => orderSocekt.disconnect();
+    return () => {
+      console.log('home component', sockets);
+      if (sockets) {
+        const { order } = sockets;
+        order &&
+          Object.keys(order.io.nsps).forEach(nsp => {
+            if (order.io.nsps[nsp] === order) {
+              delete order.io.nsps[nsp];
+            }
+          });
+      }
+    };
   }, [symbol]);
 
   const loadWalletData = async address => {
@@ -56,10 +70,10 @@ const Home = ({ symbol }) => {
   return (
     <>
       <Balance />
-      <OrderBook symbol={symbol} />
-      <TokenBar symbol={symbol} />
-      <Trade />
-      <History />
+      <OrderBook symbol={symbol} socket={sockets} />
+      <TokenBar symbol={symbol} socket={sockets && sockets.trade} />
+      <Trade socket={sockets && sockets.order} />
+      <History socket={sockets} />
     </>
   );
 };

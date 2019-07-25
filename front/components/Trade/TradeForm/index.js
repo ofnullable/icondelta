@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { SHA3Hash } from 'sha3';
 
 import AT from '../../../redux/actionTypes';
 import { toBigNumber } from '../../../utils/formatter';
 
 import { wrapper } from './index.scss';
 import { primary, danger } from '../../Layout/style.scss';
+import { SCORE_ADDRESS, ICX_ADDRESS } from '../../../utils/const';
 
 const TradeForm = ({ type, token }) => {
   const [price, setPrice] = useState('');
@@ -76,7 +78,7 @@ const TradeForm = ({ type, token }) => {
       </div>
       <div>
         <p>Total</p>
-        <input required type='text' readOnly value={total} />
+        <input required type='text' value={total} readOnly />
       </div>
       <div>
         <p>Expires</p>

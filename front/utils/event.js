@@ -65,60 +65,6 @@ const makeEventPayload = ({ id, method, params = {} }) => {
   };
 };
 
-const loadIcxBalance = (id, address) =>
-  iconexEvent(makeEventPayload({ id, method: GET_ICX_BALANCE, params: { address } }));
-
-const loadDepositedIcxBalance = (id, address) =>
-  iconexEvent(
-    makeEventPayload({
-      id,
-      method: SEND_QUERY,
-      params: {
-        from: address,
-        to: SCORE_ADDRESS,
-        dataType: 'call',
-        data: {
-          method: BALANCE_OF,
-          params: { _address: address },
-        },
-      },
-    })
-  );
-
-const loadTokenBalance = (id, address, tokenAddress) =>
-  iconexEvent(
-    makeEventPayload({
-      id,
-      method: SEND_QUERY,
-      params: {
-        from: address,
-        to: tokenAddress,
-        dataType: 'call',
-        data: {
-          method: BALANCE_OF,
-          params: { _owner: address },
-        },
-      },
-    })
-  );
-
-const loadDepositedTokenBalance = (id, address, tokenAddress) =>
-  iconexEvent(
-    makeEventPayload({
-      id,
-      method: SEND_QUERY,
-      params: {
-        from: address,
-        to: SCORE_ADDRESS,
-        dataType: 'call',
-        data: {
-          method: TOKEN_BALANCE_OF,
-          params: { _tokenAddress: tokenAddress, _address: address },
-        },
-      },
-    })
-  );
-
 const makeDepositIcxEvent = (amount, address) =>
   iconexEvent(
     makeEventPayload({
@@ -184,23 +130,6 @@ const makeWithdrawTokenEvent = (amount, address, tokenAddress) =>
   );
 
 export const requestAddress = () => dispatchEvents(iconexEvent('REQUEST_ADDRESS'));
-
-export const loadBalances = (address, tokenAddress) => {
-  const ids = {
-    [AT.ICX_BALANCE_REQUEST_ID]: makeEventId(),
-    [AT.DEPOSITED_ICX_BALANCE_REQUEST_ID]: makeEventId(),
-    [AT.TOKEN_BALANCE_REQUEST_ID]: makeEventId(),
-    [AT.DEPOSITED_TOKEN_BALANCE_REQUEST_ID]: makeEventId(),
-  };
-
-  dispatchEvents(
-    loadIcxBalance(ids[AT.ICX_BALANCE_REQUEST_ID], address),
-    loadDepositedIcxBalance(ids[AT.DEPOSITED_ICX_BALANCE_REQUEST_ID], address),
-    loadTokenBalance(ids[AT.TOKEN_BALANCE_REQUEST_ID], address, tokenAddress),
-    loadDepositedTokenBalance(ids[AT.DEPOSITED_TOKEN_BALANCE_REQUEST_ID], address, tokenAddress)
-  );
-  return ids;
-};
 
 export const depositIcxEvent = (amount, address) => {
   dispatchEvents(makeDepositIcxEvent(amount, address));

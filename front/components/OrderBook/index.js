@@ -1,11 +1,26 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import { wrapper } from './index.scss';
 import OrderList from './OrderList/Index';
 
-const OrderBook = ({ symbol }) => {
+const OrderBook = ({ symbol, socket }) => {
   const orderList = useSelector(state => state.order.orders);
+
+  useEffect(() => {
+    console.log(socket);
+    if (socket) {
+      const { order } = socket;
+      order.on('connect', () => {
+        console.log(`socket connect!`);
+
+        order.emit('getOrders', { type: 'buy', offset: 0, count: 10 }, res => {
+          console.log(res);
+        });
+      });
+    }
+  }, [socket]);
+
   return (
     <div className={wrapper}>
       <div>
