@@ -1,9 +1,9 @@
 .wrapper {
   text-align: center;
-  &.sellOrder {
+  &.sell {
     color: red;
   }
-  &.buyOrder {
+  &.buy {
     color: greenyellow;
   }
 }

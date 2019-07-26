@@ -1,17 +1,35 @@
 import React from 'react';
 
-import { ICX_ADDRESS } from '../../../utils/const';
+import { wrapper, sell, buy } from './OrderItem.scss';
 
-import { wrapper, sellOrder, buyOrder } from './OrderItem.scss';
+const OrderItem = ({ type, order }) => {
+  // TODO: show, hide modal for click event
 
-const OrderItem = ({ order }) => {
-  return (
-    <li className={[wrapper, sellOrder].join(' ')}>
-      <div>{price}</div>
-      <div>{amount}</div>
-      <div>{total}</div>
-    </li>
-  );
+  const renderItem = () => {
+    if (type === 'sell') {
+      const price = order.getAmount / order.giveAmount;
+      const amount = order.giveAmount - order.orderFills;
+      return (
+        <li className={[wrapper, sell].join(' ')}>
+          <div>{price}</div>
+          <div>{amount}</div>
+          <div>{price * amount}</div>
+        </li>
+      );
+    } else {
+      const price = order.giveAmount / order.getAmount;
+      const amount = order.getAmount - order.orderFills;
+      return (
+        <li className={[wrapper, buy].join(' ')}>
+          <div>{price}</div>
+          <div>{amount}</div>
+          <div>{price * amount}</div>
+        </li>
+      );
+    }
+  };
+
+  return renderItem();
 };
 
 export default OrderItem;

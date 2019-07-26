@@ -2,7 +2,7 @@ import React from 'react';
 
 import { wrapper, error } from './index.scss';
 
-const UserBalance = ({ currentToken, icx, token }) => {
+const UserBalance = ({ symbol, icx, token }) => {
   const renderItem = target => {
     if (target.isProceeding) {
       return <td colSpan='2'>Loading</td>;
@@ -37,7 +37,7 @@ const UserBalance = ({ currentToken, icx, token }) => {
           {renderItem(icx)}
         </tr>
         <tr>
-          <td>{currentToken.symbol}</td>
+          <td>{symbol}</td>
           {renderItem(token)}
         </tr>
       </tbody>

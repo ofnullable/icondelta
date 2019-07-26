@@ -13,7 +13,7 @@ const Balance = () => {
   return (
     <div className={wrapper}>
       <BalanceForm address={address} token={currentToken} />
-      <UserBalance currentToken={currentToken} icx={icx} token={token} />
+      <UserBalance symbol={currentToken.symbol} icx={icx} token={token} />
     </div>
   );
 };

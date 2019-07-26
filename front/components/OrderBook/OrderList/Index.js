@@ -4,27 +4,23 @@ import OrderItem from './OrderItem';
 
 import { wrapper, noData } from './index.scss';
 
-const OrderList = ({ symbol, orders }) => {
-  const renderOrders = () => {
-    if (orders.length) {
-      // TODO: render order item
-    } else {
+const OrderList = ({ sellOrders, buyOrders }) => {
+  const renderOrders = (type, orders) => {
+    if (!orders.length) {
       return (
         <li className={noData}>
           <img src='/static/images/no-data.svg' />
           <p>No Data</p>
         </li>
       );
+    } else {
+      return orders.map((o, i) => <OrderItem key={i} type={type} order={o} />);
     }
   };
   return (
     <ul className={wrapper}>
-      <li>
-        <div>{`${symbol} / ICX`}</div>
-        <div>{symbol}</div>
-        <div>ICX</div>
-      </li>
-      {renderOrders()}
+      {renderOrders('sell', sellOrders)}
+      {renderOrders('buy', buyOrders)}
     </ul>
   );
 };

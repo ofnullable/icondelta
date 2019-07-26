@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { SHA3Hash } from 'sha3';
 
 import AT from '../../../redux/actionTypes';
-import { toBigNumber } from '../../../utils/formatter';
+import { toBigNumber, toLoop } from '../../../utils/formatter';
 
 import { wrapper } from './index.scss';
 import { primary, danger } from '../../Layout/style.scss';
@@ -16,6 +16,7 @@ const TradeForm = ({ type, token }) => {
   const [expires, setExpires] = useState(10000);
 
   const { address } = useSelector(state => state.wallet);
+  const { order } = useSelector(state => state.socket);
   const dispatch = useDispatch();
 
   const hasAddress = () => {
@@ -62,7 +63,24 @@ const TradeForm = ({ type, token }) => {
     e.preventDefault();
     if (!isValidOrder() || !hasAddress()) return;
 
-    alert('valid order!');
+    if (!order.connected) {
+      return alert('Can not create new order.. please refresh window');
+    }
+    const param = {
+      signature: '0xTBD',
+      tokenGet: type === 'Buy' ? token.address : ICX_ADDRESS,
+      getAmount: type === 'Buy' ? toLoop(amount) : toLoop(total),
+      tokenGive: type === 'Buy' ? ICX_ADDRESS : token.address,
+      giveAmount: type === 'Buy' ? toLoop(total) : toLoop(amount),
+      nonce: 0,
+      makerAddress: address,
+      expireBlock: expires,
+    };
+    console.log(order, param);
+    order.emit('createOrder', param, res => {
+      console.log('create order', res);
+    });
+
     resetInputs();
   };
 
