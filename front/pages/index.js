@@ -13,7 +13,50 @@ import { addIconexEventListner, removeIconexEventListner, eventHandler } from '.
 
 import '../styles/index.scss';
 
-const BASE_URL = 'wss://api.icondelta.ga';
+const BASE_URL = 'https://api.icondelta.ga';
+
+const getOrdersResponse = {
+  data: [
+    {
+      signature: '0x0',
+      tokenGet: 'cx~',
+      getAmount: 10,
+      tokenGive: 'cx~',
+      giveAmount: 100,
+      nonce: 0,
+      makerAddress: 'hx~',
+      orderFills: 0,
+      expireBlock: 10,
+      orderDatea: 20190720,
+    },
+    {
+      signature: '0x1',
+      tokenGet: 'cx~',
+      getAmount: 10,
+      tokenGive: 'cx~',
+      giveAmount: 100,
+      nonce: 0,
+      makerAddress: 'hx~',
+      orderFills: 0,
+      expireBlock: 10,
+      orderDatea: 20190720,
+    },
+    {
+      signature: '0x2',
+      tokenGet: 'cx~',
+      getAmount: 10,
+      tokenGive: 'cx~',
+      giveAmount: 100,
+      nonce: 0,
+      makerAddress: 'hx~',
+      orderFills: 0,
+      expireBlock: 10,
+      orderDatea: 20190720,
+    },
+  ],
+};
+
+const getTradesResponse = { data: [] };
 
 const Home = ({ symbol }) => {
   const [sockets, setSockets] = useState();
@@ -29,15 +72,21 @@ const Home = ({ symbol }) => {
   useEffect(() => {
     loadWalletData(address);
 
+    const order = io.connect(`${BASE_URL}/orders/${symbol}`, {
+      // transports: ['websocket'],
+    });
+    const trade = io.connect(`${BASE_URL}/trades`, {
+      // transports: ['websocket'],
+    });
     setSockets({
-      order: io(`${BASE_URL}/orders/${symbol}`),
-      trade: io(`${BASE_URL}/trades`),
+      order,
+      trade,
     });
     dispatch({
       type: AT.SET_SOCKET,
       data: {
-        order: io(`${BASE_URL}/orders/${symbol}`),
-        trade: io(`${BASE_URL}/trades`),
+        order,
+        trade,
       },
     });
 
@@ -60,6 +109,17 @@ const Home = ({ symbol }) => {
       order.on('connect', () => {
         order.emit('getOrders', { type: 'buy', offset: 0, count: 10 }, res => {
           console.log('get orders', res);
+          dispatch({
+            type: AT.BUY_ORDER_LIST_RECEIVED,
+            data: getOrdersResponse.data,
+          });
+        });
+        order.emit('getOrders', { type: 'sell', offset: 0, count: 10 }, res => {
+          console.log('get orders', res);
+          dispatch({
+            type: AT.SELL_ORDER_LIST_RECEIVED,
+            data: getOrdersResponse.data,
+          });
         });
         order.on('order_event', data => {
           console.log(data);
@@ -68,6 +128,10 @@ const Home = ({ symbol }) => {
       trade.on('connect', () => {
         trade.emit('getTrades', { offset: 0, count: 10 }, res => {
           console.log('get trades', res);
+          dispatch({
+            type: AT.TRADE_LIST_RECEIVED,
+            data: getTradesResponse.data,
+          });
         });
         trade.emit('getLatestTokenTrades', res => {
           console.log('get last token trades', res);
@@ -82,11 +146,26 @@ const Home = ({ symbol }) => {
       order.on('connect', () => {
         order.emit('getOrders', { type: 'buy', address: address, offset: 0, count: 10 }, res => {
           console.log('get orders by address', res);
+          dispatch({
+            type: AT.MY_BUY_ORDER_LIST_RECEIVED,
+            data: getOrdersResponse.data,
+          });
+        });
+        order.emit('getOrders', { type: 'sell', address: address, offset: 0, count: 10 }, res => {
+          console.log('get orders', res);
+          dispatch({
+            type: AT.MY_SELL_ORDER_LIST_RECEIVED,
+            data: getOrdersResponse.data,
+          });
         });
       });
       trade.on('connect', () => {
         trade.emit('getTrades', { address: address, offset: 0, count: 10 }, res => {
           console.log('get trades by address', res);
+          dispatch({
+            type: AT.MY_TRADE_LIST_RECEIVED,
+            data: getTradesResponse.data,
+          });
         });
       });
     }

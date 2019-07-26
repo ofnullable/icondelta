@@ -52,7 +52,7 @@ const History = ({ symbol }) => {
       </div>
       <div>{renderMenu()}</div>
       {/* type === 'Trades' ? <TradeHistories /> : <OrderHistories /> */}
-      <HistoryList type={type} history={histories} />
+      <HistoryList type={type} history={histories.data} />
     </div>
   );
 };

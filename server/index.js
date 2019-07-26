@@ -60,16 +60,26 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/address', address);
 app.use('/api/tokens', token);
-app.use('/api/orders', order);
+// app.use('/api/orders', order);
 
 const server = http.createServer(app);
 const io = socketIo(server);
+io.on('connection', socket => {
+  const orderSpace = io.of('/orders');
+  orderSpace.on('connection', ws => {
+    console.log('order socket connected!');
 
-io.of('/orders').on('connection', socket => {
-  console.log('socket connected!');
-  console.log(socket.handshake.query.symbol);
+    orderSpace.on('disconnect', () => console.log('socket disconnected.'));
+  });
 
-  socket.on('disconnect', () => console.log('socket disconnected.'));
+  const tradeSpace = io.of('/trades');
+  tradeSpace.on('connection', ws => {
+    console.log('trade socket connected!');
+    tradeSpace.on('getTrades', param => {
+      console.log('get trades', param);
+    });
+    tradeSpace.on('disconnect', () => console.log('order socket disconnected'));
+  });
 });
 
 const port = process.env.PORT || 8010;

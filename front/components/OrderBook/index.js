@@ -5,7 +5,8 @@ import { wrapper } from './index.scss';
 import OrderList from './OrderList/Index';
 
 const OrderBook = ({ symbol }) => {
-  const orderList = useSelector(state => state.order.orders);
+  const sellOrders = useSelector(state => state.order.sellOrders);
+  const buyOrders = useSelector(state => state.order.buyOrders);
 
   return (
     <div className={wrapper}>
@@ -17,7 +18,7 @@ const OrderBook = ({ symbol }) => {
         <span>{symbol}</span>
         <span>ICX</span>
       </div>
-      <OrderList symbol={symbol} orders={orderList.data} />
+      <OrderList sellOrders={sellOrders.data} buyOrders={buyOrders.data} />
     </div>
   );
 };

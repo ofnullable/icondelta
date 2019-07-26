@@ -22,7 +22,11 @@ function* setAddress({ payload }) {
     address: payload,
   });
   yield put({
-    type: AT.LOAD_BALANCE_REQUEST,
+    type: AT.LOAD_ICX_BALANCE_REQUEST,
+    address: payload,
+  });
+  yield put({
+    type: AT.LOAD_TOKEN_BALANCE_REQUEST,
     address: payload,
     symbol: token.symbol,
   });

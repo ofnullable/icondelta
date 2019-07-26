@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { SHA3Hash } from 'sha3';
 
 import AT from '../../../redux/actionTypes';
-import { toBigNumber } from '../../../utils/formatter';
+import { toBigNumber, toLoop } from '../../../utils/formatter';
 
 import { wrapper } from './index.scss';
 import { primary, danger } from '../../Layout/style.scss';
@@ -69,9 +69,9 @@ const TradeForm = ({ type, token }) => {
     const param = {
       signature: '0xTBD',
       tokenGet: type === 'Buy' ? token.address : ICX_ADDRESS,
-      getAmount: type === 'Buy' ? amount : total,
+      getAmount: type === 'Buy' ? toLoop(amount) : toLoop(total),
       tokenGive: type === 'Buy' ? ICX_ADDRESS : token.address,
-      giveAmount: type === 'Buy' ? total : amount,
+      giveAmount: type === 'Buy' ? toLoop(total) : toLoop(amount),
       nonce: 0,
       makerAddress: address,
       expireBlock: expires,
