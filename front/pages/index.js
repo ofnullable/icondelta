@@ -72,12 +72,9 @@ const Home = ({ symbol }) => {
   useEffect(() => {
     loadWalletData(address);
 
-    const order = io.connect(`${BASE_URL}/orders/${symbol}`, {
-      // transports: ['websocket'],
-    });
-    const trade = io.connect(`${BASE_URL}/trades`, {
-      // transports: ['websocket'],
-    });
+    const order = io.connect(`${BASE_URL}/orders/${symbol}`, { forceNew: true });
+    const trade = io.connect(`${BASE_URL}/trades`, { forceNew: true });
+    console.log(order, trade);
     setSockets({
       order,
       trade,

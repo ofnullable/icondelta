@@ -64,6 +64,7 @@ app.use('/api/tokens', token);
 
 const server = http.createServer(app);
 const io = socketIo(server);
+
 io.on('connection', socket => {
   const orderSpace = io.of('/orders');
   orderSpace.on('connection', ws => {
