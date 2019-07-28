@@ -3,11 +3,12 @@ import { all, fork, put, takeLatest, select } from 'redux-saga/effects';
 import AT from '../actionTypes';
 import storage from '../../utils/storage';
 
-const getRequestIds = state => state.event.requestIds;
 const getToken = state => state.token.currentToken;
+const getOrderSocket = state => state.socket.sockets.order;
+const getRequestIds = state => state.event.requestIds;
 
 export default function*() {
-  yield all([fork(watchAddressResponse), fork(watchEventResponse)]);
+  yield all([fork(watchAddressResponse), fork(watchJsonRpcResponse), fork(watchSigningResponse)]);
 }
 
 function* watchAddressResponse() {
@@ -32,7 +33,7 @@ function* setAddress({ payload }) {
   });
 }
 
-function* watchEventResponse() {
+function* watchJsonRpcResponse() {
   yield takeLatest(AT.RESPONSE_JSON_RPC, dispatchAction);
 }
 
@@ -52,4 +53,13 @@ function* dispatchAction({ payload }) {
   } catch (e) {
     console.error(e);
   }
+}
+
+function* watchSigningResponse() {
+  yield takeLatest(AT.RESPONSE_SIGNING, emitOrder);
+}
+
+function* emitOrder({ payload }) {
+  const orderSocket = yield select(getOrderSocket);
+  const signature = payload;
 }

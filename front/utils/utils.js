@@ -1,4 +1,7 @@
-import { REDUX_STEP } from './const';
+import { SHA3 } from 'sha3';
+
+import { REDUX_STEP, ICX_ADDRESS, SCORE_ADDRESS } from './const';
+import { toLoop } from './formatter';
 
 const changeObjectState = (step, state, target, action) => {
   switch (step) {
@@ -83,12 +86,61 @@ export const changeState = (type, step, state, target, action) => {
   }
 };
 
+export const makeRandomNumber = () => {
+  if (window && window.crypto && window.crypto.getRandomValues && Uint32Array) {
+    var o = new Uint32Array(1);
+    window.crypto.getRandomValues(o);
+    return o[0];
+  } else {
+    console.warn('Falling back to pseudo-random client seed');
+    return Math.floor(Math.random() * Math.pow(2, 32));
+  }
+};
+
 export const reverseObject = obj => {
   const result = {};
   Object.keys(obj).forEach(k => (result[obj[k]] = k));
   return result;
 };
 
-export const makeSignature = () => {
-  // TODO: make signature with sha3-256
+//{icon delta SCORE address}{token get address}{token get amount}{token give address}{token give amount}{nonce}
+export const makeTxHash = (tokenGet, getAmount, tokenGive, giveAmount, nonce) => {
+  const sha3 = new SHA3(256);
+  const serialized = `${SCORE_ADDRESS}${tokenGet}${getAmount}${tokenGive}${giveAmount}${nonce}`;
+  return `0x${sha3.update(serialized).digest('hex')}`;
+};
+
+const makeBuyOrderParams = (amount, total, address, tokenAddress, nonce) => {
+  return {
+    nonce,
+    hashed: makeTxHash(tokenAddress, amount, ICX_ADDRESS, total, nonce),
+    tokenGet: tokenAddress,
+    getAmount: amount,
+    tokenGive: ICX_ADDRESS,
+    giveAmount: total,
+    makerAddress: address,
+    expireBlock: 10000,
+  };
+};
+
+const makeSellOrderParams = (amount, total, address, tokenAddress, nonce) => {
+  return {
+    nonce,
+    hashed: makeTxHash(ICX_ADDRESS, total, tokenAddress, amount, nonce),
+    tokenGet: ICX_ADDRESS,
+    getAmount: total,
+    tokenGive: tokenAddress,
+    giveAmount: amount,
+    makerAddress: address,
+    expireBlock: 10000,
+  };
+};
+
+export const makeOrderParams = (type, amount, total, address, tokenAddress) => {
+  const nonce = makeRandomNumber();
+  if (type === 'Buy') {
+    return makeBuyOrderParams(amount, total, address, tokenAddress, nonce);
+  } else if (type === 'Sell') {
+    return makeSellOrderParams(amount, total, address, tokenAddress, nonce);
+  }
 };

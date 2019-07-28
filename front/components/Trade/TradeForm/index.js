@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { SHA3Hash } from 'sha3';
 
 import AT from '../../../redux/actionTypes';
-import { toBigNumber, toLoop } from '../../../utils/formatter';
+import { toBigNumber } from '../../../utils/formatter';
 
 import { wrapper } from './index.scss';
 import { primary, danger } from '../../Layout/style.scss';
-import { SCORE_ADDRESS, ICX_ADDRESS } from '../../../utils/const';
+import { makeTxHash, makeOrderParams } from '../../../utils/utils';
+import { requestSignatureEvent } from '../../../utils/event';
 
 const TradeForm = ({ type, token }) => {
   const [price, setPrice] = useState('');
@@ -66,20 +66,17 @@ const TradeForm = ({ type, token }) => {
     if (!order.connected) {
       return alert('Can not create new order.. please refresh window');
     }
-    const param = {
-      signature: '0xTBD',
-      tokenGet: type === 'Buy' ? token.address : ICX_ADDRESS,
-      getAmount: type === 'Buy' ? toLoop(amount) : toLoop(total),
-      tokenGive: type === 'Buy' ? ICX_ADDRESS : token.address,
-      giveAmount: type === 'Buy' ? toLoop(total) : toLoop(amount),
-      nonce: 0,
-      makerAddress: address,
-      expireBlock: expires,
-    };
-    console.log(order, param);
-    order.emit('createOrder', param, res => {
-      console.log('create order', res);
+
+    const data = makeOrderParams(type, amount, total, address, token.address);
+    dispatch({
+      type: AT.MAKE_ORDER_REQUEST,
+      data,
     });
+
+    requestSignatureEvent(address, data.hashed);
+    // order.emit('order_event', { event: 'createOrder', params: data }, res => {
+    //   console.log('create order', res);
+    // });
 
     resetInputs();
   };
