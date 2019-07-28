@@ -1,7 +1,20 @@
 import React from 'react';
 
-const Modal = ({ visible }) => {
-  return visible && <div>a</div>;
+import { wrapper } from './Modal.scss';
+
+const Modal = ({ visible, setVisible }) => {
+  const handleBackgroundClick = () => {
+    if (visible) {
+      setVisible(false);
+    }
+  };
+  return (
+    visible && (
+      <div className={wrapper} onClick={handleBackgroundClick}>
+        a
+      </div>
+    )
+  );
 };
 
 export default Modal;
