@@ -67,9 +67,9 @@ const TradeForm = ({ type, token }) => {
       return alert('Can not create new order.. please refresh window');
     }
 
-    const data = makeOrderParams(type, amount, total, address, token.address);
+    const data = makeOrderParams(type, amount, total.toNumber(), address, token.address);
     dispatch({
-      type: AT.MAKE_ORDER_REQUEST,
+      type: AT.SAVE_TEMPORAL_ORDER,
       data,
     });
 
@@ -99,7 +99,7 @@ const TradeForm = ({ type, token }) => {
         <p>Expires</p>
         <input required type='text' value={expires} readOnly />
       </div>
-      <button className={type === 'Buy' ? primary : danger} type='submit'>
+      <button className={type === 'buy' ? primary : danger} type='submit'>
         {type} Order
       </button>
     </form>

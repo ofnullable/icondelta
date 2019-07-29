@@ -14,10 +14,15 @@ export default (state = initialState, action) => {
       return changeState('ARR', REDUX_STEP.SUCCESS, state, 'buyOrders', action);
     case AT.SELL_ORDER_LIST_RECEIVED:
       return changeState('ARR', REDUX_STEP.SUCCESS, state, 'sellOrders', action);
-    case AT.MAKE_ORDER_REQUEST:
+    case AT.SAVE_TEMPORAL_ORDER:
       return {
         ...state,
         ['savedOrder']: action.data,
+      };
+    case AT.REMOVE_TEMPORAL_ORDER:
+      delete state['savedOrder'];
+      return {
+        ...state,
       };
     default:
       return {

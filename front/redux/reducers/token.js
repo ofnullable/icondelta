@@ -15,7 +15,14 @@ export default (state = initialState, action) => {
       return changeState('ARR', REDUX_STEP.SUCCESS, state, 'tokens', action);
     case AT.LOAD_TOKEN_LIST_FAILURE:
       return changeState('ARR', REDUX_STEP.FAILURE, state, 'tokens');
-    case AT.CHANGE_CURRENT_TOKEN:
+    case AT.SET_CURRENT_TOKEN_SYMBOL:
+      return {
+        ...state,
+        currentToken: {
+          symbol: action.symbol,
+        },
+      };
+    case AT.SET_CURRENT_TOKEN_INFO:
       return {
         ...state,
         currentToken: action.data,

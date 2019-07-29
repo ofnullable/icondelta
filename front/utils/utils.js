@@ -107,11 +107,13 @@ export const reverseObject = obj => {
 export const makeTxHash = (tokenGet, getAmount, tokenGive, giveAmount, nonce) => {
   const sha3 = new SHA3(256);
   const serialized = `${SCORE_ADDRESS}${tokenGet}${getAmount}${tokenGive}${giveAmount}${nonce}`;
-  return `0x${sha3.update(serialized).digest('hex')}`;
+  console.log(serialized);
+  return sha3.update(serialized).digest('hex');
 };
 
-const makeBuyOrderParams = (amount, total, address, tokenAddress, nonce) => {
+const makeBuyOrderParams = (type, amount, total, address, tokenAddress, nonce) => {
   return {
+    type,
     nonce,
     hashed: makeTxHash(tokenAddress, amount, ICX_ADDRESS, total, nonce),
     tokenGet: tokenAddress,
@@ -123,8 +125,9 @@ const makeBuyOrderParams = (amount, total, address, tokenAddress, nonce) => {
   };
 };
 
-const makeSellOrderParams = (amount, total, address, tokenAddress, nonce) => {
+const makeSellOrderParams = (type, amount, total, address, tokenAddress, nonce) => {
   return {
+    type,
     nonce,
     hashed: makeTxHash(ICX_ADDRESS, total, tokenAddress, amount, nonce),
     tokenGet: ICX_ADDRESS,
@@ -132,15 +135,18 @@ const makeSellOrderParams = (amount, total, address, tokenAddress, nonce) => {
     tokenGive: tokenAddress,
     giveAmount: amount,
     makerAddress: address,
-    expireBlock: 10000,
+    orderFills: 0,
+    // expireBlock: 10000,
   };
 };
 
 export const makeOrderParams = (type, amount, total, address, tokenAddress) => {
   const nonce = makeRandomNumber();
-  if (type === 'Buy') {
-    return makeBuyOrderParams(amount, total, address, tokenAddress, nonce);
-  } else if (type === 'Sell') {
-    return makeSellOrderParams(amount, total, address, tokenAddress, nonce);
+  const lAmount = toLoop(amount);
+  const lTotal = toLoop(total);
+  if (type === 'buy') {
+    return makeBuyOrderParams(type, lAmount, lTotal, address, tokenAddress, nonce);
+  } else if (type === 'sell') {
+    return makeSellOrderParams(type, lAmount, lTotal, address, tokenAddress, nonce);
   }
 };

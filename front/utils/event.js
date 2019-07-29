@@ -1,6 +1,6 @@
 import AT from '../redux/actionTypes';
-import { SCORE_ADDRESS, TX_DEFAULT_PARAMETER } from './const';
-import { toLoop } from './formatter';
+import { SCORE_ADDRESS, TX_DEFAULT_PARAMETER, REQUEST_ID } from './const';
+import { toHexLoop, toHexString } from './formatter';
 import { makeRandomNumber } from './utils';
 
 // event payload - { method }
@@ -20,14 +20,10 @@ export const removeIconexEventListner = handler =>
 
 export const eventHandler = dispatch => e => {
   const { type, payload } = e.detail;
-  if (type === 'RESPONSE_SIGNING') {
-    console.log(payload); // e.g., 'q/dVc3qj4En0GN+...'
-  } else {
-    dispatch({
-      type,
-      payload,
-    });
-  }
+  dispatch({
+    type,
+    payload,
+  });
 };
 
 const iconexEvent = (type, payload) => {
@@ -42,13 +38,6 @@ const iconexEvent = (type, payload) => {
   }
 };
 
-const dispatchEvents = (...events) => {
-  events.forEach(e => {
-    if (!e instanceof CustomEvent) throw new Error('Can not dispatch event for ' + e.toString());
-    window.dispatchEvent(e);
-  });
-};
-
 const makeEventPayload = ({ id, method, params = {} }) => {
   return {
     id,
@@ -57,6 +46,9 @@ const makeEventPayload = ({ id, method, params = {} }) => {
     jsonrpc: '2.0',
   };
 };
+
+const makeSignatureEvent = (address, txHash) =>
+  iconexEvent('REQUEST_SIGNING', { from: address, hash: txHash });
 
 const makeDepositIcxEvent = (amount, address) =>
   iconexEvent(
@@ -67,7 +59,7 @@ const makeDepositIcxEvent = (amount, address) =>
         ...TX_DEFAULT_PARAMETER,
         from: address,
         to: SCORE_ADDRESS,
-        value: toLoop(amount),
+        value: toHexLoop(amount),
         timestamp: `0x${(new Date().getTime() * 1000).toString(16)}`,
         data: { method: 'deposit', params: {} },
       },
@@ -84,7 +76,7 @@ const makeWithdrawIcxEvent = (amount, address) =>
         from: address,
         to: SCORE_ADDRESS,
         timestamp: `0x${(new Date().getTime() * 1000).toString(16)}`,
-        data: { method: 'withdraw', params: { _amount: toLoop(amount) } },
+        data: { method: 'withdraw', params: { _amount: toHexLoop(amount) } },
       },
     })
   );
@@ -99,7 +91,7 @@ const makeDepostiTokenEvent = (amount, address, tokenAddress) =>
         from: address,
         to: tokenAddress,
         timestamp: `0x${(new Date().getTime() * 1000).toString(16)}`,
-        data: { method: 'transfer', params: { _to: SCORE_ADDRESS, _amount: toLoop(amount) } },
+        data: { method: 'transfer', params: { _to: SCORE_ADDRESS, _amount: toHexLoop(amount) } },
       },
     })
   );
@@ -116,33 +108,55 @@ const makeWithdrawTokenEvent = (amount, address, tokenAddress) =>
         timestamp: `0x${(new Date().getTime() * 1000).toString(16)}`,
         data: {
           method: 'withdrawToken',
-          params: { _tokenAddress: tokenAddress, _amount: toLoop(amount) },
+          params: { _tokenAddress: tokenAddress, _amount: toHexLoop(amount) },
         },
       },
     })
   );
 
-const makeSignatureEvent = (address, txHash) =>
-  iconexEvent('REQUEST_SIGNING', { from: address, hash: txHash });
+const makeTradeEvent = (order, taker) =>
+  iconexEvent(
+    makeEventPayload({
+      id: REQUEST_ID.TRADE,
+      method: SEND_TRANSACTION,
+      params: {
+        ...TX_DEFAULT_PARAMETER,
+        from: taker.address,
+        to: SCORE_ADDRESS,
+        timestamp: `0x${(new Date().getTime() * 1000).toString(16)}`,
+        data: {
+          method: 'trade',
+          params: {
+            _tokenGet: order.tokenGet,
+            _getAmount: toHexString(order.getAmount),
+            _tokenGive: order.tokenGive,
+            _giveAmount: toHexString(order.giveAmount),
+            _orderMaker: order.makerAddress,
+            _nonce: toHexString(order.nonce),
+            _signature: order.signature,
+            _takerOrderAmount: toHexLoop(taker.amount),
+          },
+        },
+      },
+    })
+  );
 
 export const requestAddress = () => window.dispatchEvent(iconexEvent('REQUEST_ADDRESS'));
 
-export const depositIcxEvent = (amount, address) => {
-  window.dispatchEvent(makeDepositIcxEvent(amount, address));
-};
-
-export const withdrawIcxEvent = (amount, address) => {
-  window.dispatchEvent(makeWithdrawIcxEvent(amount, address));
-};
-
-export const depositTokenEvent = (amount, address, tokenAddress) => {
-  window.dispatchEvent(makeDepostiTokenEvent(amount, address, tokenAddress));
-};
-
-export const withdrawTokenEvent = (amount, address, tokenAddress) => {
-  window.dispatchEvent(makeWithdrawTokenEvent(amount, address, tokenAddress));
-};
-
-export const requestSignatureEvent = (address, txHash) => {
+export const requestSignatureEvent = (address, txHash) =>
   window.dispatchEvent(makeSignatureEvent(address, txHash));
-};
+
+export const depositIcxEvent = (amount, address) =>
+  window.dispatchEvent(makeDepositIcxEvent(amount, address));
+
+export const withdrawIcxEvent = (amount, address) =>
+  window.dispatchEvent(makeWithdrawIcxEvent(amount, address));
+
+export const depositTokenEvent = (amount, address, tokenAddress) =>
+  window.dispatchEvent(makeDepostiTokenEvent(amount, address, tokenAddress));
+
+export const withdrawTokenEvent = (amount, address, tokenAddress) =>
+  window.dispatchEvent(makeWithdrawTokenEvent(amount, address, tokenAddress));
+
+export const requestTradeEvent = (order, taker) =>
+  window.dispatchEvent(makeTradeEvent(order, taker));

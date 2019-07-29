@@ -12,6 +12,7 @@ import AT from '../redux/actionTypes';
 import { addIconexEventListner, removeIconexEventListner, eventHandler } from '../utils/event';
 
 import '../styles/index.scss';
+import { toIcx } from '../utils/formatter';
 
 const BASE_URL = 'https://api.icondelta.ga'; // 'http://15.164.170.51'
 
@@ -129,9 +130,13 @@ const Home = ({ symbol }) => {
         );
         order.on('order_event', data => {
           console.log('broadcasted order', data);
+          // dispatch({
+          // type: AT
+          // })
         });
       });
       trade.on('connect', () => {
+        console.log('trade socket connected');
         trade.emit('trade_event', { event: 'getTrades', params: { offset: 0, count: 10 } }, res => {
           console.log('get trades', res);
           dispatch({
@@ -141,10 +146,25 @@ const Home = ({ symbol }) => {
         });
         trade.emit('trade_event', { event: 'getLatestTokenTrades', params: {} }, res => {
           console.log('get last token trades', res);
-          dispatch({
-            type: AT.LAST_TRADE_RECEIVED,
-            data: res.data,
-          });
+          // dispatch({
+          //   type: AT.LAST_TRADE_RECEIVED,
+          //   data: res.data,
+          // });
+        });
+        trade.emit(
+          'trade_event',
+          {
+            event: 'checkTradeTxHash',
+            params: {
+              txHash: '0xcbb307e96c291336beefbeab57e49d0a4a11c7a49ba88628b3a4f554bb114bcc',
+            },
+          },
+          res => {
+            console.log('check trade tx hash:', res);
+          }
+        );
+        trade.on('trade_event', function(data) {
+          console.log('trade event', data);
         });
       });
     }
@@ -235,6 +255,10 @@ Home.getInitialProps = async context => {
 
   store.dispatch({
     type: AT.LOAD_TOKEN_LIST_REQUEST,
+    symbol,
+  });
+  store.dispatch({
+    type: AT.SET_CURRENT_TOKEN_SYMBOL,
     symbol,
   });
 

@@ -23,7 +23,7 @@ function* loadTokens({ symbol }) {
 
     const currentToken = data.find(d => d.symbol === symbol);
     yield put({
-      type: AT.CHANGE_CURRENT_TOKEN,
+      type: AT.SET_CURRENT_TOKEN_INFO,
       data: currentToken,
     });
   } catch (e) {

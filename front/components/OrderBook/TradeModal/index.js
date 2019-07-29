@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { wrapper, modal, title, body } from './TradeModal.scss';
+import { wrapper, modal, title, body } from './index.scss';
 
 const TradeModal = ({ visible, setVisible, children }) => {
   const handleBackgroundClick = e => {
@@ -9,15 +9,11 @@ const TradeModal = ({ visible, setVisible, children }) => {
     }
   };
 
-  const preventModalClose = e => {
-    e.stopPropagation();
-    console.log(children);
-  };
   return (
     visible && (
       <>
         <div className={wrapper} onClick={handleBackgroundClick} />
-        <div className={modal} onClick={preventModalClose}>
+        <div className={modal}>
           <div className={title}>
             <b>Trade</b>
           </div>
