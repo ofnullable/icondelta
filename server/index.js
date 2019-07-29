@@ -81,6 +81,11 @@ io.on('connection', socket => {
     });
     tradeSpace.on('disconnect', () => console.log('order socket disconnected'));
   });
+
+  // setInterval(() => {
+  //   console.log(io.clients().connected);
+  // }, 10000);
+  console.log(io.clients());
 });
 
 const port = process.env.PORT || 8010;

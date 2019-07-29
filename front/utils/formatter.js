@@ -48,8 +48,14 @@ export const toHexString = value => {
   return `0x${value.toString(16)}`;
 };
 
-export const toLoop = value => {
+export const toHexLoop = value => {
   return toHexString(toBigNumber(value).times(10 ** 18));
+};
+
+export const toLoop = value => {
+  return toBigNumber(value)
+    .times(10 ** 18)
+    .toNumber();
 };
 
 export const toIcx = (value, round = 9) => {

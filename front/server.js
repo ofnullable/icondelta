@@ -35,14 +35,14 @@ app.prepare().then(() => {
   );
 
   server.get('/:symbol', (req, res) => {
-    const symbol = req.params.symbol || 'AC3';
+    const symbol = req.params.symbol || 'ST';
     return app.render(req, res, '/', { symbol });
   });
 
   server.get('*', (req, res) => {
     const pathname = req.url;
     if (pathname === '/') {
-      return res.redirect('/AC3');
+      return res.redirect('/ST');
     }
     return handle(req, res);
   });

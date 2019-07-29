@@ -1,0 +1,56 @@
+@import 'styles/_variables';
+
+.wrapper {
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1001;
+  background-color: $background;
+  opacity: 0.7;
+
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  display: flex;
+  position: fixed;
+  width: 30%;
+  height: 40%;
+  top: 20%;
+  left: 35%;
+  padding: 15px;
+  border: 1px solid $border-color;
+  border-radius: 5px;
+  flex-direction: column;
+  z-index: 1002;
+  background-color: $background;
+  & > div {
+    padding: 10px;
+  }
+}
+.title {
+  display: inherit;
+  height: 10%;
+  align-items: center;
+  font-size: 1.2em;
+}
+.body {
+  height: 90%;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+
+  & > label {
+    display: block;
+    text-align: left;
+    margin-bottom: 0.5em;
+  }
+  & input {
+    width: 100%;
+    margin-bottom: 1em;
+  }
+}

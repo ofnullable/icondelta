@@ -33,7 +33,7 @@ export const REDUX_STEP = {
 export const TX_DEFAULT_PARAMETER = {
   nid: isProd ? '0x1' : '0x3',
   version: '0x3',
-  stepLimit: '0x10000000',
+  stepLimit: '0x1000000',
   dataType: 'call',
 };
 
@@ -47,4 +47,5 @@ export const REQUEST_ID = {
   DEPOSIT_TOKEN: 6,
   WITHDRAW_ICX: 7,
   WITHDRAW_TOKEN: 8,
+  TRADE: 9,
 };

@@ -12,8 +12,9 @@ import AT from '../redux/actionTypes';
 import { addIconexEventListner, removeIconexEventListner, eventHandler } from '../utils/event';
 
 import '../styles/index.scss';
+import { toIcx } from '../utils/formatter';
 
-const BASE_URL = 'https://api.icondelta.ga';
+const BASE_URL = 'https://api.icondelta.ga'; // 'http://15.164.170.51'
 
 const getOrdersResponse = {
   data: [
@@ -27,7 +28,7 @@ const getOrdersResponse = {
       makerAddress: 'hx~',
       orderFills: 0,
       expireBlock: 10,
-      orderDatea: 20190720,
+      orderDate: 20190720,
     },
     {
       signature: '0x1',
@@ -39,7 +40,7 @@ const getOrdersResponse = {
       makerAddress: 'hx~',
       orderFills: 0,
       expireBlock: 10,
-      orderDatea: 20190720,
+      orderDate: 20190720,
     },
     {
       signature: '0x2',
@@ -51,7 +52,7 @@ const getOrdersResponse = {
       makerAddress: 'hx~',
       orderFills: 0,
       expireBlock: 10,
-      orderDatea: 20190720,
+      orderDate: 20190720,
     },
   ],
 };
@@ -72,8 +73,9 @@ const Home = ({ symbol }) => {
   useEffect(() => {
     loadWalletData(address);
 
-    const order = io.connect(`${BASE_URL}/orders/${symbol}`, { forceNew: true });
-    const trade = io.connect(`${BASE_URL}/trades`, { forceNew: true });
+    const order = io.connect(`${BASE_URL}/orders/${symbol}`, { transports: ['websocket'] });
+    const trade = io.connect(`${BASE_URL}/trades/${symbol}`, { transports: ['websocket'] });
+
     console.log(order, trade);
     setSockets({
       order,
@@ -104,34 +106,65 @@ const Home = ({ symbol }) => {
     if (sockets) {
       const { order, trade } = sockets;
       order.on('connect', () => {
-        order.emit('getOrders', { type: 'buy', offset: 0, count: 10 }, res => {
-          console.log('get orders', res);
-          dispatch({
-            type: AT.BUY_ORDER_LIST_RECEIVED,
-            data: getOrdersResponse.data,
-          });
-        });
-        order.emit('getOrders', { type: 'sell', offset: 0, count: 10 }, res => {
-          console.log('get orders', res);
-          dispatch({
-            type: AT.SELL_ORDER_LIST_RECEIVED,
-            data: getOrdersResponse.data,
-          });
-        });
+        order.emit(
+          'order_event',
+          { event: 'getOrders', params: { type: 'buy', offset: 0, count: 10 } },
+          res => {
+            console.log('get buy orders', res);
+            dispatch({
+              type: AT.BUY_ORDER_LIST_RECEIVED,
+              data: res.data,
+            });
+          }
+        );
+        order.emit(
+          'order_event',
+          { event: 'getOrders', params: { type: 'sell', offset: 0, count: 10 } },
+          res => {
+            console.log('get sell orders', res);
+            dispatch({
+              type: AT.SELL_ORDER_LIST_RECEIVED,
+              data: res.data,
+            });
+          }
+        );
         order.on('order_event', data => {
-          console.log(data);
+          console.log('broadcasted order', data);
+          // dispatch({
+          // type: AT
+          // })
         });
       });
       trade.on('connect', () => {
-        trade.emit('getTrades', { offset: 0, count: 10 }, res => {
+        console.log('trade socket connected');
+        trade.emit('trade_event', { event: 'getTrades', params: { offset: 0, count: 10 } }, res => {
           console.log('get trades', res);
           dispatch({
             type: AT.TRADE_LIST_RECEIVED,
-            data: getTradesResponse.data,
+            data: res.data,
           });
         });
-        trade.emit('getLatestTokenTrades', res => {
+        trade.emit('trade_event', { event: 'getLatestTokenTrades', params: {} }, res => {
           console.log('get last token trades', res);
+          // dispatch({
+          //   type: AT.LAST_TRADE_RECEIVED,
+          //   data: res.data,
+          // });
+        });
+        trade.emit(
+          'trade_event',
+          {
+            event: 'checkTradeTxHash',
+            params: {
+              txHash: '0xcbb307e96c291336beefbeab57e49d0a4a11c7a49ba88628b3a4f554bb114bcc',
+            },
+          },
+          res => {
+            console.log('check trade tx hash:', res);
+          }
+        );
+        trade.on('trade_event', function(data) {
+          console.log('trade event', data);
         });
       });
     }
@@ -141,29 +174,47 @@ const Home = ({ symbol }) => {
     if (address && sockets) {
       const { order, trade } = sockets;
       order.on('connect', () => {
-        order.emit('getOrders', { type: 'buy', address: address, offset: 0, count: 10 }, res => {
-          console.log('get orders by address', res);
-          dispatch({
-            type: AT.MY_BUY_ORDER_LIST_RECEIVED,
-            data: getOrdersResponse.data,
-          });
-        });
-        order.emit('getOrders', { type: 'sell', address: address, offset: 0, count: 10 }, res => {
-          console.log('get orders', res);
-          dispatch({
-            type: AT.MY_SELL_ORDER_LIST_RECEIVED,
-            data: getOrdersResponse.data,
-          });
-        });
+        order.emit(
+          'order_event',
+          {
+            event: 'getOrdersByAddress',
+            params: { type: 'buy', address: address, offset: 0, count: 10 },
+          },
+          res => {
+            console.log('get buy orders by address', res);
+            dispatch({
+              type: AT.MY_BUY_ORDER_LIST_RECEIVED,
+              data: res.data,
+            });
+          }
+        );
+        order.emit(
+          'order_event',
+          {
+            event: 'getOrdersByAddress',
+            params: { type: 'sell', address: address, offset: 0, count: 10 },
+          },
+          res => {
+            console.log('get sell orders by address', res);
+            dispatch({
+              type: AT.MY_SELL_ORDER_LIST_RECEIVED,
+              data: res.data,
+            });
+          }
+        );
       });
       trade.on('connect', () => {
-        trade.emit('getTrades', { address: address, offset: 0, count: 10 }, res => {
-          console.log('get trades by address', res);
-          dispatch({
-            type: AT.MY_TRADE_LIST_RECEIVED,
-            data: getTradesResponse.data,
-          });
-        });
+        trade.emit(
+          'trade_event',
+          { event: 'getTrades', params: { address: address, offset: 0, count: 10 } },
+          res => {
+            console.log('get trades by address', res);
+            dispatch({
+              type: AT.MY_TRADE_LIST_RECEIVED,
+              data: res.data,
+            });
+          }
+        );
       });
     }
   }, [address, sockets]);
@@ -204,6 +255,10 @@ Home.getInitialProps = async context => {
 
   store.dispatch({
     type: AT.LOAD_TOKEN_LIST_REQUEST,
+    symbol,
+  });
+  store.dispatch({
+    type: AT.SET_CURRENT_TOKEN_SYMBOL,
     symbol,
   });
 

@@ -2,12 +2,16 @@ import { all, fork, put, takeLatest, select } from 'redux-saga/effects';
 
 import AT from '../actionTypes';
 import storage from '../../utils/storage';
+import { REQUEST_ID } from '../../utils/const';
 
-const getRequestIds = state => state.event.requestIds;
 const getToken = state => state.token.currentToken;
+const getOrderSocket = state => state.socket.order;
+const getTradeSocket = state => state.socket.trade;
+const getSavedOrder = state => state.order.savedOrder;
+const getRequestIds = state => state.event.requestIds;
 
 export default function*() {
-  yield all([fork(watchAddressResponse), fork(watchEventResponse)]);
+  yield all([fork(watchAddressResponse), fork(watchJsonRpcResponse), fork(watchSigningResponse)]);
 }
 
 function* watchAddressResponse() {
@@ -32,7 +36,7 @@ function* setAddress({ payload }) {
   });
 }
 
-function* watchEventResponse() {
+function* watchJsonRpcResponse() {
   yield takeLatest(AT.RESPONSE_JSON_RPC, dispatchAction);
 }
 
@@ -45,11 +49,35 @@ function* dispatchAction({ payload }) {
 
     switch (ids[payload.id]) {
       // response for get balance requests
-
+      case REQUEST_ID.TRADE: {
+        const tradeSocket = yield select(getTradeSocket);
+        yield put({
+          type: AT.SEND_TRADE_TX,
+          data: payload,
+        });
+      }
       default:
         break;
     }
   } catch (e) {
     console.error(e);
   }
+}
+
+function* watchSigningResponse() {
+  yield takeLatest(AT.RESPONSE_SIGNING, emitOrder);
+}
+
+function* emitOrder({ payload }) {
+  const orderSocket = yield select(getOrderSocket);
+  const savedOrder = yield select(getSavedOrder);
+
+  delete savedOrder['hashed'];
+  savedOrder['signature'] = payload;
+
+  // yield orderSocket.emit('order_event', { event: 'createOrder', params: savedOrder });
+
+  yield put({
+    type: AT.REMOVE_TEMPORAL_ORDER,
+  });
 }

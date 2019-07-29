@@ -6,7 +6,7 @@ import TradeForm from './TradeForm';
 import { wrapper, active } from './index.scss';
 
 const Trade = () => {
-  const [type, setType] = useState('Buy');
+  const [type, setType] = useState('buy');
   const token = useSelector(state => state.token.currentToken);
 
   const handleMenuClick = e => {
@@ -18,10 +18,10 @@ const Trade = () => {
 
   return (
     <div className={wrapper}>
-      <menu className={type === 'Buy' ? active : 'Buy'} onClick={handleMenuClick}>
+      <menu className={type === 'buy' ? active : 'buy'} onClick={handleMenuClick}>
         Buy
       </menu>
-      <menu className={type !== 'Buy' ? active : 'Sell'} onClick={handleMenuClick}>
+      <menu className={type !== 'buy' ? active : 'sell'} onClick={handleMenuClick}>
         Sell
       </menu>
       <TradeForm type={type} token={token} />
