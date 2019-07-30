@@ -4,8 +4,9 @@ WORKDIR /
 
 COPY . .
 
+RUN ["npm", "install", "--unsafe-perm", "node-sass"]
 RUN npm install
 
-EXPOSE 3020
+EXPOSE 3030
 
 CMD ["npm", "start"]
