@@ -10,7 +10,7 @@
     "devbuild": "cross-env ANALYZE=true NODE_ENV=production next build",
     "build": "cross-env NODE_ENV=production next build",
     "prestart": "npm run build",
-    "start": "cross-env NODE_ENV=production PORT=3030 node server.js"
+    "start": "cross-env NODE_ENV=production PORT=3020 node server.js"
   },
   "dependencies": {
     "@next/bundle-analyzer": "^9.0.2",
