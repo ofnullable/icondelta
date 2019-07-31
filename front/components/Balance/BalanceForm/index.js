@@ -22,7 +22,7 @@ const Balance = ({ address, token }) => {
       <menu className={type !== 'Deposit' ? active : 'Withdraw'} onClick={handleMenuClick}>
         Withdraw
       </menu>
-      <BalanceInput address={address} type={type} />
+      <BalanceInput address={address} type={type} token={'ICX'} />
       <BalanceInput address={address} type={type} token={token} />
     </div>
   );

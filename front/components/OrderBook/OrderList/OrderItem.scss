@@ -1,4 +1,5 @@
 @import 'styles/_variables';
+@import 'styles/_mixin';
 
 .wrapper {
   text-align: center;
@@ -12,4 +13,19 @@
   &.buy {
     color: greenyellow;
   }
+}
+
+.buttons {
+  text-align: right;
+  margin-top: 0.5em;
+}
+.cancelButton {
+  margin-left: 0.5em;
+  @include button($background-light);
+}
+.sellButton {
+  @include button($danger);
+}
+.buyButton {
+  @include button($primary);
 }

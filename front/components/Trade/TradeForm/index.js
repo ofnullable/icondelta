@@ -6,7 +6,7 @@ import { toBigNumber } from '../../../utils/formatter';
 
 import { wrapper } from './index.scss';
 import { primary, danger } from '../../Layout/style.scss';
-import { makeTxHash, makeOrderParams } from '../../../utils/utils';
+import { makeOrderParams } from '../../../utils/utils';
 import { requestSignatureEvent } from '../../../utils/event';
 
 const TradeForm = ({ type, token }) => {
@@ -63,21 +63,17 @@ const TradeForm = ({ type, token }) => {
     e.preventDefault();
     if (!isValidOrder() || !hasAddress()) return;
 
-    if (!order.connected) {
+    if (!order || !order.connected) {
       return alert('Can not create new order.. please refresh window');
     }
 
-    const data = makeOrderParams(type, amount, total.toNumber(), address, token.address);
+    const data = makeOrderParams(type, amount, total, address, token.address);
     dispatch({
       type: AT.SAVE_TEMPORAL_ORDER,
       data,
     });
 
     requestSignatureEvent(address, data.hashed);
-    // order.emit('order_event', { event: 'createOrder', params: data }, res => {
-    //   console.log('create order', res);
-    // });
-
     resetInputs();
   };
 

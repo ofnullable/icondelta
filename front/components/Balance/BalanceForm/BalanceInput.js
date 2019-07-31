@@ -15,7 +15,6 @@ const BalanceForm = ({ address, type, token }) => {
 
   const handleInputChange = e => {
     if (!address) {
-      // requestAddress();
       return;
     }
     setAmount(e.target.value);
@@ -23,7 +22,6 @@ const BalanceForm = ({ address, type, token }) => {
 
   const handleSubmit = ({ keyCode }) => {
     if (!address) {
-      // requestAddress();
       return;
     }
     if (!keyCode || (keyCode && keyCode === 13)) {
@@ -43,15 +41,14 @@ const BalanceForm = ({ address, type, token }) => {
 
   const eventDispatch = () => {
     if (type === 'Deposit') {
-      console.log(type, token, address);
-      if (token) {
+      if (token !== 'ICX') {
         depositTokenEvent(amount, address, token.address);
       } else {
         console.log(type, token, address);
         depositIcxEvent(amount, address);
       }
     } else {
-      if (token) {
+      if (token !== 'ICX') {
         withdrawTokenEvent(amount, address, token.address);
       } else {
         withdrawIcxEvent(amount, address);
@@ -62,7 +59,7 @@ const BalanceForm = ({ address, type, token }) => {
   return (
     <div className={wrapper}>
       <p>
-        {type} {token ? token.symbol : 'ICX'}
+        {type} {token !== 'ICX' ? token && token.symbol : token}
       </p>
       <input type='text' value={amount} onChange={handleInputChange} onKeyDown={handleSubmit} />
       <button className={type === 'Deposit' ? primary : danger} onClick={handleSubmit}>

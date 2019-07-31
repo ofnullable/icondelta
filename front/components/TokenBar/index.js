@@ -20,8 +20,8 @@ const TokenBar = ({ symbol }) => {
       return tokens
         .filter(
           ({ name, symbol }) =>
-            name.toLowerCase().includes(text.toLowerCase()) ||
-            symbol.toLowerCase().includes(text.toLowerCase())
+            (name && name.toLowerCase().includes(text.toLowerCase())) ||
+            (symbol && symbol.toLowerCase().includes(text.toLowerCase()))
         )
         .slice(endIndex - 10, endIndex);
     } else {
@@ -37,7 +37,7 @@ const TokenBar = ({ symbol }) => {
     <div className={wrapper}>
       <TokenSearchForm handleChange={handleInputChange} />
       <TokenList tokens={getFilterdTokens()} symbol={symbol} />
-      <Paginator page={page} perPage={10} total={tokens.length - 1} setPage={setPage} />
+      <Paginator page={page} perPage={10} total={tokens.length - 1 || 1} setPage={setPage} />
     </div>
   );
 };

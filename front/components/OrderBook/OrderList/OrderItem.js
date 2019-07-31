@@ -2,33 +2,13 @@ import React, { memo, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import TradeModal from '../TradeModal';
-
-import { wrapper, sell, buy } from './OrderItem.scss';
-import { toIcx, toHexLoop } from '../../../utils/formatter';
+import { toIcx } from '../../../utils/formatter';
 import { requestTradeEvent } from '../../../utils/event';
 
-const getPrice = (type, order) => {
-  // console.log('getPrice', order);
-  return type === 'sell' ? order.getAmount / order.giveAmount : order.giveAmount / order.getAmount;
-};
-
-const getAmount = (type, order) => {
-  // console.log('getAmount', order);
-  return type === 'sell'
-    ? toIcx(order.giveAmount - (order.orderFills || 0))
-    : toIcx(order.getAmount - (order.orderFills || 0));
-};
-
-const getTotal = (type, order) => {
-  // console.log('getTotal', order);
-  return getPrice(type, order) * getAmount(type, order);
-};
+import { wrapper, sell, buy, buttons, sellButton, buyButton, cancelButton } from './OrderItem.scss';
 
 const OrderItem = memo(({ type, order }) => {
-  const [price, setPrice] = useState(getPrice(type, order));
-  const [amount, setAmount] = useState(getAmount(type, order));
-  const [total, setTotal] = useState(getTotal(type, order));
-  const [tradeAmount, setTradeAmount] = useState(amount);
+  const [tradeAmount, setTradeAmount] = useState(order.amount);
   const [modalVisible, setModalVisible] = useState(false);
 
   const address = useSelector(state => state.wallet.address);
@@ -41,47 +21,58 @@ const OrderItem = memo(({ type, order }) => {
     setTradeAmount(e.target.value);
   };
 
+  const handleCloseModal = () => {
+    setModalVisible(false);
+  };
+
   const handleButtonClick = () => {
     requestTradeEvent(order, { address, amount: tradeAmount });
   };
 
-  const renderModal = (type, price, amount) => {
+  const renderModal = type => {
     return (
       <TradeModal visible={modalVisible} setVisible={setModalVisible}>
-        <b>Order</b>
-        <span>d</span>
+        <p>{`Maximum amount: ${order.amount}, Price: ${order.price} (per Token)`}</p>
         <label htmlFor='amount'>{`Amount to ${type === 'buy' ? 'sell' : 'buy'}`}</label>
         <input
           id='amount'
           type='number'
           min={0}
-          max={amount}
+          max={order.amount}
           value={tradeAmount}
           onChange={handleAmountChange}
         />
         <label htmlFor='price'>Price</label>
-        <input id='price' type='number' value={price} readOnly />
-        <div>{order.orderDate}</div>
-        <button onClick={handleButtonClick}>{type === 'buy' ? 'sell' : 'buy'}</button>
+        <input id='price' type='number' value={order.price} readOnly />
+        <label htmlFor='total'>Total</label>
+        <input id='total' type='number' value={order.total} readOnly />
+        <div className={buttons}>
+          <button onClick={handleButtonClick} className={type === 'buy' ? sellButton : buyButton}>
+            {type === 'buy' ? 'sell' : 'buy'}
+          </button>
+          <button onClick={handleCloseModal} className={cancelButton}>
+            cancel
+          </button>
+        </div>
       </TradeModal>
     );
   };
 
-  const makeComponent = (price, amount, classes) => {
+  const makeComponent = classes => {
     return modalVisible ? (
       <>
-        {renderModal(type, price, amount)}
+        {renderModal(type)}
         <li className={classes.join(' ')} onClick={handleItemClick}>
-          <div>{price}</div>
-          <div>{amount}</div>
-          <div>{total}</div>
+          <div>{order.price}</div>
+          <div>{order.amount}</div>
+          <div>{order.total}</div>
         </li>
       </>
     ) : (
       <li className={classes.join(' ')} onClick={handleItemClick}>
-        <div>{price}</div>
-        <div>{amount}</div>
-        <div>{total}</div>
+        <div>{order.price}</div>
+        <div>{order.amount}</div>
+        <div>{order.total}</div>
       </li>
     );
   };
@@ -94,7 +85,7 @@ const OrderItem = memo(({ type, order }) => {
     } else {
       classes.push(wrapper, buy);
     }
-    return makeComponent(price, amount, classes);
+    return makeComponent(classes);
   };
 
   return renderItem();

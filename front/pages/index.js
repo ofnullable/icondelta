@@ -9,55 +9,10 @@ import Trade from '../components/Trade';
 import History from '../components/History';
 
 import AT from '../redux/actionTypes';
+import { SERVER_BASE_URL } from '../utils/const';
 import { addIconexEventListner, removeIconexEventListner, eventHandler } from '../utils/event';
 
 import '../styles/index.scss';
-import { toIcx } from '../utils/formatter';
-
-const BASE_URL = 'https://api.icondelta.ga'; // 'http://15.164.170.51'
-
-const getOrdersResponse = {
-  data: [
-    {
-      signature: '0x0',
-      tokenGet: 'cx~',
-      getAmount: 10,
-      tokenGive: 'cx~',
-      giveAmount: 100,
-      nonce: 0,
-      makerAddress: 'hx~',
-      orderFills: 0,
-      expireBlock: 10,
-      orderDate: 20190720,
-    },
-    {
-      signature: '0x1',
-      tokenGet: 'cx~',
-      getAmount: 10,
-      tokenGive: 'cx~',
-      giveAmount: 100,
-      nonce: 0,
-      makerAddress: 'hx~',
-      orderFills: 0,
-      expireBlock: 10,
-      orderDate: 20190720,
-    },
-    {
-      signature: '0x2',
-      tokenGet: 'cx~',
-      getAmount: 10,
-      tokenGive: 'cx~',
-      giveAmount: 100,
-      nonce: 0,
-      makerAddress: 'hx~',
-      orderFills: 0,
-      expireBlock: 10,
-      orderDate: 20190720,
-    },
-  ],
-};
-
-const getTradesResponse = { data: [] };
 
 const Home = ({ symbol }) => {
   const [sockets, setSockets] = useState();
@@ -73,8 +28,16 @@ const Home = ({ symbol }) => {
   useEffect(() => {
     loadWalletData(address);
 
-    const order = io.connect(`${BASE_URL}/orders/${symbol}`, { transports: ['websocket'] });
-    const trade = io.connect(`${BASE_URL}/trades/${symbol}`, { transports: ['websocket'] });
+    console.log(io.managers, sockets);
+
+    const order = io.connect(`${SERVER_BASE_URL}/orders/${symbol}`, {
+      transports: ['websocket'],
+      forceNew: true,
+    });
+    const trade = io.connect(`${SERVER_BASE_URL}/trades/${symbol}`, {
+      transports: ['websocket'],
+      forceNew: true,
+    });
 
     console.log(order, trade);
     setSockets({
@@ -131,38 +94,26 @@ const Home = ({ symbol }) => {
         order.on('order_event', data => {
           console.log('broadcasted order', data);
           // dispatch({
-          // type: AT
-          // })
+          //   type: AT.NEW_ORDER_RECEIVED,
+          //   data,
+          // });
         });
       });
       trade.on('connect', () => {
-        console.log('trade socket connected');
-        trade.emit('trade_event', { event: 'getTrades', params: { offset: 0, count: 10 } }, res => {
-          console.log('get trades', res);
+        // trade.emit('trade_event', { event: 'getTrades', params: { offset: 0, count: 10 } }, res => {
+        //   console.log('get trades', res);
+        //   dispatch({
+        //     type: AT.TRADE_LIST_RECEIVED,
+        //     data: res.data,
+        //   });
+        // });
+        trade.emit('trade_event', { event: 'getLatestTokenTrades', params: {} }, res => {
+          console.log('get last token trades', res);
           dispatch({
-            type: AT.TRADE_LIST_RECEIVED,
+            type: AT.LAST_TRADE_RECEIVED,
             data: res.data,
           });
         });
-        trade.emit('trade_event', { event: 'getLatestTokenTrades', params: {} }, res => {
-          console.log('get last token trades', res);
-          // dispatch({
-          //   type: AT.LAST_TRADE_RECEIVED,
-          //   data: res.data,
-          // });
-        });
-        trade.emit(
-          'trade_event',
-          {
-            event: 'checkTradeTxHash',
-            params: {
-              txHash: '0xcbb307e96c291336beefbeab57e49d0a4a11c7a49ba88628b3a4f554bb114bcc',
-            },
-          },
-          res => {
-            console.log('check trade tx hash:', res);
-          }
-        );
         trade.on('trade_event', function(data) {
           console.log('trade event', data);
         });
@@ -240,7 +191,7 @@ const Home = ({ symbol }) => {
 
   return (
     <>
-      <Balance />
+      <Balance symbol={symbol} />
       <OrderBook symbol={symbol} socket={sockets && sockets.trade} />
       <TokenBar symbol={symbol} />
       <Trade socket={sockets && sockets.order} />

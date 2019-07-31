@@ -1,11 +1,14 @@
 export const isServer = typeof window === 'undefined';
 export const isProd = process.env.NODE_ENV === 'production';
 
+export const SERVER_BASE_URL = 'https://api.icondelta.ga';
+
 export const ICX_ADDRESS = 'cx0000000000000000000000000000000000000000';
 
-export const SCORE_ADDRESS = isProd
-  ? 'cxe014be09624aa681f441a632059245279c7bd554'
-  : 'cxfd865d6bbfd2931c053e6b105961cd43a3ad9c22';
+export const SCORE_ADDRESS = 'cxfd865d6bbfd2931c053e6b105961cd43a3ad9c22';
+// isProd
+//   ? 'cxe014be09624aa681f441a632059245279c7bd554'
+//   :
 
 const ARRAY_DEFAULT_STATE = {
   data: [],
@@ -31,7 +34,7 @@ export const REDUX_STEP = {
 };
 
 export const TX_DEFAULT_PARAMETER = {
-  nid: isProd ? '0x1' : '0x3',
+  nid: '0x3', // isProd ? '0x1' :
   version: '0x3',
   stepLimit: '0x1000000',
   dataType: 'call',

@@ -5,8 +5,7 @@ import storage from '../../utils/storage';
 import { REQUEST_ID } from '../../utils/const';
 
 const getToken = state => state.token.currentToken;
-const getOrderSocket = state => state.socket.order;
-const getTradeSocket = state => state.socket.trade;
+const getSockets = state => state.socket;
 const getSavedOrder = state => state.order.savedOrder;
 const getRequestIds = state => state.event.requestIds;
 
@@ -50,11 +49,8 @@ function* dispatchAction({ payload }) {
     switch (ids[payload.id]) {
       // response for get balance requests
       case REQUEST_ID.TRADE: {
-        const tradeSocket = yield select(getTradeSocket);
-        yield put({
-          type: AT.SEND_TRADE_TX,
-          data: payload,
-        });
+        const { trade } = yield select(getSockets);
+        trade.emit('trade_event', { event: '', params: {} });
       }
       default:
         break;
@@ -69,14 +65,13 @@ function* watchSigningResponse() {
 }
 
 function* emitOrder({ payload }) {
-  const orderSocket = yield select(getOrderSocket);
+  const { order } = yield select(getSockets);
   const savedOrder = yield select(getSavedOrder);
 
   delete savedOrder['hashed'];
   savedOrder['signature'] = payload;
 
-  // yield orderSocket.emit('order_event', { event: 'createOrder', params: savedOrder });
-
+  order.emit('order_event', { event: 'createOrder', params: savedOrder }, res => console.log(res));
   yield put({
     type: AT.REMOVE_TEMPORAL_ORDER,
   });

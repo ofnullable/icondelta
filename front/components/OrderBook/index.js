@@ -18,7 +18,7 @@ const OrderBook = ({ symbol }) => {
         <span>{symbol}</span>
         <span>ICX</span>
       </div>
-      <OrderList sellOrders={sellOrders.data} buyOrders={buyOrders.data} />
+      <OrderList sellOrders={sellOrders} buyOrders={buyOrders} />
     </div>
   );
 };

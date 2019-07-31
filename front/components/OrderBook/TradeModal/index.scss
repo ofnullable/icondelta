@@ -19,7 +19,6 @@
   display: flex;
   position: fixed;
   width: 30%;
-  height: 40%;
   top: 20%;
   left: 35%;
   padding: 15px;
@@ -40,9 +39,7 @@
 }
 .body {
   height: 90%;
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
+  text-align: left;
 
   & > label {
     display: block;
