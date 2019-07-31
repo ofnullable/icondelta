@@ -6,7 +6,7 @@ router.get('/', (req, res, next) => {
       name: 'AC3',
       // address: 'cx9ab3078e72c8d9017194d17b34b1a47b661945ca',
       address: 'cx12f393e1ddc8b5555c86c24d6f396c4c6ca37024',
-      symbol: 'AC3',
+      symbol: 'ST',
       currentPrice: 0,
     },
     {

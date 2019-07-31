@@ -65,27 +65,101 @@ app.use('/api/tokens', token);
 const server = http.createServer(app);
 const io = socketIo(server);
 
-io.on('connection', socket => {
-  const orderSpace = io.of('/orders');
-  orderSpace.on('connection', ws => {
-    console.log('order socket connected!');
-
-    orderSpace.on('disconnect', () => console.log('socket disconnected.'));
+const orderSpace = io.of('/orders');
+orderSpace.on('connect', ws => {
+  console.log('order socket connected!');
+  ws.on('order_event', (param, cb) => {
+    console.log('get orders', param);
+    if (param.event === 'getOrders') {
+      switch (param.params.type) {
+        case 'buy':
+          return cb({
+            data: [
+              {
+                signature: 'asdf',
+                tokenGet: 'cx~',
+                getAmount: 10 * 10 ** 18,
+                tokenGive: 'cx~',
+                giveAmount: 11 * 10 ** 18,
+                nonce: 0,
+                makerAddress: 'hx~',
+                orderFills: 0,
+                expireBlock: 10,
+                orderDate: 20190720,
+              },
+            ],
+          });
+        case 'sell':
+          return cb({
+            data: [
+              {
+                signature: '1asdf',
+                tokenGet: 'cx~',
+                getAmount: 20 * 10 ** 18,
+                tokenGive: 'cx~',
+                giveAmount: 10 * 10 ** 18,
+                nonce: 0,
+                makerAddress: 'hx~',
+                orderFills: 0,
+                expireBlock: 10,
+                orderDate: 20190720,
+              },
+            ],
+          });
+        default:
+          return;
+      }
+    }
   });
-
-  const tradeSpace = io.of('/trades');
-  tradeSpace.on('connection', ws => {
-    console.log('trade socket connected!');
-    tradeSpace.on('getTrades', param => {
-      console.log('get trades', param);
+  setTimeout(() => {
+    ws.emit('order_event', {
+      action: 'create',
+      type: 'buy',
+      data: {
+        signature: '0xasdf',
+        tokenGet: 'cx~',
+        getAmount: 10 * 10 ** 18,
+        tokenGive: 'cx~',
+        giveAmount: 15 * 10 ** 18,
+        nonce: 0,
+        makerAddress: 'hx~',
+        orderFills: 0,
+        expireBlock: 10,
+        orderDate: 20190720,
+      },
     });
-    tradeSpace.on('disconnect', () => console.log('order socket disconnected'));
+  }, 1500);
+
+  setTimeout(() => {
+    ws.emit('order_event', {
+      action: 'update',
+      type: 'buy',
+      data: {
+        signature: '0xasdf',
+        tokenGet: 'cx~',
+        getAmount: 10 * 10 ** 18,
+        tokenGive: 'cx~',
+        giveAmount: 15 * 10 ** 18,
+        nonce: 0,
+        makerAddress: 'hx~',
+        orderFills: 5 * 10 ** 18,
+        expireBlock: 10,
+        orderDate: 20190720,
+      },
+    });
+  }, 2500);
+
+  ws.on('disconnect', () => console.log('socket disconnected.'));
+});
+
+const tradeSpace = io.of('/trades');
+tradeSpace.on('connection', ws => {
+  console.log('trade socket connected!');
+  ws.on('trade_event', param => {
+    console.log('get trades', param);
   });
 
-  // setInterval(() => {
-  //   console.log(io.clients().connected);
-  // }, 10000);
-  console.log(io.clients());
+  ws.on('disconnect', () => console.log('order socket disconnected'));
 });
 
 const port = process.env.PORT || 8010;
