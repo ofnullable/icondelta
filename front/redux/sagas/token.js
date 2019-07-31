@@ -16,6 +16,7 @@ function* watchLoadTokensRequest() {
 function* loadTokens({ symbol }) {
   try {
     const { data } = yield call(loadTokensApi);
+    console.log(data);
     yield put({
       type: AT.LOAD_TOKEN_LIST_SUCCESS,
       data,

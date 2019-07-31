@@ -7,6 +7,8 @@
   overflow: auto;
   list-style: none;
   text-align: center;
+  scrollbar-width: thin;
+  scrollbar-color: $light-gray $white;
   & > li > div {
     display: inline-block;
     width: 33%;
@@ -24,6 +26,7 @@
   }
   &::-webkit-scrollbar {
     width: 0.3em;
+    height: 0.3em;
     background: none;
     scroll-behavior: smooth;
   }

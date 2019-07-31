@@ -11,7 +11,7 @@ const getWalletUrl = () => {
     //testnet
     base += 'https://bicon.net.solidwallet.io';
   }
-  return base + '/api/v3';
+  return 'https://bicon.net.solidwallet.io/api/v3'; // base + '/api/v3';
 };
 
 const getTrackerUrl = () => {
@@ -21,9 +21,9 @@ const getTrackerUrl = () => {
     base += 'https://tracker.icon.foundation';
   } else {
     //testnet
-    base += '	https://bicon.tracker.solidwallet.io';
+    base += 'https://bicon.tracker.solidwallet.io';
   }
-  return base + '/api/v3';
+  return 'https://bicon.tracker.solidwallet.io/api/v3'; //base + '/api/v3';
 };
 
 const walletHttpProvider = new HttpProvider(`${getWalletUrl()}`);

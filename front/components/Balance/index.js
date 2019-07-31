@@ -6,14 +6,14 @@ import UserBalance from '../../components/Balance/UserBalance';
 
 import { wrapper } from './index.scss';
 
-const Balance = () => {
+const Balance = ({ symbol }) => {
   const { address, icx, token } = useSelector(state => state.wallet);
   const currentToken = useSelector(state => state.token.currentToken);
 
   return (
     <div className={wrapper}>
       <BalanceForm address={address} token={currentToken} />
-      <UserBalance symbol={currentToken.symbol} icx={icx} token={token} />
+      <UserBalance symbol={symbol} icx={icx} token={token} />
     </div>
   );
 };

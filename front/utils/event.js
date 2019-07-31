@@ -4,13 +4,7 @@ import { toHexLoop, toHexString } from './formatter';
 import { makeRandomNumber } from './utils';
 
 // event payload - { method }
-const SEND_QUERY = 'icx_call';
-const GET_ICX_BALANCE = 'icx_getBalance';
 const SEND_TRANSACTION = 'icx_sendTransaction';
-
-// event payload - { params: { data: method } }
-const BALANCE_OF = 'balanceOf';
-const TOKEN_BALANCE_OF = 'tokenBalanceOf';
 
 export const addIconexEventListner = handler =>
   window.addEventListener(AT.ICONEX_RELAY_RESPONSE, handler);
@@ -31,7 +25,7 @@ const iconexEvent = (type, payload) => {
     payload = type;
     type = 'REQUEST_JSON-RPC';
   }
-  console.log(`Event payload - type:, ${type}, payload:`, payload);
+  // console.log(`Event payload - type:, ${type}, payload:`, payload);
   if (window && window.CustomEvent) {
     const detail = { type, payload };
     return new CustomEvent('ICONEX_RELAY_REQUEST', { detail });

@@ -104,10 +104,9 @@ export const reverseObject = obj => {
 };
 
 //{icon delta SCORE address}{token get address}{token get amount}{token give address}{token give amount}{nonce}
-export const makeTxHash = (tokenGet, getAmount, tokenGive, giveAmount, nonce) => {
+const makeTxHash = (tokenGet, getAmount, tokenGive, giveAmount, nonce) => {
   const sha3 = new SHA3(256);
   const serialized = `${SCORE_ADDRESS}${tokenGet}${getAmount}${tokenGive}${giveAmount}${nonce}`;
-  console.log(serialized);
   return sha3.update(serialized).digest('hex');
 };
 
@@ -142,11 +141,9 @@ const makeSellOrderParams = (type, amount, total, address, tokenAddress, nonce) 
 
 export const makeOrderParams = (type, amount, total, address, tokenAddress) => {
   const nonce = makeRandomNumber();
-  const lAmount = toLoop(amount);
-  const lTotal = toLoop(total);
   if (type === 'buy') {
-    return makeBuyOrderParams(type, lAmount, lTotal, address, tokenAddress, nonce);
+    return makeBuyOrderParams(type, Number(amount), Number(total), address, tokenAddress, nonce);
   } else if (type === 'sell') {
-    return makeSellOrderParams(type, lAmount, lTotal, address, tokenAddress, nonce);
+    return makeSellOrderParams(type, Number(amount), Number(total), address, tokenAddress, nonce);
   }
 };

@@ -8,7 +8,9 @@ const Header = () => (
       <li>
         <div className={header_item}>
           <i className='material-icons'>autorenew</i>
-          <h1>ICONDELTA</h1>
+          <h1>
+            ICONDELTA<small style={{ fontSize: '55%', color: '#ff901a' }}> Beta</small>
+          </h1>
         </div>
       </li>
       <li>

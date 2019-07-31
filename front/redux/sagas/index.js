@@ -1,7 +1,9 @@
 import { all, fork } from 'redux-saga/effects';
 import axios from 'axios';
 
-axios.defaults.baseURL = 'https://api.icondelta.ga';
+import { SERVER_BASE_URL } from '../../utils/const';
+
+axios.defaults.baseURL = SERVER_BASE_URL; // 'http://localhost:8010/api';
 
 import wallet from './wallet';
 import token from './token';

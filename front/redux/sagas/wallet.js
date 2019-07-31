@@ -3,15 +3,13 @@ import { all, fork, put, call, takeLatest, select } from 'redux-saga/effects';
 import AT from '../actionTypes';
 import {
   requestAddress,
-  loadBalances,
   depositIcxEvent,
   withdrawIcxEvent,
   depositTokenEvent,
   withdrawTokenEvent,
 } from '../../utils/event';
 import storage from '../../utils/storage';
-import { reverseObject } from '../../utils/utils';
-import { getBalance, getIcxBalance, getTokenBalance } from '../api/iconex/wallet';
+import { getIcxBalance, getTokenBalance } from '../api/iconex/wallet';
 import { toIcx } from '../../utils/formatter';
 
 const getAddress = state => state.wallet.address;
@@ -79,7 +77,7 @@ function* loadIcxBalance({ address }) {
     console.error(e);
     yield put({
       type: AT.LOAD_ICX_BALANCE_FAILURE,
-      error: e.split('] ')[1],
+      error: e,
     });
   }
 }
@@ -93,18 +91,20 @@ function* loadTokenBalance({ address, symbol }) {
     const tokens = yield select(getTokens);
     const currentToken = yield tokens.data.find(t => t.symbol === symbol);
 
-    const balance = yield call(getTokenBalance, address, currentToken.address);
-    balance.deposited = toIcx(balance.deposited);
-    balance.undeposited = toIcx(balance.undeposited);
-    yield put({
-      type: AT.LOAD_TOKEN_BALANCE_SUCCESS,
-      data: balance,
-    });
+    if (currentToken) {
+      const balance = yield call(getTokenBalance, address, currentToken.address);
+      balance.deposited = toIcx(balance.deposited);
+      balance.undeposited = toIcx(balance.undeposited);
+      yield put({
+        type: AT.LOAD_TOKEN_BALANCE_SUCCESS,
+        data: balance,
+      });
+    }
   } catch (e) {
     console.error(e);
     yield put({
       type: AT.LOAD_TOKEN_BALANCE_FAILURE,
-      error: e.split('] ')[1],
+      error: e,
     });
   }
 }

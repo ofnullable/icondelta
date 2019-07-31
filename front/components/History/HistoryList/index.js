@@ -1,11 +1,21 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 import { wrapper, noData } from './index.scss';
 
-const HistoryList = ({ history }) => {
+const HistoryList = memo(({ history }) => {
   const renderHistories = () => {
     if (history.length) {
-      // TODO: render order item
+      return history.map((h, i) => {
+        return (
+          <li key={i}>
+            <div>txHash</div>
+            <div>{h.type}</div>
+            <div>{h.amount}</div>
+            <div>{h.icxPrice}</div>
+            <div>{h.amount * h.icxPrice}</div>
+          </li>
+        );
+      });
     } else {
       return (
         <li className={noData}>
@@ -16,6 +26,6 @@ const HistoryList = ({ history }) => {
     }
   };
   return <ul className={wrapper}>{renderHistories()}</ul>;
-};
+});
 
 export default HistoryList;
