@@ -4,8 +4,7 @@ WORKDIR /
 
 COPY . .
 
-RUN ["npm", "install", "--unsafe-perm", "node-sass"]
-RUN npm install
+RUN npm install --save node-sass
 
 EXPOSE 3030
 
