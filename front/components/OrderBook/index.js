@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-import { wrapper } from './index.scss';
+import { wrapper, menu } from './index.scss';
 import OrderList from './OrderList/Index';
 
 const OrderBook = ({ symbol }) => {
@@ -14,9 +14,11 @@ const OrderBook = ({ symbol }) => {
         <h1>{`Order Book - ${symbol}`}</h1>
       </div>
       <div>
-        <span>{`${symbol} / ICX`}</span>
-        <span>{symbol}</span>
-        <span>ICX</span>
+        <ul className={menu}>
+          <li>{`${symbol} / ICX`}</li>
+          <li>{symbol}</li>
+          <li>ICX</li>
+        </ul>
       </div>
       <OrderList sellOrders={sellOrders} buyOrders={buyOrders} />
     </div>

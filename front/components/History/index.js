@@ -44,10 +44,10 @@ const History = ({ symbol }) => {
     <div className={wrapper}>
       <div>
         <menu className={type === 'Trades' ? active : 'Trades'} onClick={handleMenuClick}>
-          Trades
+          My Trades
         </menu>
         <menu className={type !== 'Trades' ? active : 'Orders'} onClick={handleMenuClick}>
-          Orders
+          My Orders
         </menu>
       </div>
       <div>{renderMenu()}</div>

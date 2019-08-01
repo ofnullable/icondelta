@@ -1,7 +1,8 @@
+@import 'styles/_variables';
 @import 'styles/_mixin';
 
 .wrapper {
-  @include wrapper('2 / 4', '12 / -1');
+  @include wrapper('2 / 4', '13 / -1');
 
   menu {
     @include menu();
@@ -11,20 +12,21 @@
     height: 10%;
   }
   & > div {
-    height: 7%;
+    height: 10%;
   }
   & ul.menu {
     display: flex;
     height: 100%;
-    margin: 0;
+    margin: 0.5em 0 0;
     padding: 0;
     list-style: none;
+    align-items: center;
+    border-radius: 3px;
+    background-color: $background-light;
     & li {
-      width: 15%;
-      margin: 0 auto;
-      line-height: 1.8;
-      text-align: center;
+      width: 20%;
       flex: auto;
+      text-align: center;
     }
   }
 }

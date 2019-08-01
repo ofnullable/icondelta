@@ -1,8 +1,8 @@
 FROM node
 
-WORKDIR /
+WORKDIR /app
 
-COPY . .
+COPY . /app
 
 RUN npm install --save node-sass
 

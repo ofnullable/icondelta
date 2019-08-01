@@ -2,13 +2,13 @@ import React, { memo, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import TradeModal from '../TradeModal';
-import { toIcx } from '../../../utils/formatter';
 import { requestTradeEvent } from '../../../utils/event';
 
 import { wrapper, sell, buy, buttons, sellButton, buyButton, cancelButton } from './OrderItem.scss';
 
-const OrderItem = memo(({ type, order }) => {
+const OrderItem = ({ type, order }) => {
   const [tradeAmount, setTradeAmount] = useState(order.amount);
+  const [tradeTotal, setTradeTotal] = useState(order.total);
   const [modalVisible, setModalVisible] = useState(false);
 
   const address = useSelector(state => state.wallet.address);
@@ -19,6 +19,7 @@ const OrderItem = memo(({ type, order }) => {
 
   const handleAmountChange = e => {
     setTradeAmount(e.target.value);
+    setTradeTotal(e.target.value * order.price);
   };
 
   const handleCloseModal = () => {
@@ -26,14 +27,17 @@ const OrderItem = memo(({ type, order }) => {
   };
 
   const handleButtonClick = () => {
-    requestTradeEvent(order, { address, amount: tradeAmount });
+    const amount = order.type === 'buy' ? tradeAmount : tradeTotal;
+    requestTradeEvent(order, { address, amount });
+    setModalVisible(false);
   };
 
-  const renderModal = type => {
+  const renderModal = () => {
+    const type = order.type === 'buy' ? 'sell' : 'buy';
     return (
       <TradeModal visible={modalVisible} setVisible={setModalVisible}>
         <p>{`Maximum amount: ${order.amount}, Price: ${order.price} (per Token)`}</p>
-        <label htmlFor='amount'>{`Amount to ${type === 'buy' ? 'sell' : 'buy'}`}</label>
+        <label htmlFor='amount'>{`Amount to ${type}`}</label>
         <input
           id='amount'
           type='number'
@@ -45,10 +49,10 @@ const OrderItem = memo(({ type, order }) => {
         <label htmlFor='price'>Price</label>
         <input id='price' type='number' value={order.price} readOnly />
         <label htmlFor='total'>Total</label>
-        <input id='total' type='number' value={order.total} readOnly />
+        <input id='total' type='number' value={tradeTotal} readOnly />
         <div className={buttons}>
-          <button onClick={handleButtonClick} className={type === 'buy' ? sellButton : buyButton}>
-            {type === 'buy' ? 'sell' : 'buy'}
+          <button onClick={handleButtonClick} className={type === 'buy' ? buyButton : sellButton}>
+            {type}
           </button>
           <button onClick={handleCloseModal} className={cancelButton}>
             cancel
@@ -58,7 +62,8 @@ const OrderItem = memo(({ type, order }) => {
     );
   };
 
-  const makeComponent = classes => {
+  const renderItem = () => {
+    const classes = order.type === 'buy' ? [wrapper, buy] : [wrapper, sell];
     return modalVisible ? (
       <>
         {renderModal(type)}
@@ -77,18 +82,7 @@ const OrderItem = memo(({ type, order }) => {
     );
   };
 
-  const renderItem = () => {
-    const classes = [];
-
-    if (type === 'sell') {
-      classes.push(wrapper, sell);
-    } else {
-      classes.push(wrapper, buy);
-    }
-    return makeComponent(classes);
-  };
-
   return renderItem();
-});
+};
 
 export default OrderItem;

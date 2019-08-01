@@ -15,7 +15,7 @@ import { addIconexEventListner, removeIconexEventListner, eventHandler } from '.
 import '../styles/index.scss';
 
 const Home = ({ symbol }) => {
-  const [sockets, setSockets] = useState();
+  const [sockets, setSockets] = useState(null);
   const { address } = useSelector(state => state.wallet);
   const dispatch = useDispatch();
 
@@ -28,8 +28,6 @@ const Home = ({ symbol }) => {
   useEffect(() => {
     loadWalletData(address);
 
-    console.log(io.managers, sockets);
-
     const order = io.connect(`${SERVER_BASE_URL}/orders/${symbol}`, {
       transports: ['websocket'],
       forceNew: true,
@@ -39,7 +37,7 @@ const Home = ({ symbol }) => {
       forceNew: true,
     });
 
-    console.log(order, trade);
+    console.log('socket connected!', order, trade);
     setSockets({
       order,
       trade,
@@ -60,7 +58,7 @@ const Home = ({ symbol }) => {
         dispatch({
           type: AT.REMOVE_SOCKET,
         });
-        console.log('socket disconnect');
+        console.log('socket disconnected');
       }
     };
   }, [symbol]);
@@ -93,20 +91,13 @@ const Home = ({ symbol }) => {
         );
         order.on('order_event', data => {
           console.log('broadcasted order', data);
-          // dispatch({
-          //   type: AT.NEW_ORDER_RECEIVED,
-          //   data,
-          // });
+          dispatch({
+            type: AT.NEW_ORDER_RECEIVED,
+            data,
+          });
         });
       });
       trade.on('connect', () => {
-        // trade.emit('trade_event', { event: 'getTrades', params: { offset: 0, count: 10 } }, res => {
-        //   console.log('get trades', res);
-        //   dispatch({
-        //     type: AT.TRADE_LIST_RECEIVED,
-        //     data: res.data,
-        //   });
-        // });
         trade.emit('trade_event', { event: 'getLatestTokenTrades', params: {} }, res => {
           console.log('get last token trades', res);
           dispatch({
@@ -114,9 +105,20 @@ const Home = ({ symbol }) => {
             data: res.data,
           });
         });
-        trade.on('trade_event', function(data) {
+        trade.on('trade_event', data => {
           console.log('trade event', data);
+          // dispatch({
+          //   type: CHANGE_CURRENT_PRICE,
+          //   data,
+          // });
         });
+        // trade.emit('trade_event', { event: 'getTrades', params: { offset: 0, count: 10 } }, res => {
+        //   console.log('get trades', res);
+        //   dispatch({
+        //     type: AT.TRADE_LIST_RECEIVED,
+        //     data: res.data,
+        //   });
+        // });
       });
     }
   }, [sockets]);
@@ -129,7 +131,7 @@ const Home = ({ symbol }) => {
           'order_event',
           {
             event: 'getOrdersByAddress',
-            params: { type: 'buy', address: address, offset: 0, count: 10 },
+            params: { type: 'buy', address, offset: 0, count: 10 },
           },
           res => {
             console.log('get buy orders by address', res);
@@ -143,7 +145,7 @@ const Home = ({ symbol }) => {
           'order_event',
           {
             event: 'getOrdersByAddress',
-            params: { type: 'sell', address: address, offset: 0, count: 10 },
+            params: { type: 'sell', address, offset: 0, count: 10 },
           },
           res => {
             console.log('get sell orders by address', res);
@@ -157,7 +159,7 @@ const Home = ({ symbol }) => {
       trade.on('connect', () => {
         trade.emit(
           'trade_event',
-          { event: 'getTrades', params: { address: address, offset: 0, count: 10 } },
+          { event: 'getTrades', params: { address, offset: 0, count: 10 } },
           res => {
             console.log('get trades by address', res);
             dispatch({
