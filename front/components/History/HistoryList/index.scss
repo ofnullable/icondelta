@@ -1,7 +1,7 @@
 @import 'styles/_variables';
 
 .wrapper {
-  height: 83%;
+  height: calc(80% - 0.5em);
   margin: 0;
   padding: 0;
   overflow: auto;
@@ -14,13 +14,9 @@
     align-items: center;
     justify-content: center;
   }
-  & > li > div {
-    display: inline-block;
-    width: 20%;
-    padding: 10px;
-  }
   &::-webkit-scrollbar {
     width: 0.3em;
+    height: 0.3em;
     background: none;
     scroll-behavior: smooth;
   }

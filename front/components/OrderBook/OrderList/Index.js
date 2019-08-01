@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 import OrderItem from './OrderItem';
 
 import { wrapper, noData } from './index.scss';
 
-const OrderList = ({ sellOrders, buyOrders }) => {
+const OrderList = memo(({ sellOrders, buyOrders }) => {
   const renderOrders = () => {
     if (!sellOrders.length && !buyOrders.length) {
       return (
@@ -22,6 +22,6 @@ const OrderList = ({ sellOrders, buyOrders }) => {
   };
 
   return <ul className={wrapper}>{renderOrders()}</ul>;
-};
+});
 
 export default OrderList;

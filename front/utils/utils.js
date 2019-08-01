@@ -120,7 +120,7 @@ const makeBuyOrderParams = (type, amount, total, address, tokenAddress, nonce) =
     tokenGive: ICX_ADDRESS,
     giveAmount: total,
     makerAddress: address,
-    expireBlock: 10000,
+    // expireBlock: 10000,
   };
 };
 
@@ -142,8 +142,8 @@ const makeSellOrderParams = (type, amount, total, address, tokenAddress, nonce) 
 export const makeOrderParams = (type, amount, total, address, tokenAddress) => {
   const nonce = makeRandomNumber();
   if (type === 'buy') {
-    return makeBuyOrderParams(type, Number(amount), Number(total), address, tokenAddress, nonce);
+    return makeBuyOrderParams(type, toLoop(amount), toLoop(total), address, tokenAddress, nonce);
   } else if (type === 'sell') {
-    return makeSellOrderParams(type, Number(amount), Number(total), address, tokenAddress, nonce);
+    return makeSellOrderParams(type, toLoop(amount), toLoop(total), address, tokenAddress, nonce);
   }
 };

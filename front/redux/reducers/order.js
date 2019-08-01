@@ -1,32 +1,45 @@
 import AT from '../actionTypes';
 
+import { toIcx, toBigNumber } from '../../utils/formatter';
+
 const initialState = {
   buyOrders: [],
   sellOrders: [],
   savedOrder: null,
 };
 
-const getPrice = (type, order) => {
-  return type === 'sell' ? order.getAmount / order.giveAmount : order.giveAmount / order.getAmount;
+const calcAmount = order => {
+  return order.type === 'sell'
+    ? toIcx(order.giveAmount - order.orderFills)
+    : toIcx(order.getAmount - order.orderFills);
 };
 
-const getAmount = (type, order) => {
-  return type === 'sell'
-    ? order.giveAmount - (order.orderFills || 0)
-    : order.getAmount - (order.orderFills || 0);
+const calcPrice = order => {
+  return order.type === 'sell'
+    ? order.getAmount / order.giveAmount
+    : order.giveAmount / order.getAmount;
 };
 
-const getTotal = order => {
-  return order.price * order.amount;
+const calcTotal = order => {
+  return order.type === 'sell'
+    ? toIcx(order.price * (order.giveAmount - order.orderFills))
+    : toIcx(order.price * (order.getAmount - order.orderFills));
 };
 
-const addInfo = orderList => {
-  return orderList.map(o => {
-    o.amount = getAmount(o.type, o);
-    o.price = getPrice(o.type, o);
-    o.total = getTotal(o);
-    return o;
-  });
+const addInfo = order => {
+  if (order instanceof Array) {
+    return order.map(o => {
+      o.amount = calcAmount(o);
+      o.price = calcPrice(o);
+      o.total = calcTotal(o);
+      return o;
+    });
+  } else if (order instanceof Object) {
+    order.amount = calcAmount(order);
+    order.price = calcPrice(order);
+    order.total = calcTotal(order);
+    return order;
+  }
 };
 
 export default (state = initialState, action) => {
@@ -43,45 +56,38 @@ export default (state = initialState, action) => {
         ['sellOrders']: addInfo(action.data).sort((o1, o2) => o2.price - o1.price),
       };
     }
-    case AT.NEW_ORDER_RECEIVED:
-      const orderData = ({
-        type,
-        tokenGet,
-        getAmount,
-        tokenGive,
-        giveAmount,
-        makerAddress,
-        nonce,
-        signature,
-        orderFills,
-        orderData,
-        amount,
-        price,
-        total,
-      } = addInfo(action.data));
+    case AT.NEW_ORDER_RECEIVED: {
+      const orderData = addInfo(action.data);
 
-      console.log(orderData);
-
-      if (action.data.action === 'create') {
-        if (action.data.type === 'buy') {
-          state.buyOrders.push(orderData);
+      if (orderData.action === 'create') {
+        if (orderData.type === 'buy') {
+          state.buyOrders = [...state.buyOrders, orderData].sort((o1, o2) => o2.price - o1.price);
         } else {
-          state.sellOrders.data.push(orderData);
+          state.sellOrders = [...state.sellOrders, orderData].sort((o1, o2) => o2.price - o1.price);
         }
       } else {
-        if (action.data.type === 'buy') {
-          const buyOrders = state.buyOrders;
-          const index = buyOrders.findIndex(o => o.signature === action.data.signature);
-          buyOrders[index] = { ...orderData };
+        if (orderData.type === 'buy') {
+          const index = state.buyOrders.findIndex(o => o.signature === orderData.signature);
+          if (orderData.getAmount <= orderData.orderFills) {
+            state.buyOrders = state.buyOrders.filter((_, i) => i !== index);
+          } else {
+            state.buyOrders[index] = { ...orderData };
+            state.buyOrders = [...buyOrders];
+          }
         } else {
-          const sellOrders = state.sellOrders.data;
-          const index = sellOrders.findIndex(o => o.signature === action.data.signature);
-          buyOrders[index] = { ...orderData };
+          const index = state.sellOrders.findIndex(o => o.signature === orderData.signature);
+          if (orderData.giveAmount <= orderData.orderFills) {
+            state.sellOrders = state.sellOrders.filter((_, i) => i !== index);
+          } else {
+            state.sellOrders[index] = { ...orderData };
+            state.sellOrders = [...sellOrders];
+          }
         }
       }
       return {
         ...state,
       };
+    }
     case AT.SAVE_TEMPORAL_ORDER:
       return {
         ...state,

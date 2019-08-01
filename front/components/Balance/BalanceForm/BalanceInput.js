@@ -44,7 +44,6 @@ const BalanceForm = ({ address, type, token }) => {
       if (token !== 'ICX') {
         depositTokenEvent(amount, address, token.address);
       } else {
-        console.log(type, token, address);
         depositIcxEvent(amount, address);
       }
     } else {

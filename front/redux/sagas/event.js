@@ -7,7 +7,6 @@ import { REQUEST_ID } from '../../utils/const';
 const getToken = state => state.token.currentToken;
 const getSockets = state => state.socket;
 const getSavedOrder = state => state.order.savedOrder;
-const getRequestIds = state => state.event.requestIds;
 
 export default function*() {
   yield all([fork(watchAddressResponse), fork(watchJsonRpcResponse), fork(watchSigningResponse)]);
@@ -41,16 +40,16 @@ function* watchJsonRpcResponse() {
 
 function* dispatchAction({ payload }) {
   try {
-    const ids = yield select(getRequestIds);
-    // const token = yield select(getToken);
+    console.log(`Response for ${payload.id},`, payload);
 
-    console.log(`Response for ${ids[payload.id]},`, payload);
-
-    switch (ids[payload.id]) {
+    switch (payload.id) {
       // response for get balance requests
       case REQUEST_ID.TRADE: {
         const { trade } = yield select(getSockets);
-        trade.emit('trade_event', { event: '', params: {} });
+        trade.emit('trade_event', {
+          event: 'checkTradeTxHash',
+          params: { txHash: payload.result },
+        });
       }
       default:
         break;

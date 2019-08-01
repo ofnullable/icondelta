@@ -1,29 +1,33 @@
 @import 'styles/_mixin';
 
 .wrapper {
-  @include wrapper('2 / 4', '1 / 12');
+  @include wrapper('2 / 4', '1 / 13');
   & > div:first-child {
+    height: 5%;
     margin: 7px 0;
   }
   & > div {
-    height: 5%;
-    width: 100%;
-    & h1 {
-      width: 100%;
+    height: 10%;
+    & > h1 {
       margin: 0;
-      line-height: 1.2em;
       font-size: 1.2em;
       font-weight: 700;
     }
-  }
-  & > div > span:nth-child(2) {
-    width: 34%;
-  }
-  & > div > span {
-    display: inline-block;
-    width: 33%;
-    height: 100%;
-    text-align: center;
-    line-height: 1.5;
+
+    & ul.menu {
+      display: flex;
+      height: 100%;
+      margin: 0.5em 0 0;
+      padding: 0;
+      list-style: none;
+      align-items: center;
+      border-radius: 3px;
+      background-color: $background-light;
+      & li {
+        width: 20%;
+        flex: auto;
+        text-align: center;
+      }
+    }
   }
 }
