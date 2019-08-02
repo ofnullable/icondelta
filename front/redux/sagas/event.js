@@ -40,7 +40,8 @@ function* watchJsonRpcResponse() {
 
 function* dispatchAction({ payload }) {
   try {
-    // console.log(`Response for ${payload.id},`, payload);
+    console.log(`Response for ${payload.id},`, payload);
+
     switch (payload.id) {
       // response for get balance requests
       case REQUEST_ID.TRADE: {

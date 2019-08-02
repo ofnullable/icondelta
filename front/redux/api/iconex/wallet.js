@@ -1,8 +1,8 @@
-import { iconService, CallBuilder } from './config';
+import { walletService, CallBuilder } from './config';
 import { SCORE_ADDRESS } from '../../../utils/const';
 
 const getIcx = address => {
-  return iconService.getBalance(address).execute();
+  return walletService.getBalance(address).execute();
 };
 
 const getDepositedIcx = address => {
@@ -11,7 +11,7 @@ const getDepositedIcx = address => {
     .method('balanceOf')
     .params({ _address: address })
     .build();
-  return iconService.call(tx).execute();
+  return walletService.call(tx).execute();
 };
 
 const getToken = (address, tokenAddress) => {
@@ -20,7 +20,7 @@ const getToken = (address, tokenAddress) => {
     .method('balanceOf')
     .params({ _owner: address })
     .build();
-  return iconService.call(tx).execute();
+  return walletService.call(tx).execute();
 };
 
 const getDepositedToken = (address, tokenAddress) => {
@@ -29,7 +29,7 @@ const getDepositedToken = (address, tokenAddress) => {
     .method('tokenBalanceOf')
     .params({ _address: address, _tokenAddress: tokenAddress })
     .build();
-  return iconService.call(tx).execute();
+  return walletService.call(tx).execute();
 };
 
 export const getIcxBalance = async address => {

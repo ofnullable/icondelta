@@ -3,24 +3,15 @@
 
 .wrapper {
   text-align: center;
-  border-radius: 3px;
   cursor: pointer;
   &:hover {
-    background-color: $border-color;
+    background-color: $background-light;
   }
   &.sell {
-    color: $danger;
+    color: red;
   }
   &.buy {
-    color: $primary;
-  }
-  & > div {
-    display: inline-block;
-    width: 33%;
-    padding: 10px;
-  }
-  & > div:nth-child(2) {
-    width: 34%;
+    color: greenyellow;
   }
 }
 

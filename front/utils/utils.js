@@ -1,8 +1,7 @@
-import { useDispatch } from 'react-redux';
 import { SHA3 } from 'sha3';
 
 import { REDUX_STEP, ICX_ADDRESS, SCORE_ADDRESS } from './const';
-import { toLoop, toBigNumber, toIcx } from './formatter';
+import { toLoop } from './formatter';
 
 const changeObjectState = (step, state, target, action) => {
   switch (step) {
@@ -98,6 +97,12 @@ export const makeRandomNumber = () => {
   }
 };
 
+export const reverseObject = obj => {
+  const result = {};
+  Object.keys(obj).forEach(k => (result[obj[k]] = k));
+  return result;
+};
+
 //{icon delta SCORE address}{token get address}{token get amount}{token give address}{token give amount}{nonce}
 const makeTxHash = (tokenGet, getAmount, tokenGive, giveAmount, nonce) => {
   const sha3 = new SHA3(256);
@@ -142,58 +147,3 @@ export const makeOrderParams = (type, amount, total, address, tokenAddress) => {
     return makeSellOrderParams(type, toLoop(amount), toLoop(total), address, tokenAddress, nonce);
   }
 };
-
-const getPrice = order => {
-  const { giveAmount, getAmount } = order;
-  return order.type === 'buy'
-    ? toBigNumber(giveAmount)
-        .dividedBy(getAmount)
-        .toString(10)
-    : toBigNumber(getAmount)
-        .dividedBy(giveAmount)
-        .toString(10);
-};
-
-const getAmount = order => {
-  const { giveAmount, getAmount, orderFills } = order;
-  return order.type === 'buy'
-    ? toIcx(toBigNumber(getAmount).minus(orderFills))
-    : toIcx(toBigNumber(giveAmount).minus(orderFills));
-};
-
-const getTotal = order => {
-  const { giveAmount, getAmount, orderFills, price } = order;
-  return order.type === 'buy'
-    ? toIcx(
-        toBigNumber(getAmount)
-          .minus(orderFills)
-          .multipliedBy(price)
-      )
-    : toIcx(
-        toBigNumber(giveAmount)
-          .minus(orderFills)
-          .multipliedBy(price)
-      );
-};
-
-export const addInfoToOrder = order => {
-  if (order instanceof Array) {
-    return order.map(o => {
-      o.price = getPrice(o);
-      o.amount = getAmount(o);
-      o.total = getTotal(o);
-      return o;
-    });
-  } else if (order instanceof Object) {
-    order.price = getPrice(order);
-    order.amount = getAmount(order);
-    order.total = getTotal(order);
-    return order;
-  }
-};
-
-// export const reverseObject = obj => {
-//   const result = {};
-//   Object.keys(obj).forEach(k => (result[obj[k]] = k));
-//   return result;
-// };

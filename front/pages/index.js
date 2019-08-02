@@ -72,11 +72,10 @@ const Home = ({ symbol }) => {
           { event: 'getOrders', params: { type: 'buy', offset: 0, count: 10 } },
           res => {
             console.log('get buy orders', res);
-            if (res && res.success)
-              dispatch({
-                type: AT.BUY_ORDER_LIST_RECEIVED,
-                data: res.data,
-              });
+            dispatch({
+              type: AT.BUY_ORDER_LIST_RECEIVED,
+              data: res.data,
+            });
           }
         );
         order.emit(
@@ -84,36 +83,33 @@ const Home = ({ symbol }) => {
           { event: 'getOrders', params: { type: 'sell', offset: 0, count: 10 } },
           res => {
             console.log('get sell orders', res);
-            if (res && res.success)
-              dispatch({
-                type: AT.SELL_ORDER_LIST_RECEIVED,
-                data: res.data,
-              });
+            dispatch({
+              type: AT.SELL_ORDER_LIST_RECEIVED,
+              data: res.data,
+            });
           }
         );
-        order.on('order_event', res => {
-          console.log('broadcasted order', res);
+        order.on('order_event', data => {
+          console.log('broadcasted order', data);
           dispatch({
             type: AT.NEW_ORDER_RECEIVED,
-            data: res,
+            data,
           });
         });
       });
       trade.on('connect', () => {
         trade.emit('trade_event', { event: 'getLatestTokenTrades', params: {} }, res => {
           console.log('get last token trades', res);
-          if (res && res.success)
-            dispatch({
-              type: AT.LAST_TRADE_RECEIVED,
-              data: res.data,
-            });
+          dispatch({
+            type: AT.LAST_TRADE_RECEIVED,
+            data: res.data,
+          });
         });
-        trade.on('trade_event', res => {
-          console.log('trade event', res);
-          loadWalletData(address);
+        trade.on('trade_event', data => {
+          console.log('trade event', data);
           // dispatch({
-          //   type: AT.SET_TOKEN_PRICE,
-          //   data: res,
+          //   type: CHANGE_CURRENT_PRICE,
+          //   data,
           // });
         });
         // trade.emit('trade_event', { event: 'getTrades', params: { offset: 0, count: 10 } }, res => {
@@ -135,44 +131,41 @@ const Home = ({ symbol }) => {
           'order_event',
           {
             event: 'getOrdersByAddress',
-            params: { type: 'buy', address }, // , offset: 0, count: 10
+            params: { type: 'buy', address, offset: 0, count: 10 },
           },
           res => {
             console.log('get buy orders by address', res);
-            if (res && res.success)
-              dispatch({
-                type: AT.MY_BUY_ORDER_LIST_RECEIVED,
-                data: res.data,
-              });
+            dispatch({
+              type: AT.MY_BUY_ORDER_LIST_RECEIVED,
+              data: res.data,
+            });
           }
         );
         order.emit(
           'order_event',
           {
             event: 'getOrdersByAddress',
-            params: { type: 'sell', address }, // , offset: 0, count: 10
+            params: { type: 'sell', address, offset: 0, count: 10 },
           },
           res => {
             console.log('get sell orders by address', res);
-            if (res && res.success)
-              dispatch({
-                type: AT.MY_SELL_ORDER_LIST_RECEIVED,
-                data: res.data,
-              });
+            dispatch({
+              type: AT.MY_SELL_ORDER_LIST_RECEIVED,
+              data: res.data,
+            });
           }
         );
       });
       trade.on('connect', () => {
         trade.emit(
           'trade_event',
-          { event: 'getTradesByAddress', params: { address } }, //, offset: 0, count: 10
+          { event: 'getTrades', params: { address, offset: 0, count: 10 } },
           res => {
             console.log('get trades by address', res);
-            if (res && res.success)
-              dispatch({
-                type: AT.MY_TRADE_LIST_RECEIVED,
-                data: res.data,
-              });
+            dispatch({
+              type: AT.MY_TRADE_LIST_RECEIVED,
+              data: res.data,
+            });
           }
         );
       });
@@ -193,6 +186,7 @@ const Home = ({ symbol }) => {
     } else {
       dispatch({
         type: AT.LOAD_ADDRESS_REQUEST,
+        symbol,
       });
     }
   };
@@ -200,9 +194,9 @@ const Home = ({ symbol }) => {
   return (
     <>
       <Balance symbol={symbol} />
-      <OrderBook symbol={symbol} />
+      <OrderBook symbol={symbol} socket={sockets && sockets.trade} />
       <TokenBar symbol={symbol} />
-      <Trade />
+      <Trade socket={sockets && sockets.order} />
       <History symbol={symbol} />
     </>
   );

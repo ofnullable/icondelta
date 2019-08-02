@@ -5,39 +5,43 @@ import { wrapper, error } from './index.scss';
 const UserBalance = ({ symbol, icx, token }) => {
   const renderItem = target => {
     if (target.isProceeding) {
-      return <div style={{ width: '80%' }}>Loading</div>;
+      return <td colSpan='2'>Loading</td>;
     } else if (target.error) {
       return (
-        <div style={{ width: '80%' }} className={error}>
+        <td colSpan='2' className={error}>
           {target.error}
-        </div>
+        </td>
       );
     } else {
       return (
         <>
-          <div>{target.data.undeposited || 0}</div>
-          <div>{target.data.deposited || 0}</div>
+          <td>{target.data.undeposited || 0}</td>
+          <td>{target.data.deposited || 0}</td>
         </>
       );
     }
   };
 
   return (
-    <ul className={wrapper}>
-      <li>
-        <div width='20%'>name</div>
-        <div width='40%'>wallet</div>
-        <div width='40%'>score</div>
-      </li>
-      <li>
-        <div>ICX</div>
-        {renderItem(icx)}
-      </li>
-      <li>
-        <div>{symbol}</div>
-        {renderItem(token)}
-      </li>
-    </ul>
+    <table className={wrapper}>
+      <thead>
+        <tr>
+          <th width='20%'>name</th>
+          <th width='40%'>wallet</th>
+          <th width='40%'>score</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>ICX</td>
+          {renderItem(icx)}
+        </tr>
+        <tr>
+          <td>{symbol}</td>
+          {renderItem(token)}
+        </tr>
+      </tbody>
+    </table>
   );
 };
 

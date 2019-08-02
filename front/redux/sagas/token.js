@@ -22,12 +22,10 @@ function* loadTokens({ symbol }) {
     });
 
     const currentToken = data.find(d => d.symbol === symbol);
-    if (currentToken) {
-      yield put({
-        type: AT.SET_CURRENT_TOKEN_INFO,
-        data: currentToken,
-      });
-    }
+    yield put({
+      type: AT.SET_CURRENT_TOKEN_INFO,
+      data: currentToken,
+    });
   } catch (e) {
     console.error(e.response);
   }

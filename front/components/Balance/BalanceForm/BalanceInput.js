@@ -1,5 +1,4 @@
-import React, { useState, memo } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState } from 'react';
 
 import {
   depositIcxEvent,
@@ -7,53 +6,24 @@ import {
   withdrawIcxEvent,
   withdrawTokenEvent,
 } from '../../../utils/event';
-import AT from '../../../redux/actionTypes';
 
-import { wrapper, primary, danger } from './BalanceInput.scss';
+import { wrapper } from './BalanceInput.scss';
+import { primary, danger } from '../../Layout/style.scss';
 
-const BalanceInput = memo(({ address, type, token, balance }) => {
-  // console.log(balance);
+const BalanceForm = ({ address, type, token }) => {
   const [amount, setAmount] = useState('');
-  const dispatch = useDispatch();
 
   const handleInputChange = e => {
     if (!address) {
-      dispatch({ type: AT.LOAD_ADDRESS_REQUEST });
       return;
     }
     setAmount(e.target.value);
   };
 
-  const eventDispatch = () => {
-    if (type === 'Deposit') {
-      if (token === 'ICX') {
-        depositIcxEvent(amount, address);
-      } else {
-        depositTokenEvent(amount, address, token.address);
-      }
-    } else {
-      if (token === 'ICX') {
-        withdrawIcxEvent(amount, address);
-      } else {
-        withdrawTokenEvent(amount, address, token.address);
-      }
-    }
-  };
-
-  const amountValidation = () => {
-    if (type === 'Deposit') {
-      if (Number(balance.undeposited) < amount) {
-        return false;
-      }
-    } else {
-      if (Number(balance.deposited) < amount) {
-        return false;
-      }
-    }
-    return true;
-  };
-
   const handleSubmit = ({ keyCode }) => {
+    if (!address) {
+      return;
+    }
     if (!keyCode || (keyCode && keyCode === 13)) {
       if (!amount) {
         alert('Please enter amount!');
@@ -64,13 +34,24 @@ const BalanceInput = memo(({ address, type, token, balance }) => {
         setAmount('');
         return;
       }
-      if (!amountValidation()) {
-        alert(`Can't ${type} more then you have`);
-        setAmount(type === 'Deposit' ? balance.undeposited : balance.deposited);
-        return;
-      }
       eventDispatch();
       setAmount('');
+    }
+  };
+
+  const eventDispatch = () => {
+    if (type === 'Deposit') {
+      if (token !== 'ICX') {
+        depositTokenEvent(amount, address, token.address);
+      } else {
+        depositIcxEvent(amount, address);
+      }
+    } else {
+      if (token !== 'ICX') {
+        withdrawTokenEvent(amount, address, token.address);
+      } else {
+        withdrawIcxEvent(amount, address);
+      }
     }
   };
 
@@ -85,6 +66,6 @@ const BalanceInput = memo(({ address, type, token, balance }) => {
       </button>
     </div>
   );
-});
+};
 
-export default BalanceInput;
+export default BalanceForm;

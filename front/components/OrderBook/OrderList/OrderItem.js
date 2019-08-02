@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { memo, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import TradeModal from '../TradeModal';
 import { requestTradeEvent } from '../../../utils/event';
-import AT from '../../../redux/actionTypes';
 
 import { wrapper, sell, buy, buttons, sellButton, buyButton, cancelButton } from './OrderItem.scss';
 
@@ -13,13 +12,8 @@ const OrderItem = ({ type, order }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const address = useSelector(state => state.wallet.address);
-  const dispatch = useDispatch();
 
   const handleItemClick = () => {
-    if (!address) {
-      dispatch({ type: AT.LOAD_ADDRESS_REQUEST });
-      return;
-    }
     setModalVisible(true);
   };
 
@@ -32,7 +26,7 @@ const OrderItem = ({ type, order }) => {
     setModalVisible(false);
   };
 
-  const handleTrade = () => {
+  const handleButtonClick = () => {
     const amount = order.type === 'buy' ? tradeAmount : tradeTotal;
     requestTradeEvent(order, { address, amount });
     setModalVisible(false);
@@ -57,7 +51,7 @@ const OrderItem = ({ type, order }) => {
         <label htmlFor='total'>Total</label>
         <input id='total' type='number' value={tradeTotal} readOnly />
         <div className={buttons}>
-          <button onClick={handleTrade} className={type === 'buy' ? buyButton : sellButton}>
+          <button onClick={handleButtonClick} className={type === 'buy' ? buyButton : sellButton}>
             {type}
           </button>
           <button onClick={handleCloseModal} className={cancelButton}>

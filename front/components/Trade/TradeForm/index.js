@@ -3,10 +3,11 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import AT from '../../../redux/actionTypes';
 import { toBigNumber } from '../../../utils/formatter';
+
+import { wrapper } from './index.scss';
+import { primary, danger } from '../../Layout/style.scss';
 import { makeOrderParams } from '../../../utils/utils';
 import { requestSignatureEvent } from '../../../utils/event';
-
-import { wrapper, primary, danger } from './index.scss';
 
 const TradeForm = ({ type, token }) => {
   const [price, setPrice] = useState('');
@@ -18,8 +19,12 @@ const TradeForm = ({ type, token }) => {
   const { order } = useSelector(state => state.socket);
   const dispatch = useDispatch();
 
-  const loadAddress = () => {
-    dispatch({ type: AT.LOAD_ADDRESS_REQUEST });
+  const hasAddress = () => {
+    if (!address) {
+      dispatch({ type: AT.LOAD_ADDRESS_REQUEST, symbol: token.symbol });
+      return false;
+    }
+    return true;
   };
 
   const isValidOrder = () => {
@@ -35,10 +40,6 @@ const TradeForm = ({ type, token }) => {
   };
 
   const handleAmountChange = e => {
-    if (!address) {
-      loadAddress();
-      return;
-    }
     const value = e.target.value;
     setAmount(value);
     if (price && value) {
@@ -49,10 +50,6 @@ const TradeForm = ({ type, token }) => {
   };
 
   const handlePriceChange = e => {
-    if (!address) {
-      loadAddress();
-      return;
-    }
     const value = e.target.value;
     setPrice(value);
     if (amount && value) {
@@ -64,7 +61,7 @@ const TradeForm = ({ type, token }) => {
 
   const makeOrder = e => {
     e.preventDefault();
-    if (!isValidOrder()) return;
+    if (!isValidOrder() || !hasAddress()) return;
 
     if (!order || !order.connected) {
       return alert('Can not create new order.. please refresh window');

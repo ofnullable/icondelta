@@ -12,12 +12,7 @@ const Balance = ({ symbol }) => {
 
   return (
     <div className={wrapper}>
-      <BalanceForm
-        address={address}
-        token={currentToken}
-        icxBalance={icx && icx.data}
-        tokenBalance={token && token.data}
-      />
+      <BalanceForm address={address} token={currentToken} />
       <UserBalance symbol={symbol} icx={icx} token={token} />
     </div>
   );
