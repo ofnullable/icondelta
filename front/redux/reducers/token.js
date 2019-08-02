@@ -25,7 +25,9 @@ export default (state = initialState, action) => {
     case AT.SET_CURRENT_TOKEN_INFO:
       return {
         ...state,
-        currentToken: action.data,
+        currentToken: {
+          ...action.data,
+        },
       };
     case AT.LAST_TRADE_RECEIVED:
       state.tokens.data.map(t => {

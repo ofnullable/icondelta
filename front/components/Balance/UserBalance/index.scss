@@ -1,16 +1,40 @@
-.wrapper {
-  height: 40%;
-  color: inherit;
+@import 'styles/_variables';
 
-  & th,
-  & td {
-    padding: 12px;
-    text-align: center;
+.wrapper {
+  display: flex;
+  width: 100%;
+  height: 40%;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  align-items: center;
+  flex-direction: column;
+  & > li:first-child {
+    background-color: $background-light;
+    border-radius: 5px;
   }
-  & .error {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    color: red;
+  & > li {
+    display: flex;
+    width: 100%;
+    flex: auto;
+    align-items: center;
+    justify-content: center;
+    & > div:first-child {
+      width: 20%;
+    }
+    & > div {
+      width: 40%;
+      flex: auto;
+      text-align: center;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      &.error {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        color: red;
+      }
+    }
   }
 }

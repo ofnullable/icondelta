@@ -11,5 +11,11 @@
   }
   & button {
     width: 30%;
+    &.primary {
+      @include button($primary);
+    }
+    &.danger {
+      @include button($danger);
+    }
   }
 }
