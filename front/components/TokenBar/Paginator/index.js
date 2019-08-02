@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { wrapper, active, disabled } from './index.scss';
 

@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 
 import BalanceInput from './BalanceInput';
 
 import { wrapper, active } from './index.scss';
 
-const Balance = ({ address, token }) => {
+const Balance = memo(({ address, token, icxBalance, tokenBalance }) => {
   const [type, setType] = useState('Deposit');
 
   const handleMenuClick = e => {
@@ -22,10 +22,10 @@ const Balance = ({ address, token }) => {
       <menu className={type !== 'Deposit' ? active : 'Withdraw'} onClick={handleMenuClick}>
         Withdraw
       </menu>
-      <BalanceInput address={address} type={type} token={'ICX'} />
-      <BalanceInput address={address} type={type} token={token} />
+      <BalanceInput address={address} type={type} token={'ICX'} balance={icxBalance} />
+      <BalanceInput address={address} type={type} token={token} balance={tokenBalance} />
     </div>
   );
-};
+});
 
 export default Balance;

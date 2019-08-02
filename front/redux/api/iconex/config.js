@@ -2,7 +2,7 @@ import IconService, { HttpProvider, IconBuilder } from 'icon-sdk-js';
 
 import { isProd } from '../../../utils/const';
 
-const getWalletUrl = () => {
+const getIconUrl = () => {
   let base = '';
   if (isProd) {
     //mainnet
@@ -14,22 +14,8 @@ const getWalletUrl = () => {
   return 'https://bicon.net.solidwallet.io/api/v3'; // base + '/api/v3';
 };
 
-const getTrackerUrl = () => {
-  let base = '';
-  if (isProd) {
-    //mainnet
-    base += 'https://tracker.icon.foundation';
-  } else {
-    //testnet
-    base += 'https://bicon.tracker.solidwallet.io';
-  }
-  return 'https://bicon.tracker.solidwallet.io/api/v3'; //base + '/api/v3';
-};
+const httpProvider = new HttpProvider(`${getIconUrl()}`);
 
-const walletHttpProvider = new HttpProvider(`${getWalletUrl()}`);
-const trackerHttpProvider = new HttpProvider(`${getTrackerUrl()}`);
+export const iconService = new IconService(httpProvider);
 
-export const walletService = new IconService(walletHttpProvider);
-export const trackerService = new IconService(trackerHttpProvider);
-
-export const { CallBuilder, TransactionBuilder } = IconBuilder;
+export const { CallBuilder } = IconBuilder;

@@ -14,8 +14,6 @@ const TokenList = ({ tokens, symbol }) => {
           <div>Symbol</div>
           <div>Price</div>
         </li>
-      </ul>
-      <ul>
         {tokens.map(t => {
           if (t.symbol === symbol) {
             return <TokenInfo key={t.address} token={t} className={active} />;

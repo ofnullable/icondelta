@@ -9,12 +9,17 @@
     margin-bottom: 0.5em;
   }
   & input {
-    // width: 100%;
     text-align: right;
   }
   & > button {
     width: 100%;
     margin: 1.8em 0 0;
     line-height: 1.7;
+    &.primary {
+      @include button($primary);
+    }
+    &.danger {
+      @include button($danger);
+    }
   }
 }
