@@ -6,9 +6,9 @@ const TokenSearchForm = ({ handleChange }) => {
   return (
     <div className={wrapper}>
       <input type='text' onChange={handleChange} />
-      <div>
+      <button>
         <i className='material-icons'>search</i>
-      </div>
+      </button>
     </div>
   );
 };

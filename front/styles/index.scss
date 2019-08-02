@@ -13,14 +13,33 @@ body {
   padding: 0;
   border: none;
   color: $white;
-  font-family: $font-family;
   background-color: $window-background;
+  font-family: Fira Code, -apple-system, BlinkMacSystemFont, Avenir Next, Avenir, Helvetica,
+    sans-serif;
 }
 
 body > div {
   height: 100%;
 }
 
-input:read-only {
-  background: $light-gray;
+input {
+  width: 100%;
+  text-align: right;
+  padding: 3px 10px;
+  border-radius: 5px;
+  border: 1px solid $border-color;
+  &:read-only {
+    background: $light-gray;
+  }
+}
+
+button {
+  @include transition(all 0.3s ease);
+  cursor: pointer;
+  display: inline-block;
+  color: inherit;
+  padding: 3px 15px;
+  border: 1px solid;
+  border-radius: 4px;
+  text-align: center;
 }

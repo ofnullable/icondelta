@@ -12,7 +12,7 @@ export default (state = initialState, action) => {
       };
     case AT.REMOVE_SOCKET:
       return {
-        ['sockets']: {},
+        sockets: {},
       };
     default:
       return {

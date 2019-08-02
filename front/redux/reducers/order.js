@@ -1,6 +1,6 @@
 import AT from '../actionTypes';
 
-import { toIcx, toBigNumber } from '../../utils/formatter';
+import { addInfoToOrder } from '../../utils/utils';
 
 const initialState = {
   buyOrders: [],
@@ -8,56 +8,22 @@ const initialState = {
   savedOrder: null,
 };
 
-const calcAmount = order => {
-  return order.type === 'sell'
-    ? toIcx(order.giveAmount - order.orderFills)
-    : toIcx(order.getAmount - order.orderFills);
-};
-
-const calcPrice = order => {
-  return order.type === 'sell'
-    ? order.getAmount / order.giveAmount
-    : order.giveAmount / order.getAmount;
-};
-
-const calcTotal = order => {
-  return order.type === 'sell'
-    ? toIcx(order.price * (order.giveAmount - order.orderFills))
-    : toIcx(order.price * (order.getAmount - order.orderFills));
-};
-
-const addInfo = order => {
-  if (order instanceof Array) {
-    return order.map(o => {
-      o.amount = calcAmount(o);
-      o.price = calcPrice(o);
-      o.total = calcTotal(o);
-      return o;
-    });
-  } else if (order instanceof Object) {
-    order.amount = calcAmount(order);
-    order.price = calcPrice(order);
-    order.total = calcTotal(order);
-    return order;
-  }
-};
-
 export default (state = initialState, action) => {
   switch (action.type) {
     case AT.BUY_ORDER_LIST_RECEIVED: {
       return {
         ...state,
-        ['buyOrders']: addInfo(action.data).sort((o1, o2) => o2.price - o1.price),
+        buyOrders: addInfoToOrder(action.data).sort((o1, o2) => o2.price - o1.price),
       };
     }
     case AT.SELL_ORDER_LIST_RECEIVED: {
       return {
         ...state,
-        ['sellOrders']: addInfo(action.data).sort((o1, o2) => o2.price - o1.price),
+        sellOrders: addInfoToOrder(action.data).sort((o1, o2) => o2.price - o1.price),
       };
     }
     case AT.NEW_ORDER_RECEIVED: {
-      const orderData = addInfo(action.data);
+      const orderData = addInfoToOrder(action.data);
 
       if (orderData.action === 'create') {
         if (orderData.type === 'buy') {
@@ -91,10 +57,10 @@ export default (state = initialState, action) => {
     case AT.SAVE_TEMPORAL_ORDER:
       return {
         ...state,
-        ['savedOrder']: action.data,
+        savedOrder: action.data,
       };
     case AT.REMOVE_TEMPORAL_ORDER:
-      delete state['savedOrder'];
+      delete state.savedOrder;
       return {
         ...state,
       };
