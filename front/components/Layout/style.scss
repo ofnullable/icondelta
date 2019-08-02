@@ -57,64 +57,6 @@ main {
     display: block;
   }
 }
-input {
-  width: 100%;
-  text-align: right;
-  padding: 3px 10px;
-  border-radius: 5px;
-  border: 1px solid $border-color;
-  &.addon {
-    width: 90%;
-    border-right: none;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    & + div {
-      width: 10%;
-      color: #000;
-      text-align: center;
-      padding: 3px 0;
-      line-height: 1.5;
-      display: inline-block;
-      border: 1px solid #adb5bd;
-      border-left: none;
-      border-top-right-radius: 5px;
-      border-bottom-right-radius: 5px;
-      background-color: #fff;
-    }
-  }
-}
-button {
-  @include transition(all 0.3s ease);
-  cursor: pointer;
-  display: inline-block;
-  color: inherit;
-  padding: 3px 15px;
-  border: 1px solid;
-  border-radius: 4px;
-  text-align: center;
-  &.primary {
-    @include button($primary);
-  }
-  &.danger {
-    @include button($danger);
-  }
-}
-table {
-  width: 100%;
-  text-align: left;
-  table-layout: fixed;
-  border-collapse: collapse;
-  & thead {
-    border-radius: 15px;
-    background-color: $background-light;
-    & th:first-child {
-      border-radius: 5px 0 0 5px;
-    }
-    & th:last-child {
-      border-radius: 0 5px 5px 0;
-    }
-  }
-}
 footer {
   color: #fff;
   height: 5%;

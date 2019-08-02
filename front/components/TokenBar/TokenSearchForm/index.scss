@@ -1,26 +1,27 @@
 @import 'styles/_variables';
 
 .wrapper {
-  padding-bottom: 15px;
-  & > input {
-    width: 85%;
+  height: 7%;
+  padding-top: 3px;
+  & input {
+    width: 80%;
     text-align: left;
     padding: 5px 10px;
-    border-right: none;
     vertical-align: middle;
+    border-right: none;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
-  & > input + div {
-    width: 15%;
+  & input + button {
+    width: 20%;
     cursor: pointer;
     padding: 3px 10px;
     vertical-align: middle;
     text-align: center;
-    display: inline-block;
     background-color: $secondery;
-    border: 1.5px solid $secondery;
     border-left: none;
+    border: 0.5px solid $secondery;
+    border-radius: 0;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
     &:hover {

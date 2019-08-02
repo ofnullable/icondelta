@@ -6,6 +6,7 @@
 
   menu {
     @include menu();
+    height: 100%;
     padding: 9px;
   }
   & > div:first-child {

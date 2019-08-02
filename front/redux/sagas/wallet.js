@@ -12,15 +12,8 @@ import storage from '../../utils/storage';
 import { getIcxBalance, getTokenBalance } from '../api/iconex/wallet';
 import { toIcx } from '../../utils/formatter';
 
-const getAddress = state => state.wallet.address;
+const getSymbol = state => state.token.currentToken.symbol;
 const getTokens = state => state.token.tokens;
-
-const getDetails = function*() {
-  return {
-    address: yield select(getAddress),
-    token: yield select(getTokens),
-  };
-};
 
 export default function*() {
   yield all([
@@ -38,8 +31,9 @@ function* watchLoadAddressRequest() {
   yield takeLatest(AT.LOAD_ADDRESS_REQUEST, loadAddress);
 }
 
-function* loadAddress({ symbol }) {
+function* loadAddress() {
   const address = yield storage.get('address');
+  const symbol = yield select(getSymbol);
 
   if (address) {
     yield put({
@@ -98,6 +92,11 @@ function* loadTokenBalance({ address, symbol }) {
       yield put({
         type: AT.LOAD_TOKEN_BALANCE_SUCCESS,
         data: balance,
+      });
+    } else {
+      yield put({
+        type: AT.LOAD_TOKEN_BALANCE_FAILURE,
+        error: `Fail to find token for symbol: ${symbol}`,
       });
     }
   } catch (e) {
