@@ -6,13 +6,14 @@ import { requestTradeEvent } from '../../../utils/event';
 import AT from '../../../redux/actionTypes';
 
 import { wrapper, sell, buy, buttons, sellButton, buyButton, cancelButton } from './OrderItem.scss';
+import { toBigNumber } from '../../../utils/formatter';
 
 const OrderItem = ({ type, order }) => {
   const [tradeAmount, setTradeAmount] = useState(order.amount);
   const [tradeTotal, setTradeTotal] = useState(order.total);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const address = useSelector(state => state.wallet.address);
+  const { address, icx, token } = useSelector(state => state.wallet);
   const dispatch = useDispatch();
 
   const handleItemClick = () => {
@@ -25,7 +26,11 @@ const OrderItem = ({ type, order }) => {
 
   const handleAmountChange = e => {
     setTradeAmount(e.target.value);
-    setTradeTotal(e.target.value * order.price);
+    setTradeTotal(
+      toBigNumber(e.target.value)
+        .multipliedBy(order.price)
+        .toString()
+    );
   };
 
   const handleCloseModal = () => {

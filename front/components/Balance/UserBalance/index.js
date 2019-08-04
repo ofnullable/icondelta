@@ -1,23 +1,37 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { useSelector } from 'react-redux';
+
+import BalanceItem from './BalanceItem';
 
 import { wrapper, error } from './index.scss';
 
-const UserBalance = ({ symbol, icx, token }) => {
-  const renderItem = target => {
+const UserBalance = memo(({ symbol }) => {
+  const { icx, token } = useSelector(state => state.wallet);
+
+  const renderItem = (name, target) => {
     if (target.isProceeding) {
-      return <div style={{ width: '80%' }}>Loading</div>;
+      return (
+        <li>
+          <div>{name}</div>
+          <div style={{ width: '80%' }}>Loading</div>
+        </li>
+      );
     } else if (target.error) {
       return (
-        <div style={{ width: '80%' }} className={error}>
-          {target.error}
-        </div>
+        <li>
+          <div>{name}</div>
+          <div style={{ width: '80%' }} className={error}>
+            {target.error}
+          </div>
+        </li>
       );
     } else {
       return (
-        <>
-          <div>{target.data.undeposited || 0}</div>
-          <div>{target.data.deposited || 0}</div>
-        </>
+        <BalanceItem
+          symbol={name}
+          deposited={target.data.deposited}
+          undeposited={target.data.undeposited}
+        />
       );
     }
   };
@@ -29,16 +43,10 @@ const UserBalance = ({ symbol, icx, token }) => {
         <div width='40%'>wallet</div>
         <div width='40%'>score</div>
       </li>
-      <li>
-        <div>ICX</div>
-        {renderItem(icx)}
-      </li>
-      <li>
-        <div>{symbol}</div>
-        {renderItem(token)}
-      </li>
+      {renderItem('ICX', icx)}
+      {renderItem(symbol, token)}
     </ul>
   );
-};
+});
 
 export default UserBalance;

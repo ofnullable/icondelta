@@ -2,6 +2,7 @@ import AT from '../actionTypes';
 import storage from '../../utils/storage';
 import { INITIAL_STATE, REDUX_STEP } from '../../utils/const';
 import { changeState } from '../../utils/utils';
+import { toIcx } from '../../utils/formatter';
 
 const initialState = {
   address: storage.get('address') || null,
@@ -21,23 +22,81 @@ export default (state = initialState, action) => {
         ...state,
         address: action.address,
       };
-    case AT.LOAD_ICX_BALANCE_REQUEST:
-      return changeState('OBJ', REDUX_STEP.REQUEST, state, 'icx');
-
-    case AT.LOAD_TOKEN_BALANCE_REQUEST:
-      return changeState('OBJ', REDUX_STEP.REQUEST, state, 'token');
-
-    case AT.LOAD_ICX_BALANCE_SUCCESS:
-      return changeState('OBJ', REDUX_STEP.SUCCESS, state, 'icx', action);
-
-    case AT.LOAD_TOKEN_BALANCE_SUCCESS:
-      return changeState('OBJ', REDUX_STEP.SUCCESS, state, 'token', action);
+    case AT.LOAD_WALLET_BALANCE_REQEUST:
+      return {
+        ...state,
+        icx: {
+          ...state.icx,
+          isProceeding: true,
+        },
+        token: {
+          ...state.token,
+          isProceeding: true,
+        },
+      };
+    case AT.LOAD_WALLET_BALANCE_SUCCESS:
+      Object.keys(action.icx).forEach(k => (action.icx[k] = toIcx(action.icx[k])));
+      Object.keys(action.token).forEach(k => (action.token[k] = toIcx(action.token[k])));
+      return {
+        ...state,
+        icx: {
+          error: '',
+          data: action.icx,
+          isProceeding: false,
+        },
+        token: {
+          error: '',
+          data: action.token,
+          isProceeding: false,
+        },
+      };
 
     case AT.LOAD_ICX_BALANCE_FAILURE:
-      return changeState('OBJ', REDUX_STEP.FAILURE, state, 'icx', action);
+      Object.keys(action.token).forEach(k => (action.token[k] = toIcx(action.token[k])));
+      return {
+        ...state,
+        icx: {
+          ...state.icx,
+          isProceeding: false,
+          error: action.error,
+        },
+        token: {
+          ...state.token,
+          data: action.token,
+          isProceeding: false,
+        },
+      };
 
     case AT.LOAD_TOKEN_BALANCE_FAILURE:
-      return changeState('OBJ', REDUX_STEP.FAILURE, state, 'token', action);
+      Object.keys(action.icx).forEach(k => (action.icx[k] = toIcx(action.icx[k])));
+      return {
+        ...state,
+        icx: {
+          ...state.icx,
+          data: action.icx,
+          isProceeding: false,
+        },
+        token: {
+          ...state.token,
+          isProceeding: false,
+          error: action.error,
+        },
+      };
+
+    case AT.LOAD_WALLET_BALANCE_FAILURE:
+      return {
+        ...state,
+        icx: {
+          ...state.icx,
+          isProceeding: false,
+          error: action.error,
+        },
+        token: {
+          ...state.token,
+          isProceeding: false,
+          error: action.error,
+        },
+      };
 
     default:
       return {

@@ -1,21 +1,28 @@
 import React, { memo } from 'react';
 
-import { wrapper, noData } from './index.scss';
-import HistoryItem from './HistoryItem';
+import TradeHistoryItem from './TradeHistoryItem';
+import OrderHistoryItem from './OrderHistoryItem';
 
-const HistoryList = memo(({ history }) => {
-  return (
-    <ul className={wrapper}>
-      {history.length ? (
-        history.map((h, i) => <HistoryItem key={i} history={h} />)
-      ) : (
+import { wrapper, noData } from './index.scss';
+
+const HistoryList = memo(({ type, history }) => {
+  const renderItem = () => {
+    if (!history.length) {
+      return (
         <li className={noData}>
           <img src='/static/images/no-data.svg' />
           <p>No Data</p>
         </li>
-      )}
-    </ul>
-  );
+      );
+    }
+    if (type === 'Trades') {
+      return history.map((h, i) => <TradeHistoryItem key={i} history={h} />);
+    } else {
+      return history.map((h, i) => <OrderHistoryItem key={i} history={h} />);
+    }
+  };
+
+  return <ul className={wrapper}>{renderItem()}</ul>;
 });
 
 export default HistoryList;

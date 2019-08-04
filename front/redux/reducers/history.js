@@ -1,5 +1,5 @@
 import AT from '../actionTypes';
-import { changeState } from '../../utils/utils';
+import { changeState, addInfoToOrder } from '../../utils/utils';
 import { INITIAL_STATE, REDUX_STEP } from '../../utils/const';
 
 const initialState = {
@@ -9,16 +9,13 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case AT.MY_BUY_ORDER_LIST_RECEIVED:
-      return {
-        ...state,
-      };
-    case AT.MY_SELL_ORDER_LIST_RECEIVED:
-      return {
-        ...state,
-      };
+    case AT.MY_ORDER_LIST_RECEIVED:
+      action.data = addInfoToOrder(action.data.buy.concat(action.data.sell));
+      return changeState('ARR', REDUX_STEP.SUCCESS, state, 'orders', action);
+
     case AT.MY_TRADE_LIST_RECEIVED:
       return changeState('ARR', REDUX_STEP.SUCCESS, state, 'trades', action);
+
     default:
       return {
         ...state,

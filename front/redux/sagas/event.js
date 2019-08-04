@@ -24,11 +24,7 @@ function* setAddress({ payload }) {
     address: payload,
   });
   yield put({
-    type: AT.LOAD_ICX_BALANCE_REQUEST,
-    address: payload,
-  });
-  yield put({
-    type: AT.LOAD_TOKEN_BALANCE_REQUEST,
+    type: AT.LOAD_WALLET_BALANCE_REQEUST,
     address: payload,
     symbol: token.symbol,
   });
@@ -45,10 +41,14 @@ function* dispatchAction({ payload }) {
       // response for get balance requests
       case REQUEST_ID.TRADE: {
         const { trade } = yield select(getSockets);
-        trade.emit('trade_event', {
-          event: 'checkTradeTxHash',
-          params: { txHash: payload.result },
-        });
+        trade.emit(
+          'trade_event',
+          {
+            event: 'checkTradeTxHash',
+            params: { txHash: payload.result },
+          },
+          res => console.log(res)
+        );
       }
       default:
         break;

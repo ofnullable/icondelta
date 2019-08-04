@@ -1,6 +1,4 @@
 const express = require('express');
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
 const next = require('next');
 const morgan = require('morgan');
 
@@ -20,19 +18,6 @@ app.prepare().then(() => {
   server.use(express.json());
 
   server.use('/static', express.static('static'));
-
-  server.use(cookieParser(process.env.COOKIE_SECRET));
-  server.use(
-    session({
-      resave: false,
-      saveUninitialized: false,
-      secret: process.env.COOKIE_SECRET,
-      cookie: {
-        httpOnly: true,
-        secure: false,
-      },
-    })
-  );
 
   server.get('/:symbol', (req, res) => {
     const symbol = req.params.symbol || 'ST';

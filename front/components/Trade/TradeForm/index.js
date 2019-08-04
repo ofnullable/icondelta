@@ -8,14 +8,15 @@ import { requestSignatureEvent } from '../../../utils/event';
 
 import { wrapper, primary, danger } from './index.scss';
 
-const TradeForm = ({ type, token }) => {
-  const [price, setPrice] = useState('');
+const TradeForm = ({ type }) => {
   const [amount, setAmount] = useState('');
+  const [price, setPrice] = useState('');
   const [total, setTotal] = useState('');
-  const [expires, setExpires] = useState(10000);
+  const [expires, setExpires] = useState(0);
 
-  const { address } = useSelector(state => state.wallet);
-  const { order } = useSelector(state => state.socket);
+  const { address, icx, token } = useSelector(state => state.wallet);
+  const currentToken = useSelector(state => state.token.currentToken);
+  const sockets = useSelector(state => state.socket.sockets);
   const dispatch = useDispatch();
 
   const loadAddress = () => {
@@ -23,8 +24,26 @@ const TradeForm = ({ type, token }) => {
   };
 
   const isValidOrder = () => {
-    if (!price || !amount || !total) return false;
-    if (isNaN(price) || isNaN(amount) || isNaN(total)) return false;
+    if (!price || !amount || !total) {
+      alert('Please enter valid value');
+      return false;
+    }
+    if (isNaN(price) || isNaN(amount) || isNaN(total)) {
+      alert('Please enter valid value');
+      return false;
+    }
+    console.log(Number(total), icx, token);
+    if (type === 'buy') {
+      if (Number(total) > icx.data.deposited) {
+        alert('You do not have enough funds to send this order');
+        return false;
+      }
+    } else {
+      if (Number(amount) > token.data.deposited) {
+        alert('You do not have enough funds to send this order');
+        return false;
+      }
+    }
     return true;
   };
 
@@ -64,13 +83,14 @@ const TradeForm = ({ type, token }) => {
 
   const makeOrder = e => {
     e.preventDefault();
+
     if (!isValidOrder()) return;
 
-    if (!order || !order.connected) {
+    if (!sockets || sockets.order || !sockets.order.connected) {
       return alert('Can not create new order.. please refresh window');
     }
 
-    const data = makeOrderParams(type, amount, total, address, token.address);
+    const data = makeOrderParams(type, amount, total, address, currentToken.address);
     dispatch({
       type: AT.SAVE_TEMPORAL_ORDER,
       data,
@@ -87,11 +107,11 @@ const TradeForm = ({ type, token }) => {
         <input required type='text' value={amount} onChange={handleAmountChange} />
       </div>
       <div>
-        <p>Price</p>
+        <p>{`Price ( ${currentToken.symbol} / ICX )`}</p>
         <input required type='text' value={price} onChange={handlePriceChange} />
       </div>
       <div>
-        <p>Total</p>
+        <p>Total ( ICX )</p>
         <input required type='text' value={total} readOnly />
       </div>
       <div>

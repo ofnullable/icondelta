@@ -1,5 +1,5 @@
 import React, { useState, memo } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import {
   depositIcxEvent,
@@ -11,9 +11,9 @@ import AT from '../../../redux/actionTypes';
 
 import { wrapper, primary, danger } from './BalanceInput.scss';
 
-const BalanceInput = memo(({ address, type, token, balance }) => {
-  // console.log(balance);
+const BalanceInput = memo(({ type, target, balance }) => {
   const [amount, setAmount] = useState('');
+  const { address } = useSelector(state => state.wallet);
   const dispatch = useDispatch();
 
   const handleInputChange = e => {
@@ -26,16 +26,16 @@ const BalanceInput = memo(({ address, type, token, balance }) => {
 
   const eventDispatch = () => {
     if (type === 'Deposit') {
-      if (token === 'ICX') {
+      if (target === 'ICX') {
         depositIcxEvent(amount, address);
       } else {
-        depositTokenEvent(amount, address, token.address);
+        depositTokenEvent(amount, address, target.address);
       }
     } else {
-      if (token === 'ICX') {
+      if (target === 'ICX') {
         withdrawIcxEvent(amount, address);
       } else {
-        withdrawTokenEvent(amount, address, token.address);
+        withdrawTokenEvent(amount, address, target.address);
       }
     }
   };
@@ -64,11 +64,13 @@ const BalanceInput = memo(({ address, type, token, balance }) => {
         setAmount('');
         return;
       }
-      if (!amountValidation()) {
-        alert(`Can't ${type} more then you have`);
-        setAmount(type === 'Deposit' ? balance.undeposited : balance.deposited);
-        return;
-      }
+
+      // if (!amountValidation()) {
+      //   alert(`Can't ${type} more then you have`);
+      //   setAmount(type === 'Deposit' ? balance.undeposited : balance.deposited);
+      //   return;
+      // }
+
       eventDispatch();
       setAmount('');
     }
@@ -77,7 +79,7 @@ const BalanceInput = memo(({ address, type, token, balance }) => {
   return (
     <div className={wrapper}>
       <p>
-        {type} {token !== 'ICX' ? token && token.symbol : token}
+        {type} {target !== 'ICX' ? target && target.symbol : target}
       </p>
       <input type='text' value={amount} onChange={handleInputChange} onKeyDown={handleSubmit} />
       <button className={type === 'Deposit' ? primary : danger} onClick={handleSubmit}>
