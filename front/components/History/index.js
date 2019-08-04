@@ -6,10 +6,7 @@ import HistoryList from './HistoryList';
 
 const History = ({ symbol }) => {
   const [type, setType] = useState('Trades');
-  const histories = useSelector(state => {
-    if (type === 'Trades') return state.history.trades;
-    else return state.history.orders;
-  });
+  const { orders, trades } = useSelector(state => state.history);
 
   const handleMenuClick = e => {
     if (e.target.className === active) {
@@ -51,8 +48,7 @@ const History = ({ symbol }) => {
         </menu>
       </div>
       <div>{renderMenu()}</div>
-      {/* type === 'Trades' ? <TradeHistories /> : <OrderHistories /> */}
-      <HistoryList type={type} history={histories.data} />
+      <HistoryList type={type} history={type === 'Trades' ? trades.data : orders.data} />
     </div>
   );
 };

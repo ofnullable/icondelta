@@ -1,11 +1,14 @@
 import React, { useState, memo } from 'react';
+import { useSelector } from 'react-redux';
 
 import BalanceInput from './BalanceInput';
 
 import { wrapper, active } from './index.scss';
 
-const Balance = memo(({ address, token, icxBalance, tokenBalance }) => {
+const Balance = memo(() => {
   const [type, setType] = useState('Deposit');
+
+  const { currentToken } = useSelector(state => state.token);
 
   const handleMenuClick = e => {
     if (e.target.className === active) {
@@ -22,8 +25,8 @@ const Balance = memo(({ address, token, icxBalance, tokenBalance }) => {
       <menu className={type !== 'Deposit' ? active : 'Withdraw'} onClick={handleMenuClick}>
         Withdraw
       </menu>
-      <BalanceInput address={address} type={type} token={'ICX'} balance={icxBalance} />
-      <BalanceInput address={address} type={type} token={token} balance={tokenBalance} />
+      <BalanceInput type={type} target='ICX' />
+      <BalanceInput type={type} target={currentToken} />
     </div>
   );
 });

@@ -10,18 +10,13 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case AT.BUY_ORDER_LIST_RECEIVED: {
+    case AT.ORDER_LIST_RECEIVED:
       return {
         ...state,
-        buyOrders: addInfoToOrder(action.data).sort((o1, o2) => o2.price - o1.price),
+        buyOrders: addInfoToOrder(action.data.buy).sort((o1, o2) => o2.price - o1.price),
+        sellOrders: addInfoToOrder(action.data.sell).sort((o1, o2) => o2.price - o1.price),
       };
-    }
-    case AT.SELL_ORDER_LIST_RECEIVED: {
-      return {
-        ...state,
-        sellOrders: addInfoToOrder(action.data).sort((o1, o2) => o2.price - o1.price),
-      };
-    }
+
     case AT.NEW_ORDER_RECEIVED: {
       const orderData = addInfoToOrder(action.data);
 
@@ -38,7 +33,7 @@ export default (state = initialState, action) => {
             state.buyOrders = state.buyOrders.filter((_, i) => i !== index);
           } else {
             state.buyOrders[index] = { ...orderData };
-            state.buyOrders = [...buyOrders];
+            state.buyOrders = [...state.buyOrders];
           }
         } else {
           const index = state.sellOrders.findIndex(o => o.signature === orderData.signature);
@@ -46,7 +41,7 @@ export default (state = initialState, action) => {
             state.sellOrders = state.sellOrders.filter((_, i) => i !== index);
           } else {
             state.sellOrders[index] = { ...orderData };
-            state.sellOrders = [...sellOrders];
+            state.sellOrders = [...state.sellOrders];
           }
         }
       }

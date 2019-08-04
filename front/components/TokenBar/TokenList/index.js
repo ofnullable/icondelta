@@ -1,5 +1,4 @@
 import React from 'react';
-import Link from 'next/link';
 
 import TokenInfo from './TokenInfo';
 
@@ -18,20 +17,7 @@ const TokenList = ({ tokens, symbol }) => {
           if (t.symbol === symbol) {
             return <TokenInfo key={t.address} token={t} className={active} />;
           } else {
-            return (
-              <Link
-                href={{
-                  pathname: `/`,
-                  query: { symbol: t.symbol },
-                }}
-                as={`/${t.symbol}`}
-                key={t.address}
-              >
-                <a>
-                  <TokenInfo token={t} />
-                </a>
-              </Link>
-            );
+            return <TokenInfo key={t.address} token={t} />;
           }
         })}
       </ul>

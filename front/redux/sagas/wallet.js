@@ -18,8 +18,7 @@ const getTokens = state => state.token.tokens;
 export default function*() {
   yield all([
     fork(watchLoadAddressRequest),
-    fork(watchLoadIcxBalanceRequest),
-    fork(watchLoadTokenBalanceRequest),
+    fork(watchLoadWalletBalanceRequest),
     fork(watchDepositIcxRequest),
     fork(watchWithdrawIcxRequest),
     fork(watchDepositTokenRequest),
@@ -41,11 +40,7 @@ function* loadAddress() {
       address,
     });
     yield put({
-      type: AT.LOAD_ICX_BALANCE_REQUEST,
-      address,
-    });
-    yield put({
-      type: AT.LOAD_TOKEN_BALANCE_REQUEST,
+      type: AT.LOAD_WALLET_BALANCE_REQEUST,
       address,
       symbol,
     });
@@ -54,57 +49,48 @@ function* loadAddress() {
   }
 }
 
-function* watchLoadIcxBalanceRequest() {
-  yield takeLatest(AT.LOAD_ICX_BALANCE_REQUEST, loadIcxBalance);
+function* watchLoadWalletBalanceRequest() {
+  yield takeLatest(AT.LOAD_WALLET_BALANCE_REQEUST, loadWalletBalance);
 }
 
-function* loadIcxBalance({ address }) {
-  try {
-    const balance = yield call(getIcxBalance, address);
-    balance.deposited = toIcx(balance.deposited);
-    balance.undeposited = toIcx(balance.undeposited);
-    yield put({
-      type: AT.LOAD_ICX_BALANCE_SUCCESS,
-      data: balance,
-    });
-  } catch (e) {
-    console.error(e);
-    yield put({
-      type: AT.LOAD_ICX_BALANCE_FAILURE,
-      error: e,
-    });
-  }
-}
-
-function* watchLoadTokenBalanceRequest() {
-  yield takeLatest(AT.LOAD_TOKEN_BALANCE_REQUEST, loadTokenBalance);
-}
-
-function* loadTokenBalance({ address, symbol }) {
+function* loadWalletBalance({ address, symbol }) {
+  let icxBalance, tokenBalance;
   try {
     const tokens = yield select(getTokens);
     const currentToken = yield tokens.data.find(t => t.symbol === symbol);
 
-    if (currentToken) {
-      const balance = yield call(getTokenBalance, address, currentToken.address);
-      balance.deposited = toIcx(balance.deposited);
-      balance.undeposited = toIcx(balance.undeposited);
-      yield put({
-        type: AT.LOAD_TOKEN_BALANCE_SUCCESS,
-        data: balance,
-      });
-    } else {
-      yield put({
-        type: AT.LOAD_TOKEN_BALANCE_FAILURE,
-        error: `Fail to find token for symbol: ${symbol}`,
-      });
-    }
+    icxBalance = yield call(getIcxBalance, address);
+
+    tokenBalance = yield call(getTokenBalance, address, currentToken.address);
+
+    yield put({
+      type: AT.LOAD_WALLET_BALANCE_SUCCESS,
+      icx: icxBalance,
+      token: tokenBalance,
+    });
   } catch (e) {
     console.error(e);
-    yield put({
-      type: AT.LOAD_TOKEN_BALANCE_FAILURE,
-      error: e,
-    });
+
+    if (icxBalance) {
+      yield put({
+        type: AT.LOAD_TOKEN_BALANCE_FAILURE,
+        icx: icxBalance,
+        error: e.message || e,
+      });
+      return;
+    } else if (tokenBalance) {
+      yield put({
+        type: AT.LOAD_ICX_BALANCE_FAILURE,
+        token: tokenBalance,
+        error: e.message || e,
+      });
+      return;
+    } else {
+      yield put({
+        type: AT.LOAD_WALLET_BALANCE_FAILURE,
+        error: e.message || e,
+      });
+    }
   }
 }
 
@@ -113,7 +99,7 @@ function* watchDepositIcxRequest() {
 }
 
 function* depositIcx({ amount, address }) {
-  const eventId = depositIcxEvent(amount, address);
+  depositIcxEvent(amount, address);
 }
 
 function* watchWithdrawIcxRequest() {
@@ -121,7 +107,7 @@ function* watchWithdrawIcxRequest() {
 }
 
 function* withdrawIcx({ amount, address }) {
-  const eventId = withdrawIcxEvent(amount, address);
+  withdrawIcxEvent(amount, address);
 }
 
 function* watchDepositTokenRequest() {
@@ -129,7 +115,7 @@ function* watchDepositTokenRequest() {
 }
 
 function* depositToken({ amount, address, tokenAddress }) {
-  const eventId = depositTokenEvent(amount, address, tokenAddress);
+  depositTokenEvent(amount, address, tokenAddress);
 }
 
 function* watchWithdrawTokenRequest() {
@@ -137,5 +123,5 @@ function* watchWithdrawTokenRequest() {
 }
 
 function* withdrawToken({ amount, address, tokenAddress }) {
-  const eventId = withdrawTokenEvent(amount, address, tokenAddress);
+  withdrawTokenEvent(amount, address, tokenAddress);
 }

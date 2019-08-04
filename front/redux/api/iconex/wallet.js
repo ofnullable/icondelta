@@ -33,15 +33,23 @@ const getDepositedToken = (address, tokenAddress) => {
 };
 
 export const getIcxBalance = async address => {
-  return {
-    undeposited: await getIcx(address),
-    deposited: await getDepositedIcx(address),
-  };
+  try {
+    return {
+      undeposited: await getIcx(address),
+      deposited: await getDepositedIcx(address),
+    };
+  } catch (e) {
+    throw new Error('Fail to get ICX balance');
+  }
 };
 
 export const getTokenBalance = async (address, tokenAddress) => {
-  return {
-    undeposited: await getToken(address, tokenAddress),
-    deposited: await getDepositedToken(address, tokenAddress),
-  };
+  try {
+    return {
+      undeposited: await getToken(address, tokenAddress),
+      deposited: await getDepositedToken(address, tokenAddress),
+    };
+  } catch (e) {
+    throw new Error('Fail to get balance for token:', tokenAddress);
+  }
 };
