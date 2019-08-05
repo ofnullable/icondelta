@@ -24,21 +24,52 @@ const OrderItem = ({ type, order }) => {
     setModalVisible(true);
   };
 
-  const handleAmountChange = e => {
-    setTradeAmount(e.target.value);
+  const changeTradeAmount = value => {
+    setTradeAmount(value);
     setTradeTotal(
-      toBigNumber(e.target.value)
+      toBigNumber(value)
         .multipliedBy(order.price)
         .toString()
     );
   };
 
+  const changeTradeTotal = value => {
+    changeTradeAmount(
+      Math.floor(
+        toBigNumber(value)
+          .dividedBy(order.price)
+          .toString()
+      )
+    );
+  };
+
+  const handleAmountChange = e => {
+    changeTradeAmount(e.target.value);
+  };
+
   const handleCloseModal = () => {
+    changeTradeAmount(order.amount);
     setModalVisible(false);
   };
 
-  const handleTrade = () => {
+  const handleTrade = e => {
+    e.preventDefault();
     const amount = order.type === 'buy' ? tradeAmount : tradeTotal;
+
+    if (order.type === 'buy') {
+      if (Number(amount) > Number(token.data.deposited)) {
+        alert('You do not have enough funds to send this order');
+        changeTradeAmount(token.data.deposited);
+        return;
+      }
+    } else {
+      if (Number(amount) > Number(icx.data.deposited)) {
+        alert('You do not have enough funds to send this order');
+        changeTradeTotal(icx.data.deposited);
+        return;
+      }
+    }
+
     requestTradeEvent(order, { address, amount });
     setModalVisible(false);
   };
@@ -47,28 +78,30 @@ const OrderItem = ({ type, order }) => {
     const type = order.type === 'buy' ? 'sell' : 'buy';
     return (
       <TradeModal visible={modalVisible} setVisible={setModalVisible}>
-        <p>{`Maximum amount: ${order.amount}, Price: ${order.price} (per Token)`}</p>
-        <label htmlFor='amount'>{`Amount to ${type}`}</label>
-        <input
-          id='amount'
-          type='number'
-          min={0}
-          max={order.amount}
-          value={tradeAmount}
-          onChange={handleAmountChange}
-        />
-        <label htmlFor='price'>Price</label>
-        <input id='price' type='number' value={order.price} readOnly />
-        <label htmlFor='total'>Total</label>
-        <input id='total' type='number' value={tradeTotal} readOnly />
-        <div className={buttons}>
-          <button onClick={handleTrade} className={type === 'buy' ? buyButton : sellButton}>
-            {type}
-          </button>
-          <button onClick={handleCloseModal} className={cancelButton}>
-            cancel
-          </button>
-        </div>
+        <form onSubmit={handleTrade}>
+          <p>{`Maximum amount: ${order.amount}, Price: ${order.price} (per Token)`}</p>
+          <label htmlFor='amount'>{`Amount to ${type}`}</label>
+          <input
+            id='amount'
+            type='number'
+            min={0}
+            max={order.amount}
+            value={tradeAmount}
+            onChange={handleAmountChange}
+          />
+          <label htmlFor='price'>Price</label>
+          <input id='price' type='number' value={order.price} readOnly />
+          <label htmlFor='total'>Total</label>
+          <input id='total' type='number' value={tradeTotal} readOnly />
+          <div className={buttons}>
+            <button type='submit' className={type === 'buy' ? buyButton : sellButton}>
+              {type}
+            </button>
+            <button type='button' onClick={handleCloseModal} className={cancelButton}>
+              cancel
+            </button>
+          </div>
+        </form>
       </TradeModal>
     );
   };

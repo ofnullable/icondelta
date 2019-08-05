@@ -22,5 +22,5 @@ fastify
 const port = process.env.PORT || 3020;
 fastify.listen(port, err => {
   if (err) throw err;
-  console.log(`Server listenging on port: ${port}`);
+  console.log(`Next, Fastify server listenging on port: ${port}`);
 });
