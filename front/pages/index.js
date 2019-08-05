@@ -25,7 +25,6 @@ const Home = ({ symbol }) => {
   }, []);
 
   useEffect(() => {
-    console.log('?');
     loadWalletData(address);
 
     dispatch({
@@ -50,9 +49,6 @@ const Home = ({ symbol }) => {
     if (sockets) {
       const { order, trade } = sockets;
       order.on('connect', () => {
-        order.on('pong', function(data) {
-          console.log('Received Pong: ', data);
-        });
         order.emit('order_event', { event: 'getOrders', params: { offset: 0, count: 10 } }, res => {
           console.log('get orders', res);
           if (res && res.success)
@@ -72,9 +68,6 @@ const Home = ({ symbol }) => {
       });
 
       trade.on('connect', () => {
-        trade.on('pong', function(data) {
-          console.log('Received Pong: ', data);
-        });
         trade.emit('trade_event', { event: 'getLatestTokenTrades', params: {} }, res => {
           console.log('get last token trades', res);
           if (res && res.success)
@@ -103,6 +96,7 @@ const Home = ({ symbol }) => {
   }, [sockets]);
 
   useEffect(() => {
+    console.log(address, sockets);
     if (address && sockets) {
       const { order, trade } = sockets;
       order.on('connect', () => {
@@ -154,13 +148,13 @@ const Home = ({ symbol }) => {
   };
 
   return (
-    <>
+    <main>
       <Balance symbol={symbol} />
       <OrderBook symbol={symbol} />
       <TokenBar symbol={symbol} />
       <Trade />
       <History symbol={symbol} />
-    </>
+    </main>
   );
 };
 
