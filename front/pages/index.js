@@ -25,7 +25,7 @@ const Home = ({ symbol }) => {
   }, []);
 
   useEffect(() => {
-    loadWalletData(address);
+    loadWalletData();
 
     dispatch({
       type: AT.SET_SOCKET,
@@ -96,7 +96,6 @@ const Home = ({ symbol }) => {
   }, [sockets]);
 
   useEffect(() => {
-    console.log(address, sockets);
     if (address && sockets) {
       const { order, trade } = sockets;
       order.on('connect', () => {
@@ -119,7 +118,7 @@ const Home = ({ symbol }) => {
       trade.on('connect', () => {
         trade.emit(
           'trade_event',
-          { event: 'getTradesByAddress', params: { address } }, //, offset: 0, count: 10
+          { event: 'getTradesByAddress', params: { address, offset: 0, count: 10 } },
           res => {
             console.log('get trades by address', res);
             if (res && res.success)
@@ -133,7 +132,7 @@ const Home = ({ symbol }) => {
     }
   }, [address, sockets]);
 
-  const loadWalletData = address => {
+  const loadWalletData = () => {
     if (address) {
       dispatch({
         type: AT.LOAD_WALLET_BALANCE_REQEUST,

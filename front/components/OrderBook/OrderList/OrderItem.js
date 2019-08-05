@@ -77,7 +77,7 @@ const OrderItem = ({ type, order }) => {
   const renderModal = () => {
     const type = order.type === 'buy' ? 'sell' : 'buy';
     return (
-      <TradeModal visible={modalVisible} setVisible={setModalVisible}>
+      <TradeModal visible={modalVisible} title='Trade' handleClose={handleCloseModal}>
         <form onSubmit={handleTrade}>
           <p>{`Maximum amount: ${order.amount}, Price: ${order.price} (per Token)`}</p>
           <label htmlFor='amount'>{`Amount to ${type}`}</label>
@@ -110,7 +110,7 @@ const OrderItem = ({ type, order }) => {
     const classes = order.type === 'buy' ? [wrapper, buy] : [wrapper, sell];
     return modalVisible ? (
       <>
-        {renderModal(type)}
+        {renderModal()}
         <li className={classes.join(' ')} onClick={handleItemClick}>
           <div>{order.price}</div>
           <div>{order.amount}</div>

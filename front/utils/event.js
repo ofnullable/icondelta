@@ -47,7 +47,7 @@ const makeSignatureEvent = (address, txHash) =>
 const makeDepositIcxEvent = (amount, address) =>
   iconexEvent(
     makeEventPayload({
-      id: makeRandomNumber(),
+      id: REQUEST_ID.DEPOSIT_ICX,
       method: SEND_TRANSACTION,
       params: {
         ...TX_DEFAULT_PARAMETER,
@@ -63,7 +63,7 @@ const makeDepositIcxEvent = (amount, address) =>
 const makeWithdrawIcxEvent = (amount, address) =>
   iconexEvent(
     makeEventPayload({
-      id: makeRandomNumber(),
+      id: REQUEST_ID.WITHDRAW_ICX,
       method: SEND_TRANSACTION,
       params: {
         ...TX_DEFAULT_PARAMETER,
@@ -78,14 +78,14 @@ const makeWithdrawIcxEvent = (amount, address) =>
 const makeDepostiTokenEvent = (amount, address, tokenAddress) =>
   iconexEvent(
     makeEventPayload({
-      id: makeRandomNumber(),
+      id: REQUEST_ID.DEPOSIT_TOKEN,
       method: SEND_TRANSACTION,
       params: {
         ...TX_DEFAULT_PARAMETER,
         from: address,
         to: tokenAddress,
         timestamp: `0x${(new Date().getTime() * 1000).toString(16)}`,
-        data: { method: 'transfer', params: { _to: SCORE_ADDRESS, _amount: toHexLoop(amount) } },
+        data: { method: 'transfer', params: { _to: SCORE_ADDRESS, _value: toHexLoop(amount) } },
       },
     })
   );
@@ -93,7 +93,7 @@ const makeDepostiTokenEvent = (amount, address, tokenAddress) =>
 const makeWithdrawTokenEvent = (amount, address, tokenAddress) =>
   iconexEvent(
     makeEventPayload({
-      id: makeRandomNumber(),
+      id: REQUEST_ID.WITHDRAW_TOKEN,
       method: SEND_TRANSACTION,
       params: {
         ...TX_DEFAULT_PARAMETER,

@@ -42,10 +42,6 @@ export const TX_DEFAULT_PARAMETER = {
 
 // For event handling.. but not now
 export const REQUEST_ID = {
-  ICX_BALANCE: 1,
-  TOKEN_BALANCE: 2,
-  DEPOSITED_ICX_BALANCE: 3,
-  DEPOSTIED_TOKEN_BALANCE: 4,
   DEPOSIT_ICX: 5,
   DEPOSIT_TOKEN: 6,
   WITHDRAW_ICX: 7,

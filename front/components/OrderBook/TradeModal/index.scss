@@ -30,24 +30,24 @@
   & > div {
     padding: 10px;
   }
-}
-.title {
-  display: inherit;
-  height: 10%;
-  align-items: center;
-  font-size: 1.2em;
-}
-.body {
-  height: 90%;
-  text-align: left;
-
-  & > label {
-    display: block;
-    text-align: left;
-    margin-bottom: 0.5em;
+  .modalTitle {
+    display: inherit;
+    height: 10%;
+    align-items: center;
+    font-size: 1.2em;
   }
-  & input {
-    width: 100%;
-    margin-bottom: 1em;
+  .modalBody {
+    height: 90%;
+    text-align: left;
+
+    & > label {
+      display: block;
+      text-align: left;
+      margin-bottom: 0.5em;
+    }
+    & input {
+      width: 100%;
+      margin-bottom: 1em;
+    }
   }
 }

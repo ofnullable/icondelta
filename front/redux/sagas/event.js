@@ -5,7 +5,7 @@ import storage from '../../utils/storage';
 import { REQUEST_ID } from '../../utils/const';
 
 const getToken = state => state.token.currentToken;
-const getSockets = state => state.socket;
+const getSockets = state => state.socket.sockets;
 const getSavedOrder = state => state.order.savedOrder;
 
 export default function*() {
@@ -38,7 +38,13 @@ function* dispatchAction({ payload }) {
   try {
     // console.log(`Response for ${payload.id},`, payload);
     switch (payload.id) {
-      // response for get balance requests
+      case REQUEST_ID.DEPOSIT_ICX:
+      case REQUEST_ID.DEPOSIT_TOKEN:
+      case REQUEST_ID.WITHDRAW_ICX:
+      case REQUEST_ID.WITHDRAW_TOKEN: {
+        // How can get updated balance?
+        break;
+      }
       case REQUEST_ID.TRADE: {
         const { trade } = yield select(getSockets);
         trade.emit(

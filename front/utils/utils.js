@@ -148,15 +148,17 @@ const getPrice = order => {
   return order.type === 'buy'
     ? toBigNumber(giveAmount)
         .dividedBy(getAmount)
-        .toString(10)
+        .toNumber()
     : toBigNumber(getAmount)
         .dividedBy(giveAmount)
-        .toString(10);
+        .toNumber();
 };
 
 const getAmount = order => {
-  const { getAmount, orderFills } = order;
-  return toIcx(toBigNumber(getAmount).minus(orderFills));
+  const { giveAmount, getAmount, orderFills } = order;
+  return order.type === 'buy'
+    ? toIcx(toBigNumber(getAmount).minus(orderFills))
+    : toIcx(toBigNumber(giveAmount).minus(orderFills));
 };
 
 const getTotal = order => {

@@ -1,23 +1,17 @@
 import React from 'react';
 
-import { wrapper, modal, title, body } from './index.scss';
+import { wrapper, modal, modalTitle, modalBody } from './index.scss';
 
-const TradeModal = ({ visible, setVisible, children }) => {
-  const handleBackgroundClick = e => {
-    if (visible) {
-      setVisible(false);
-    }
-  };
-
+const TradeModal = ({ visible, handleClose, title, children }) => {
   return (
     visible && (
       <>
-        <div className={wrapper} onClick={handleBackgroundClick} />
+        <div className={wrapper} onClick={handleClose} />
         <div className={modal}>
-          <div className={title}>
-            <b>Trade</b>
+          <div className={modalTitle}>
+            <b>{title}</b>
           </div>
-          <div className={body}>{children && children}</div>
+          <div className={modalBody}>{children && children}</div>
         </div>
       </>
     )

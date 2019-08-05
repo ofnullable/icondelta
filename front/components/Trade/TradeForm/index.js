@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import AT from '../../../redux/actionTypes';
@@ -18,9 +18,17 @@ const TradeForm = ({ type }) => {
   const currentToken = useSelector(state => state.token.currentToken);
   const sockets = useSelector(state => state.socket.sockets);
   const dispatch = useDispatch();
+  const amountInput = useRef();
 
   const loadAddress = () => {
     dispatch({ type: AT.LOAD_ADDRESS_REQUEST });
+  };
+
+  const resetInputs = () => {
+    setPrice('');
+    setAmount('');
+    setTotal('');
+    amountInput.current.focus();
   };
 
   const isValidOrder = () => {
@@ -32,7 +40,11 @@ const TradeForm = ({ type }) => {
       alert('Please enter valid value');
       return false;
     }
-    console.log(Number(total), icx, token);
+    if (Number(price) < 1e-9 || Number(amount) < 1e-9) {
+      alert(`Amount or Price is too small.. We only support 1e-9 or more`);
+      resetInputs();
+      return false;
+    }
     if (type === 'buy') {
       if (Number(total) > icx.data.deposited) {
         alert('You do not have enough funds to send this order');
@@ -45,12 +57,6 @@ const TradeForm = ({ type }) => {
       }
     }
     return true;
-  };
-
-  const resetInputs = () => {
-    setPrice('');
-    setAmount('');
-    setTotal('');
   };
 
   const handleAmountChange = e => {
@@ -86,7 +92,8 @@ const TradeForm = ({ type }) => {
 
     if (!isValidOrder()) return;
 
-    if (!sockets || sockets.order || !sockets.order.connected) {
+    if (!sockets || !sockets.order || !sockets.order.connected) {
+      console.log(sockets, sockets.order, sockets.order.connected);
       return alert('Can not create new order.. please refresh window');
     }
 
@@ -104,7 +111,13 @@ const TradeForm = ({ type }) => {
     <form className={wrapper} onSubmit={makeOrder}>
       <div>
         <p>Amount to {type}</p>
-        <input required type='text' value={amount} onChange={handleAmountChange} />
+        <input
+          required
+          type='text'
+          value={amount}
+          onChange={handleAmountChange}
+          ref={amountInput}
+        />
       </div>
       <div>
         <p>{`Price ( ${currentToken.symbol} / ICX )`}</p>

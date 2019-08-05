@@ -1,7 +1,6 @@
 import AT from '../actionTypes';
 import storage from '../../utils/storage';
-import { INITIAL_STATE, REDUX_STEP } from '../../utils/const';
-import { changeState } from '../../utils/utils';
+import { INITIAL_STATE } from '../../utils/const';
 import { toIcx } from '../../utils/formatter';
 
 const initialState = {
