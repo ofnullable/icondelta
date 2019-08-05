@@ -24,6 +24,7 @@ module.exports = withBundleAnalyzer(
       config.node = {
         fs: 'empty',
       };
+
       return {
         ...config,
         mode: isProd ? 'production' : 'development',

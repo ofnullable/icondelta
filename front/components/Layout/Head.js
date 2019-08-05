@@ -4,7 +4,6 @@ import NextHead from 'next/head';
 const title = ' icondelta ';
 const url = 'https://www.icondelta.ga';
 const description = 'Decentralized Exchange on ICON Network';
-const ogImage = '';
 
 const Head = () => (
   <NextHead>
@@ -18,19 +17,13 @@ const Head = () => (
 
     <meta name='twitter:site' content={url} />
     <meta name='twitter:card' content='summary_large_image' />
-    <meta name='twitter:image' content={ogImage} />
 
-    <meta property='og:image' content={ogImage} />
-    <meta property='og:image:width' content='1200' />
-    <meta property='og:image:height' content='630' />
     <meta property='og:title' content={title} />
     <meta property='og:url' content={url} />
     <meta property='og:description' content={description} />
 
     <link rel='icon' href='/static/favicon.ico' />
-    <link rel='icon' sizes='192x192' href='/static/touch-icon.png' />
-    <link rel='apple-touch-icon' href='/static/touch-icon.png' />
-    <link rel='mask-icon' href='/static/favicon-mask.svg' color='#343a40' />
+
     <link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons' />
     <link rel='stylesheet' href='https://unpkg.com/firacode@1.206.0/distr/fira_code.css' />
 
