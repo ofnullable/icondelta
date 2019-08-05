@@ -96,39 +96,37 @@ const Home = ({ symbol }) => {
   }, [sockets]);
 
   useEffect(() => {
+    console.log(address, sockets);
+
     if (address && sockets) {
       const { order, trade } = sockets;
-      order.on('connect', () => {
-        order.emit(
-          'order_event',
-          {
-            event: 'getOrdersByAddress',
-            params: { address, offset: 0, count: 10 },
-          },
-          res => {
-            console.log('get orders by address', res);
-            if (res && res.success)
-              dispatch({
-                type: AT.MY_ORDER_LIST_RECEIVED,
-                data: res.data,
-              });
-          }
-        );
-      });
-      trade.on('connect', () => {
-        trade.emit(
-          'trade_event',
-          { event: 'getTradesByAddress', params: { address, offset: 0, count: 10 } },
-          res => {
-            console.log('get trades by address', res);
-            if (res && res.success)
-              dispatch({
-                type: AT.MY_TRADE_LIST_RECEIVED,
-                data: res.data,
-              });
-          }
-        );
-      });
+      order.emit(
+        'order_event',
+        {
+          event: 'getOrdersByAddress',
+          params: { address, offset: 0, count: 10 },
+        },
+        res => {
+          console.log('get orders by address', res);
+          if (res && res.success)
+            dispatch({
+              type: AT.MY_ORDER_LIST_RECEIVED,
+              data: res.data,
+            });
+        }
+      );
+      trade.emit(
+        'trade_event',
+        { event: 'getTradesByAddress', params: { address, offset: 0, count: 10 } },
+        res => {
+          console.log('get trades by address', res);
+          if (res && res.success)
+            dispatch({
+              type: AT.MY_TRADE_LIST_RECEIVED,
+              data: res.data,
+            });
+        }
+      );
     }
   }, [address, sockets]);
 
