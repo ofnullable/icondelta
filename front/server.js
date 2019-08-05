@@ -1,39 +1,26 @@
-const express = require('express');
-const next = require('next');
-const morgan = require('morgan');
+const path = require('path');
+const fastify = require('fastify')({
+  logger: { level: 'info' },
+});
 
-const dev = process.env.NODE_ENV !== 'production';
-
-const app = next({ dev });
-const handle = app.getRequestHandler();
-
-require('dotenv').config();
-
-app.prepare().then(() => {
-  const server = express();
-
-  server.use(morgan('dev'));
-
-  server.use(express.urlencoded({ extended: true }));
-  server.use(express.json());
-
-  server.use('/static', express.static('static'));
-
-  server.get('/:symbol', (req, res) => {
-    const symbol = req.params.symbol || 'ST';
-    return app.render(req, res, '/', { symbol });
+fastify
+  .register(require('fastify-static'), {
+    root: path.join(__dirname, 'static'),
+    prefix: '/static/', // optional: default '/'
+  })
+  .register(require('fastify-nextjs'))
+  .after(() => {
+    fastify.next('/', (app, req, reply) => {
+      reply.redirect('/ST');
+    });
+    fastify.next('/:symbol', (app, req, reply) => {
+      const symbol = req.params.symbol.toUpperCase() || 'ST';
+      app.render(req.raw, reply.res, '/', { symbol });
+    });
   });
 
-  server.get('*', (req, res) => {
-    const pathname = req.url;
-    if (pathname === '/') {
-      return res.redirect('/ST');
-    }
-    return handle(req, res);
-  });
-
-  const port = process.env.PORT || 3020;
-  server.listen(port, () => {
-    console.log(`Next, Express server running on port ${port}!`);
-  });
+const port = process.env.PORT || 3020;
+fastify.listen(port, err => {
+  if (err) throw err;
+  console.log(`Next, Fastify server listenging on port: ${port}`);
 });
