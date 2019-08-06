@@ -1,5 +1,5 @@
 import AT from '../redux/actionTypes';
-import { SCORE_ADDRESS, TX_DEFAULT_PARAMETER, REQUEST_ID } from './const';
+import { SCORE_ADDRESS, TX_DEFAULT_PARAMETER, ICONEX_REQUEST_ID } from './const';
 import { toHexLoop, toHexString } from './formatter';
 import { makeRandomNumber } from './utils';
 
@@ -47,7 +47,7 @@ const makeSignatureEvent = (address, txHash) =>
 const makeDepositIcxEvent = (amount, address) =>
   iconexEvent(
     makeEventPayload({
-      id: REQUEST_ID.DEPOSIT_ICX,
+      id: ICONEX_REQUEST_ID.DEPOSIT_ICX,
       method: SEND_TRANSACTION,
       params: {
         ...TX_DEFAULT_PARAMETER,
@@ -63,7 +63,7 @@ const makeDepositIcxEvent = (amount, address) =>
 const makeWithdrawIcxEvent = (amount, address) =>
   iconexEvent(
     makeEventPayload({
-      id: REQUEST_ID.WITHDRAW_ICX,
+      id: ICONEX_REQUEST_ID.WITHDRAW_ICX,
       method: SEND_TRANSACTION,
       params: {
         ...TX_DEFAULT_PARAMETER,
@@ -78,7 +78,7 @@ const makeWithdrawIcxEvent = (amount, address) =>
 const makeDepostiTokenEvent = (amount, address, tokenAddress) =>
   iconexEvent(
     makeEventPayload({
-      id: REQUEST_ID.DEPOSIT_TOKEN,
+      id: ICONEX_REQUEST_ID.DEPOSIT_TOKEN,
       method: SEND_TRANSACTION,
       params: {
         ...TX_DEFAULT_PARAMETER,
@@ -93,7 +93,7 @@ const makeDepostiTokenEvent = (amount, address, tokenAddress) =>
 const makeWithdrawTokenEvent = (amount, address, tokenAddress) =>
   iconexEvent(
     makeEventPayload({
-      id: REQUEST_ID.WITHDRAW_TOKEN,
+      id: ICONEX_REQUEST_ID.WITHDRAW_TOKEN,
       method: SEND_TRANSACTION,
       params: {
         ...TX_DEFAULT_PARAMETER,
@@ -111,7 +111,7 @@ const makeWithdrawTokenEvent = (amount, address, tokenAddress) =>
 const makeTradeEvent = (order, taker) =>
   iconexEvent(
     makeEventPayload({
-      id: REQUEST_ID.TRADE,
+      id: ICONEX_REQUEST_ID.TRADE,
       method: SEND_TRANSACTION,
       params: {
         ...TX_DEFAULT_PARAMETER,

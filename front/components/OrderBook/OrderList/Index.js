@@ -15,8 +15,8 @@ const OrderList = memo(({ sellOrders, buyOrders }) => {
       );
     } else {
       return [
-        sellOrders.map((o, i) => <OrderItem key={i} type='sell' order={o} />),
-        buyOrders.map((o, i) => <OrderItem key={i} type='buy' order={o} />),
+        sellOrders.map((o, i) => <OrderItem key={i} order={o} />),
+        buyOrders.map((o, i) => <OrderItem key={i} order={o} />),
       ];
     }
   };

@@ -18,19 +18,31 @@ export default (state = initialState, action) => {
     case AT.LOAD_TOKEN_LIST_FAILURE:
       return changeState('ARR', REDUX_STEP.FAILURE, state, 'tokens');
 
-    case AT.SET_CURRENT_TOKEN_SYMBOL:
-      return {
-        ...state,
-        currentToken: {
-          symbol: action.symbol,
-        },
-      };
-
-    case AT.SET_CURRENT_TOKEN_INFO:
+    case AT.SET_CURRENT_TOKEN:
       return {
         ...state,
         currentToken: {
           ...action.data,
+        },
+      };
+
+    case AT.SET_CURRENT_TOKEN_SYMBOL:
+      return {
+        ...state,
+        currentToken: {
+          ...state.currentToken,
+          symbol: action.symbol,
+        },
+      };
+
+    case AT.SET_TOKEN_PRICE:
+      const target = state.tokens.data.find(t => t.address === action.data.tokenAddress);
+      target.currentPrice = action.data.icxPrice;
+      return {
+        ...state,
+        tokens: {
+          ...state.tokens,
+          data: [...state.tokens.data],
         },
       };
 

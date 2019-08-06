@@ -2,12 +2,13 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { Provider } from 'react-redux';
 import App, { Container } from 'next/app';
-import axios from 'axios';
 import withRedux from 'next-redux-wrapper';
 import withReduxSaga from 'next-redux-saga';
 
-import Layout from '../components/Layout';
 import store from '../redux/store';
+import Layout from '../components/Layout';
+
+import '../styles/index.scss';
 
 const title = ' icondelta ';
 const url = 'https://www.icondelta.ga';
@@ -15,12 +16,6 @@ const description = 'Decentralized Exchange on ICON Network';
 
 class IconDelta extends App {
   static async getInitialProps({ Component, ctx }) {
-    const cookie = ctx.isServer ? ctx.req.headers.cookie : '';
-    if (ctx.isServer && cookie) {
-      axios.defaults.headers.cookie = cookie;
-      axios.defaults.withCredentials = true;
-    }
-
     let pageProps = {};
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx);

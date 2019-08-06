@@ -1,7 +1,7 @@
 import { all, fork, put, call, takeLatest } from 'redux-saga/effects';
 
 import AT from '../actionTypes';
-import { loadOrdersApi } from '../api/request/orders';
+import { loadOrdersApi } from '../api/server/orders';
 
 export default function*() {
   yield all([fork(watchLoadOrdersRequest)]);

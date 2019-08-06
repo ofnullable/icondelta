@@ -2,13 +2,14 @@ export const isServer = typeof window === 'undefined';
 export const isProd = process.env.NODE_ENV === 'production';
 
 export const SERVER_BASE_URL = 'https://api.icondelta.ga';
+export const ICON_NETWORK_URL = 'https://bicon.net.solidwallet.io'; // isProd ? 'https://tracker.icon.foundation' : 'https://bicon.net.solidwallet.io';
 
 export const ICX_ADDRESS = 'cx0000000000000000000000000000000000000000';
 
 export const SCORE_ADDRESS = 'cxfd865d6bbfd2931c053e6b105961cd43a3ad9c22';
 // isProd
 //   ? 'cxe014be09624aa681f441a632059245279c7bd554'
-//   :
+//   : 'cxfd865d6bbfd2931c053e6b105961cd43a3ad9c22';
 
 const ARRAY_DEFAULT_STATE = {
   data: [],
@@ -40,8 +41,14 @@ export const TX_DEFAULT_PARAMETER = {
   dataType: 'call',
 };
 
-// For event handling.. but not now
-export const REQUEST_ID = {
+export const ICON_REQUEST_TARGETS = {
+  ICX: 'icx',
+  DEPOSITED_ICX: 'depositedIcx',
+  TOKEN: 'token',
+  DEPOSITED_TOKEN: 'depositedToken',
+};
+
+export const ICONEX_REQUEST_ID = {
   DEPOSIT_ICX: 5,
   DEPOSIT_TOKEN: 6,
   WITHDRAW_ICX: 7,

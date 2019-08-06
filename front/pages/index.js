@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Balance from '../components/Balance';
@@ -8,10 +8,8 @@ import Trade from '../components/Trade';
 import History from '../components/History';
 
 import AT from '../redux/actionTypes';
-import socket from '../redux/api/socket';
+import { socket } from '../redux/api/config';
 import { addIconexEventListner, removeIconexEventListner, eventHandler } from '../utils/event';
-
-import '../styles/index.scss';
 
 const Home = ({ symbol }) => {
   const { address } = useSelector(state => state.wallet);
@@ -48,50 +46,58 @@ const Home = ({ symbol }) => {
   useEffect(() => {
     if (sockets) {
       const { order, trade } = sockets;
-      order.on('connect', () => {
-        order.emit('order_event', { event: 'getOrders', params: { offset: 0, count: 10 } }, res => {
-          console.log('get orders', res);
-          if (res && res.success)
-            dispatch({
-              type: AT.ORDER_LIST_RECEIVED,
-              data: res.data,
-            });
-        });
-
-        order.on('order_event', res => {
-          console.log('broadcasted order', res);
+      order.emit('order_event', { event: 'getOrders', params: { offset: 0, count: 10 } }, res => {
+        console.log('get orders', res);
+        if (res && res.success)
           dispatch({
-            type: AT.NEW_ORDER_RECEIVED,
+            type: AT.ORDER_LIST_RECEIVED,
+            data: res.data,
+          });
+      });
+
+      order.on('order_event', res => {
+        console.log('broadcasted order', res);
+        dispatch({
+          type: AT.NEW_ORDER_RECEIVED,
+          data: res,
+        });
+        if (res.makerAddress === address) {
+          dispatch({
+            type: AT.MY_NEW_ORDER_RECEIVED,
             data: res,
           });
-        });
+        }
       });
 
-      trade.on('connect', () => {
-        trade.emit('trade_event', { event: 'getLatestTokenTrades', params: {} }, res => {
-          console.log('get last token trades', res);
-          if (res && res.success)
-            dispatch({
-              type: AT.LAST_TRADE_RECEIVED,
-              data: res.data,
-            });
-        });
-        trade.on('trade_event', res => {
-          console.log('trade event', res);
-          loadWalletData(address);
-          // dispatch({
-          //   type: AT.SET_TOKEN_PRICE,
-          //   data: res,
-          // });
-        });
-        // trade.emit('trade_event', { event: 'getTrades', params: { offset: 0, count: 10 } }, res => {
-        //   console.log('get trades', res);
-        //   dispatch({
-        //     type: AT.TRADE_LIST_RECEIVED,
-        //     data: res.data,
-        //   });
-        // });
+      trade.emit('trade_event', { event: 'getLatestTokenTrades', params: {} }, res => {
+        console.log('get last token trades', res);
+        if (res && res.success)
+          dispatch({
+            type: AT.LAST_TRADE_RECEIVED,
+            data: res.data,
+          });
       });
+      trade.on('trade_event', res => {
+        console.log('broadcasted trade', res);
+        loadWalletData(address);
+        dispatch({
+          type: AT.SET_TOKEN_PRICE,
+          data: res,
+        });
+        if (res.takerAddress === address) {
+          dispatch({
+            type: AT.MY_NEW_TRADE_RECEIVED,
+            data: res,
+          });
+        }
+      });
+      // trade.emit('trade_event', { event: 'getTrades', params: { offset: 0, count: 10 } }, res => {
+      //   console.log('get trades', res);
+      //   dispatch({
+      //     type: AT.TRADE_LIST_RECEIVED,
+      //     data: res.data,
+      //   });
+      // });
     }
   }, [sockets]);
 
@@ -158,14 +164,8 @@ const Home = ({ symbol }) => {
 Home.getInitialProps = async context => {
   const store = context.store;
   const symbol = context.query.symbol;
-  if (!store.getState().token.tokens.data.length) {
-    store.dispatch({
-      type: AT.LOAD_TOKEN_LIST_REQUEST,
-      symbol,
-    });
-  }
   store.dispatch({
-    type: AT.SET_CURRENT_TOKEN_SYMBOL,
+    type: AT.LOAD_TOKEN_LIST_REQUEST,
     symbol,
   });
 

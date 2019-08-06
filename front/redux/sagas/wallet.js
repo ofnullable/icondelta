@@ -9,8 +9,7 @@ import {
   withdrawTokenEvent,
 } from '../../utils/event';
 import storage from '../../utils/storage';
-import { getIcxBalance, getTokenBalance } from '../api/iconex/wallet';
-import { toIcx } from '../../utils/formatter';
+import { loadIcxBalance, loadTokenBalance } from '../api/icon/wallet';
 
 const getSymbol = state => state.token.currentToken.symbol;
 const getTokens = state => state.token.tokens;
@@ -59,9 +58,8 @@ function* loadWalletBalance({ address, symbol }) {
     const tokens = yield select(getTokens);
     const currentToken = yield tokens.data.find(t => t.symbol === symbol);
 
-    icxBalance = yield call(getIcxBalance, address);
-
-    tokenBalance = yield call(getTokenBalance, address, currentToken.address);
+    icxBalance = yield call(loadIcxBalance, address);
+    tokenBalance = yield call(loadTokenBalance, address, currentToken.address);
 
     yield put({
       type: AT.LOAD_WALLET_BALANCE_SUCCESS,
@@ -75,7 +73,7 @@ function* loadWalletBalance({ address, symbol }) {
       yield put({
         type: AT.LOAD_TOKEN_BALANCE_FAILURE,
         icx: icxBalance,
-        error: e.message || e,
+        error: `Fail to Load token balance for ${symbol}`,
       });
       return;
     } else if (tokenBalance) {
