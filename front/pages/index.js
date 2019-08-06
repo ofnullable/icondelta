@@ -22,6 +22,20 @@ const Home = ({ symbol }) => {
     return () => removeIconexEventListner(handler);
   }, []);
 
+  const loadWalletData = () => {
+    if (address) {
+      dispatch({
+        type: AT.LOAD_WALLET_BALANCE_REQEUST,
+        address,
+        symbol,
+      });
+    } else {
+      dispatch({
+        type: AT.LOAD_ADDRESS_REQUEST,
+      });
+    }
+  };
+
   useEffect(() => {
     loadWalletData();
 
@@ -55,20 +69,6 @@ const Home = ({ symbol }) => {
           });
       });
 
-      order.on('order_event', res => {
-        console.log('broadcasted order', res);
-        dispatch({
-          type: AT.NEW_ORDER_RECEIVED,
-          data: res,
-        });
-        if (res.makerAddress === address) {
-          dispatch({
-            type: AT.MY_NEW_ORDER_RECEIVED,
-            data: res,
-          });
-        }
-      });
-
       trade.emit('trade_event', { event: 'getLatestTokenTrades', params: {} }, res => {
         console.log('get last token trades', res);
         if (res && res.success)
@@ -77,33 +77,10 @@ const Home = ({ symbol }) => {
             data: res.data,
           });
       });
-      trade.on('trade_event', res => {
-        console.log('broadcasted trade', res);
-        loadWalletData(address);
-        dispatch({
-          type: AT.SET_TOKEN_PRICE,
-          data: res,
-        });
-        if (res.takerAddress === address) {
-          dispatch({
-            type: AT.MY_NEW_TRADE_RECEIVED,
-            data: res,
-          });
-        }
-      });
-      // trade.emit('trade_event', { event: 'getTrades', params: { offset: 0, count: 10 } }, res => {
-      //   console.log('get trades', res);
-      //   dispatch({
-      //     type: AT.TRADE_LIST_RECEIVED,
-      //     data: res.data,
-      //   });
-      // });
     }
   }, [sockets]);
 
   useEffect(() => {
-    console.log(address, sockets);
-
     if (address && sockets) {
       const { order, trade } = sockets;
       order.emit(
@@ -121,6 +98,7 @@ const Home = ({ symbol }) => {
             });
         }
       );
+
       trade.emit(
         'trade_event',
         { event: 'getTradesByAddress', params: { address, offset: 0, count: 10 } },
@@ -135,20 +113,6 @@ const Home = ({ symbol }) => {
       );
     }
   }, [address, sockets]);
-
-  const loadWalletData = () => {
-    if (address) {
-      dispatch({
-        type: AT.LOAD_WALLET_BALANCE_REQEUST,
-        address,
-        symbol,
-      });
-    } else {
-      dispatch({
-        type: AT.LOAD_ADDRESS_REQUEST,
-      });
-    }
-  };
 
   return (
     <main>

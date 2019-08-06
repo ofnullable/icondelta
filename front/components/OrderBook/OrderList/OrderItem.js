@@ -88,6 +88,7 @@ const OrderItem = ({ order }) => {
             max={order.amount}
             value={tradeAmount}
             onChange={handleAmountChange}
+            step='0.01'
           />
           <label htmlFor='price'>Price</label>
           <input id='price' type='number' value={order.price} readOnly />
