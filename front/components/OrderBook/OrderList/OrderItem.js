@@ -8,7 +8,7 @@ import AT from '../../../redux/actionTypes';
 import { wrapper, sell, buy, buttons, sellButton, buyButton, cancelButton } from './OrderItem.scss';
 import { toBigNumber } from '../../../utils/formatter';
 
-const OrderItem = ({ type, order }) => {
+const OrderItem = ({ order }) => {
   const [tradeAmount, setTradeAmount] = useState(order.amount);
   const [tradeTotal, setTradeTotal] = useState(order.total);
   const [modalVisible, setModalVisible] = useState(false);

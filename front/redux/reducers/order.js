@@ -37,7 +37,7 @@ export default (state = initialState, action) => {
           }
         } else {
           const index = state.sellOrders.findIndex(o => o.signature === orderData.signature);
-          if (orderData.giveAmount <= orderData.orderFills) {
+          if (orderData.getAmount <= orderData.orderFills) {
             state.sellOrders = state.sellOrders.filter((_, i) => i !== index);
           } else {
             state.sellOrders[index] = { ...orderData };

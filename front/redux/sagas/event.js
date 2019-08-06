@@ -2,7 +2,7 @@ import { all, fork, put, takeLatest, select } from 'redux-saga/effects';
 
 import AT from '../actionTypes';
 import storage from '../../utils/storage';
-import { REQUEST_ID } from '../../utils/const';
+import { ICONEX_REQUEST_ID } from '../../utils/const';
 
 const getToken = state => state.token.currentToken;
 const getSockets = state => state.socket.sockets;
@@ -38,14 +38,14 @@ function* dispatchAction({ payload }) {
   try {
     // console.log(`Response for ${payload.id},`, payload);
     switch (payload.id) {
-      case REQUEST_ID.DEPOSIT_ICX:
-      case REQUEST_ID.DEPOSIT_TOKEN:
-      case REQUEST_ID.WITHDRAW_ICX:
-      case REQUEST_ID.WITHDRAW_TOKEN: {
+      case ICONEX_REQUEST_ID.DEPOSIT_ICX:
+      case ICONEX_REQUEST_ID.DEPOSIT_TOKEN:
+      case ICONEX_REQUEST_ID.WITHDRAW_ICX:
+      case ICONEX_REQUEST_ID.WITHDRAW_TOKEN: {
         // How can get updated balance?
         break;
       }
-      case REQUEST_ID.TRADE: {
+      case ICONEX_REQUEST_ID.TRADE: {
         const { trade } = yield select(getSockets);
         trade.emit(
           'trade_event',

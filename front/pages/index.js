@@ -61,6 +61,12 @@ const Home = ({ symbol }) => {
           type: AT.NEW_ORDER_RECEIVED,
           data: res,
         });
+        if (res.makerAddress === address) {
+          dispatch({
+            type: AT.MY_NEW_ORDER_RECEIVED,
+            data: res,
+          });
+        }
       });
 
       trade.emit('trade_event', { event: 'getLatestTokenTrades', params: {} }, res => {
@@ -72,12 +78,18 @@ const Home = ({ symbol }) => {
           });
       });
       trade.on('trade_event', res => {
-        console.log('trade event', res);
+        console.log('broadcasted trade', res);
         loadWalletData(address);
         dispatch({
           type: AT.SET_TOKEN_PRICE,
           data: res,
         });
+        if (res.takerAddress === address) {
+          dispatch({
+            type: AT.MY_NEW_TRADE_RECEIVED,
+            data: res,
+          });
+        }
       });
       // trade.emit('trade_event', { event: 'getTrades', params: { offset: 0, count: 10 } }, res => {
       //   console.log('get trades', res);

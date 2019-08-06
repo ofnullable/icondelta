@@ -1,4 +1,3 @@
-import { useDispatch } from 'react-redux';
 import { SHA3 } from 'sha3';
 
 import { REDUX_STEP, ICX_ADDRESS, SCORE_ADDRESS } from './const';
@@ -155,45 +154,49 @@ const getPrice = order => {
 };
 
 const getAmount = order => {
-  const { giveAmount, getAmount, orderFills } = order;
+  const { getAmount, orderFills } = order;
   return order.type === 'buy'
     ? toIcx(toBigNumber(getAmount).minus(orderFills))
-    : toIcx(toBigNumber(giveAmount).minus(orderFills));
+    : toBigNumber(order.total)
+        .dividedBy(order.price)
+        .toString();
 };
 
 const getTotal = order => {
-  const { giveAmount, getAmount, orderFills, price } = order;
+  const { getAmount, orderFills, price } = order;
   return order.type === 'buy'
     ? toIcx(
         toBigNumber(getAmount)
           .minus(orderFills)
           .multipliedBy(price)
       )
-    : toIcx(
-        toBigNumber(giveAmount)
-          .minus(orderFills)
-          .multipliedBy(price)
-      );
+    : toIcx(toBigNumber(getAmount).minus(orderFills));
 };
 
 export const addInfoToOrder = order => {
   if (order instanceof Array) {
     return order.map(o => {
-      o.price = getPrice(o);
-      o.amount = getAmount(o);
-      o.total = getTotal(o);
+      if (o.type === 'buy') {
+        o.price = getPrice(o);
+        o.amount = getAmount(o);
+        o.total = getTotal(o);
+      } else {
+        o.price = getPrice(o);
+        o.total = getTotal(o);
+        o.amount = getAmount(o);
+      }
       return o;
     });
   } else if (order instanceof Object) {
-    order.price = getPrice(order);
-    order.amount = getAmount(order);
-    order.total = getTotal(order);
+    if (order.type === 'buy') {
+      order.price = getPrice(order);
+      order.amount = getAmount(order);
+      order.total = getTotal(order);
+    } else {
+      order.price = getPrice(order);
+      order.total = getTotal(order);
+      order.amount = getAmount(order);
+    }
     return order;
   }
 };
-
-// export const reverseObject = obj => {
-//   const result = {};
-//   Object.keys(obj).forEach(k => (result[obj[k]] = k));
-//   return result;
-// };

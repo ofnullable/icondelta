@@ -16,11 +16,11 @@ fastify
 
   .after(() => {
     fastify.next('/', async (app, req, reply) => {
-      reply.redirect('/ST');
+      return reply.redirect('/ST');
     });
     fastify.next('/:symbol', async (app, req, reply) => {
       const symbol = req.params.symbol.toUpperCase() || 'ST';
-      app.render(req.raw, reply.res, '/', { symbol });
+      return app.render(req.raw, reply.res, '/', { symbol });
     });
   });
 
