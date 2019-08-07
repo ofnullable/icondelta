@@ -56,7 +56,7 @@ footer {
   ##Device = Desktops
   ##Screen = 1600px to higher resolution desktops
 */
-@media only screen and (min-width: 1600px) {
+@media only screen and (min-width: 1601px) {
   header {
     height: 7%;
     & ul {
@@ -86,7 +86,7 @@ footer {
   ##Device = Desktops
   ##Screen = 1281px to higher resolution desktops
 */
-@media only screen and (max-width: 1599px) {
+@media only screen and (max-width: 1600px) {
   header {
     height: 6%;
     & ul {
