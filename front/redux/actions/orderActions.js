@@ -6,3 +6,9 @@ export const newOrderReceived = data => {
     data,
   };
 };
+
+export const removeTemporalOrder = () => {
+  return {
+    type: AT.REMOVE_TEMPORAL_ORDER,
+  };
+};

@@ -1,8 +1,9 @@
 import React from 'react';
 
-import { wrapper } from './HistoryItem.scss';
 import { toIcx } from '../../../utils/formatter';
 import { TRACKER_BASE_URL } from '../../../utils/const';
+
+import { wrapper, buy, sell } from './HistoryItem.scss';
 
 const TradeHistoryItem = ({ history }) => {
   const amount = toIcx(history.amount);
@@ -13,7 +14,7 @@ const TradeHistoryItem = ({ history }) => {
           {history.txHash || ''}
         </a>
       </div>
-      <div>{history.type}</div>
+      <div className={history.type === 'buy' ? buy : sell}>{history.type}</div>
       <div>{amount}</div>
       <div>{amount * history.icxPrice}</div>
       <div>{history.icxPrice}</div>

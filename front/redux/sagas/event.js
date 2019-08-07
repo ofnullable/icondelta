@@ -3,13 +3,20 @@ import { all, fork, put, takeLatest, select } from 'redux-saga/effects';
 import AT from '../actionTypes';
 import storage from '../../utils/storage';
 import { ICONEX_REQUEST_ID } from '../../utils/const';
+import { requestSignatureEvent, requestTradeEvent } from '../../utils/event';
 
 const getToken = state => state.token.currentToken;
 const getSockets = state => state.socket.sockets;
-const getSavedOrder = state => state.order.savedOrder;
+const getTempOrder = state => state.order.tempOrder;
 
 export default function*() {
-  yield all([fork(watchAddressResponse), fork(watchJsonRpcResponse), fork(watchSigningResponse)]);
+  yield all([
+    fork(watchAddressResponse),
+    fork(watchJsonRpcResponse),
+    fork(watchSigningRequest),
+    fork(watchSigningResponse),
+    fork(watchTradeRequest),
+  ]);
 }
 
 function* watchAddressResponse() {
@@ -47,14 +54,10 @@ function* dispatchAction({ payload }) {
       }
       case ICONEX_REQUEST_ID.TRADE: {
         const { trade } = yield select(getSockets);
-        trade.emit(
-          'trade_event',
-          {
-            event: 'checkTradeTxHash',
-            params: { txHash: payload.result },
-          },
-          res => console.log(res)
-        );
+        yield put({
+          type: AT.CHECK_TRADE_REQUEST,
+          data: { txHash: payload.result, socket: trade },
+        });
       }
       default:
         break;
@@ -64,19 +67,39 @@ function* dispatchAction({ payload }) {
   }
 }
 
-function* watchSigningResponse() {
-  yield takeLatest(AT.RESPONSE_SIGNING, emitOrder);
+function* watchSigningRequest() {
+  yield takeLatest(AT.REQUEST_SIGNING, makeSignature);
 }
 
-function* emitOrder({ payload }) {
-  const { order } = yield select(getSockets);
-  const savedOrder = yield select(getSavedOrder);
-
-  delete savedOrder['hashed'];
-  savedOrder['signature'] = payload;
-
-  order.emit('order_event', { event: 'createOrder', params: savedOrder }, res => console.log(res));
+function* makeSignature({ address, data }) {
   yield put({
-    type: AT.REMOVE_TEMPORAL_ORDER,
+    type: AT.SAVE_TEMPORAL_ORDER,
+    data,
   });
+  requestSignatureEvent(address, data.hashed);
+}
+
+function* watchSigningResponse() {
+  yield takeLatest(AT.RESPONSE_SIGNING, orderRequest);
+}
+
+function* orderRequest({ payload }) {
+  const { order } = yield select(getSockets);
+  const tempOrder = yield select(getTempOrder);
+
+  delete tempOrder['hashed'];
+  tempOrder['signature'] = payload;
+
+  yield put({
+    type: AT.ORDER_REQUEST,
+    data: { tempOrder, socket: order },
+  });
+}
+
+function* watchTradeRequest() {
+  yield takeLatest(AT.REQUEST_TRADE, tradeRequest);
+}
+
+function* tradeRequest({ data }) {
+  requestTradeEvent(data.order, { address: data.address, amount: data.amount });
 }

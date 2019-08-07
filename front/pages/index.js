@@ -62,20 +62,18 @@ const Home = ({ symbol }) => {
       const { order, trade } = sockets;
       order.emit('order_event', { event: 'getOrders', params: { offset: 0, count: 10 } }, res => {
         console.log('get orders', res);
-        if (res && res.success)
-          dispatch({
-            type: AT.ORDER_LIST_RECEIVED,
-            data: res.data,
-          });
+        dispatch({
+          type: AT.ORDER_LIST_RECEIVED,
+          data: res,
+        });
       });
 
       trade.emit('trade_event', { event: 'getLatestTokenTrades', params: {} }, res => {
-        console.log('get last token trades', res);
-        if (res && res.success)
-          dispatch({
-            type: AT.LAST_TRADE_RECEIVED,
-            data: res.data,
-          });
+        console.log('get last trades of each token', res);
+        dispatch({
+          type: AT.LAST_TRADE_RECEIVED,
+          data: res,
+        });
       });
     }
   }, [sockets]);
@@ -91,11 +89,10 @@ const Home = ({ symbol }) => {
         },
         res => {
           console.log('get orders by address', res);
-          if (res && res.success)
-            dispatch({
-              type: AT.MY_ORDER_LIST_RECEIVED,
-              data: res.data,
-            });
+          dispatch({
+            type: AT.MY_ORDER_LIST_RECEIVED,
+            data: res,
+          });
         }
       );
 
@@ -104,11 +101,10 @@ const Home = ({ symbol }) => {
         { event: 'getTradesByAddress', params: { address, offset: 0, count: 10 } },
         res => {
           console.log('get trades by address', res);
-          if (res && res.success)
-            dispatch({
-              type: AT.MY_TRADE_LIST_RECEIVED,
-              data: res.data,
-            });
+          dispatch({
+            type: AT.MY_TRADE_LIST_RECEIVED,
+            data: res,
+          });
         }
       );
     }

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import TradeModal from '../TradeModal';
-import { requestTradeEvent } from '../../../utils/event';
 import AT from '../../../redux/actionTypes';
 
 import { wrapper, sell, buy, buttons, sellButton, buyButton, cancelButton } from './OrderItem.scss';
@@ -70,8 +69,12 @@ const OrderItem = ({ order }) => {
       }
     }
 
-    requestTradeEvent(order, { address, amount });
-    setModalVisible(false);
+    dispatch({
+      type: AT.REQUEST_TRADE,
+      data: { order, address, amount },
+    });
+
+    handleCloseModal();
   };
 
   const renderModal = () => {
@@ -88,7 +91,7 @@ const OrderItem = ({ order }) => {
             max={order.amount}
             value={tradeAmount}
             onChange={handleAmountChange}
-            step='0.01'
+            step='0.000000001'
           />
           <label htmlFor='price'>Price</label>
           <input id='price' type='number' value={order.price} readOnly />

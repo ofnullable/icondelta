@@ -6,14 +6,14 @@ const fastify = require('fastify')({
 
 const port = process.env.PORT || 3020;
 const dev = process.env.NODE_ENV !== 'production';
+const host = dev ? 'localhost' : '0.0.0.0';
 
 fastify
+  .register(require('fastify-nextjs'))
   .register(require('fastify-static'), {
     root: path.join(__dirname, 'static'),
     prefix: '/static/', // optional: default '/'
   })
-  .register(require('fastify-nextjs'), { dev })
-
   .after(() => {
     fastify.next('/', async (app, req, reply) => {
       return reply.redirect('/ST');
@@ -24,7 +24,7 @@ fastify
     });
   });
 
-fastify.listen(port, '0.0.0.0', err => {
+fastify.listen(port, host, err => {
   if (err) throw err;
   console.log(`Next, Fastify server listenging on port: ${port}`);
 });

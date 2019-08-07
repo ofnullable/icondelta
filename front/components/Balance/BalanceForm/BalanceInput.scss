@@ -2,8 +2,9 @@
 
 .wrapper {
   height: 50%;
-  overflow: auto;
-
+  & p {
+    margin: 0;
+  }
   & input {
     width: calc(70% - 1em);
     margin-right: 1em;
@@ -22,12 +23,14 @@
   .wrapper {
     padding: 0.5em 0;
     & p {
-      margin: 10px 0;
+      padding: 0;
     }
   }
 }
 @media only screen and (max-width: 1600px) {
-  & p {
-    margin: 5px 0;
+  .wrapper {
+    & p {
+      padding: 5px 0;
+    }
   }
 }
