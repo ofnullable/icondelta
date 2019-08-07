@@ -2,10 +2,21 @@
 @import '_variables';
 @import '_nomalize';
 
+@media only screen and (min-width: 1600px) {
+  html,
+  body {
+    font-size: 14px;
+  }
+}
+@media only screen and (max-width: 1599px) {
+  html,
+  body {
+    font-size: 12px;
+  }
+}
 html,
 body {
   height: 100%;
-  font-size: 14px;
 }
 
 body {

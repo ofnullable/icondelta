@@ -2,7 +2,6 @@
 .wrapper {
   display: flex;
   width: 100%;
-  height: 40%;
   padding: 0;
   margin: 0;
   list-style: none;
@@ -15,13 +14,11 @@
     flex: auto;
     align-items: center;
     justify-content: center;
-
     &:first-child {
       height: 34%;
       background-color: $background-light;
       border-radius: 5px;
     }
-
     & > div:first-child {
       width: 20%;
     }
@@ -39,5 +36,15 @@
         color: red;
       }
     }
+  }
+}
+@media only screen and (min-width: 1600px) {
+  .wrapper {
+    height: 40%;
+  }
+}
+@media only screen and (max-width: 1599px) {
+  .wrapper {
+    height: 35%;
   }
 }

@@ -1,3 +1,5 @@
+@import 'styles/_variables';
+
 .wrapper {
   display: flex;
   width: 100%;
@@ -17,6 +19,26 @@
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
+    }
+  }
+}
+.buy {
+  color: $primary;
+}
+.sell {
+  color: $danger;
+}
+
+@media only screen and (min-width: 1600px) {
+  & > div {
+    padding: 15px;
+  }
+}
+
+@media only screen and (max-width: 1599px) {
+  .wrapper {
+    & > div {
+      padding: 10px;
     }
   }
 }

@@ -3,14 +3,12 @@
 .wrapper {
   width: 100%;
   height: 7%;
-  padding: 12px;
   text-align: center;
   & button {
     color: $secondery;
-    padding: 3px 10px;
     min-width: 32px;
     background-color: transparent;
-
+    vertical-align: middle;
     &.disabled {
       cursor: unset;
       color: $border-color;
@@ -23,15 +21,44 @@
   }
   & > div {
     display: inline-block;
-    margin: 0 15px;
+    vertical-align: middle;
     & > input {
-      margin: 0 10px;
       max-width: 100px;
       text-align: center;
     }
     & > p {
       margin: 0;
       display: inline-block;
+    }
+  }
+}
+@media only screen and (min-width: 1600px) {
+  .wrapper {
+    padding: 12px;
+    & > div {
+      margin: 0 15px;
+      & > input {
+        margin: 0 10px;
+      }
+    }
+    & > button {
+      padding: 3px 10px;
+    }
+  }
+}
+@media only screen and (min-width: 1281px) and (max-width: 1599px) {
+  .wrapper {
+    padding: 7px;
+    & > div {
+      margin: 0 7px;
+      & > input {
+        width: 55%;
+        padding: 2px 10px;
+        margin: 0 5px;
+      }
+    }
+    & > button {
+      padding: 2px 5px;
     }
   }
 }

@@ -7,13 +7,6 @@
   menu {
     @include menu();
     height: 100%;
-    padding: 9px;
-  }
-  & > div:first-child {
-    height: 10%;
-  }
-  & > div {
-    height: 10%;
   }
   & ul.menu {
     display: flex;
@@ -28,6 +21,29 @@
       width: 20%;
       flex: auto;
       text-align: center;
+    }
+  }
+}
+
+@media only screen and (min-width: 1600px) {
+  .wrapper {
+    menu {
+      padding: 9px;
+    }
+    & > div {
+      height: 10%;
+    }
+  }
+}
+
+@media only screen and (max-width: 1599px) {
+  .wrapper {
+    menu {
+      padding: 5px;
+      line-height: 1.5;
+    }
+    & > div {
+      height: 12%;
     }
   }
 }

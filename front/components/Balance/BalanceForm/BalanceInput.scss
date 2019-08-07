@@ -1,9 +1,9 @@
 @import 'styles/_mixin';
 
 .wrapper {
-  padding: 0.5em 0;
+  height: 50%;
   & p {
-    margin: 10px;
+    margin: 0 5px 5px;
   }
   & input {
     width: calc(70% - 1em);
@@ -17,5 +17,10 @@
     &.danger {
       @include button($danger);
     }
+  }
+}
+@media only screen and (min-width: 1600px) {
+  .wrapper {
+    padding: 0.5em 0;
   }
 }
