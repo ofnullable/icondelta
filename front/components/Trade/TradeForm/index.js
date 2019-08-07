@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import AT from '../../../redux/actionTypes';
 import { toBigNumber } from '../../../utils/formatter';
 import { makeOrderParams } from '../../../utils/utils';
-import { requestSignatureEvent } from '../../../utils/event';
 
 import { wrapper, primary, danger } from './index.scss';
 
@@ -90,20 +89,18 @@ const TradeForm = ({ type }) => {
   const makeOrder = e => {
     e.preventDefault();
 
-    if (!isValidOrder()) return;
-
     if (!sockets || !sockets.order || !sockets.order.connected) {
-      console.log(sockets, sockets.order, sockets.order.connected);
       return alert('Can not create new order.. please refresh window');
     }
 
-    const data = makeOrderParams(type, amount, total, address, currentToken.address);
+    if (!isValidOrder()) return;
+
     dispatch({
-      type: AT.SAVE_TEMPORAL_ORDER,
-      data,
+      type: AT.REQUEST_SIGNING,
+      address,
+      data: makeOrderParams(type, amount, total, address, currentToken.address),
     });
 
-    requestSignatureEvent(address, data.hashed);
     resetInputs();
   };
 

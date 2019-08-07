@@ -30,7 +30,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         currentToken: {
-          ...state.currentToken,
           symbol: action.symbol,
         },
       };
@@ -47,17 +46,17 @@ export default (state = initialState, action) => {
       };
 
     case AT.LAST_TRADE_RECEIVED:
-      return {
-        ...state,
-        tokens: {
-          ...state.tokens,
-          data: state.tokens.data.map(t => {
-            t.currentPrice = action.data[t.symbol].icxPrice;
-            return t;
-          }),
-        },
-      };
-
+      if (action.data) {
+        state.tokens.data = state.tokens.data.map(t => {
+          t.currentPrice = action.data.data[t.symbol].icxPrice;
+          return t;
+        });
+        return {
+          ...state,
+        };
+      } else {
+        return { ...state };
+      }
     default:
       return {
         ...state,

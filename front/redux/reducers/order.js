@@ -5,17 +5,26 @@ import { addInfoToOrder } from '../../utils/utils';
 const initialState = {
   buyOrders: [],
   sellOrders: [],
-  savedOrder: null,
+  tempOrder: null,
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case AT.ORDER_LIST_RECEIVED:
-      return {
-        ...state,
-        buyOrders: addInfoToOrder(action.data.buy).sort((o1, o2) => o2.price - o1.price),
-        sellOrders: addInfoToOrder(action.data.sell).sort((o1, o2) => o2.price - o1.price),
-      };
+      if (action.data) {
+        action.data = action.data.data;
+        return {
+          ...state,
+          buyOrders: addInfoToOrder(action.data.buy).sort((o1, o2) => o2.price - o1.price),
+          sellOrders: addInfoToOrder(action.data.sell).sort((o1, o2) => o2.price - o1.price),
+        };
+      } else {
+        return {
+          ...state,
+          buyOrders: [],
+          sellOrders: [],
+        };
+      }
 
     case AT.NEW_ORDER_RECEIVED: {
       const orderData = addInfoToOrder(action.data);
@@ -52,13 +61,16 @@ export default (state = initialState, action) => {
     case AT.SAVE_TEMPORAL_ORDER:
       return {
         ...state,
-        savedOrder: action.data,
+        tempOrder: action.data,
       };
     case AT.REMOVE_TEMPORAL_ORDER:
-      delete state.savedOrder;
+      delete state.tempOrder;
       return {
         ...state,
       };
+
+    case AT.ORDER_REQUEST:
+
     default:
       return {
         ...state,

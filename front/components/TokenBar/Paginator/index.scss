@@ -7,8 +7,8 @@
   & button {
     color: $secondery;
     min-width: 32px;
-    background-color: transparent;
     vertical-align: middle;
+    background-color: transparent;
     &.disabled {
       cursor: unset;
       color: $border-color;
@@ -32,7 +32,7 @@
     }
   }
 }
-@media only screen and (min-width: 1600px) {
+@media only screen and (min-width: 1601px) {
   .wrapper {
     padding: 12px;
     & > div {
@@ -46,13 +46,14 @@
     }
   }
 }
-@media only screen and (min-width: 1281px) and (max-width: 1599px) {
+@media only screen and (max-width: 1600px) {
   .wrapper {
-    padding: 7px;
+    padding: 10px 0;
     & > div {
+      width: 45%;
       margin: 0 7px;
       & > input {
-        width: 55%;
+        width: 45%;
         padding: 2px 10px;
         margin: 0 5px;
       }

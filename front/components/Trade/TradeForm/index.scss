@@ -2,11 +2,14 @@
 
 .wrapper {
   & p {
-    margin-top: 0;
-    margin-bottom: 0.5em;
+    margin: 0.5em 0;
   }
   & input {
     text-align: right;
+  }
+  & > div {
+    margin-top: 0.5em;
+    overflow: auto;
   }
   & > button {
     width: 100%;
@@ -19,21 +22,17 @@
     }
   }
 }
-@media only screen and (min-width: 1600px) {
+@media only screen and (min-width: 1601px) {
   .wrapper {
-    & > div {
-      margin-top: 1em;
-    }
+    margin-top: 1em;
     & > button {
       margin: 1.8em 0 0;
     }
   }
 }
-@media only screen and (min-width: 1281px) and (max-width: 1599px) {
+@media only screen and (max-width: 1600px) {
   .wrapper {
-    & > div {
-      margin-top: 0.5em;
-    }
+    padding-top: 0.5em;
     & > button {
       margin: 1.5em 0 0;
     }

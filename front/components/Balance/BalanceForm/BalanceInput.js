@@ -41,12 +41,25 @@ const BalanceInput = memo(({ type, target, balance }) => {
   };
 
   const amountValidation = () => {
+    if (!amount) {
+      alert('Please enter amount!');
+      return;
+    }
+    if (isNaN(amount)) {
+      alert('Only numbers can be enterd.');
+      setAmount('');
+      return;
+    }
     if (type === 'Deposit') {
       if (Number(balance.undeposited) < amount) {
+        alert(`Can't ${type} more then you have`);
+        setAmount(balance.undeposited);
         return false;
       }
     } else {
       if (Number(balance.deposited) < amount) {
+        alert(`Can't ${type} more then you have`);
+        setAmount(balance.deposited);
         return false;
       }
     }
@@ -55,21 +68,9 @@ const BalanceInput = memo(({ type, target, balance }) => {
 
   const handleSubmit = ({ keyCode }) => {
     if (!keyCode || (keyCode && keyCode === 13)) {
-      if (!amount) {
-        alert('Please enter amount!');
+      if (!amountValidation()) {
         return;
       }
-      if (isNaN(amount)) {
-        alert('Only numbers can be enterd.');
-        setAmount('');
-        return;
-      }
-
-      // if (!amountValidation()) {
-      //   alert(`Can't ${type} more then you have`);
-      //   setAmount(type === 'Deposit' ? balance.undeposited : balance.deposited);
-      //   return;
-      // }
 
       eventDispatch();
       setAmount('');

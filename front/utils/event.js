@@ -1,7 +1,6 @@
 import AT from '../redux/actionTypes';
 import { SCORE_ADDRESS, TX_DEFAULT_PARAMETER, ICONEX_REQUEST_ID } from './const';
 import { toHexLoop, toHexString } from './formatter';
-import { makeRandomNumber } from './utils';
 
 // event payload - { method }
 const SEND_TRANSACTION = 'icx_sendTransaction';

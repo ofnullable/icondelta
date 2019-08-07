@@ -4,7 +4,6 @@
   @include wrapper('2 / 4', '1 / 13');
   & > div:first-child {
     height: 5%;
-    margin: 7px 0;
   }
   & > div {
     height: 10%;
@@ -13,7 +12,6 @@
       font-size: 1.2em;
       font-weight: 700;
     }
-
     & ul.menu {
       display: flex;
       height: 100%;
@@ -31,14 +29,14 @@
     }
   }
 }
-@media only screen and (min-width: 1600px) {
+@media only screen and (min-width: 1601px) {
   .wrapper {
     & > div:first-child {
-      margin: 7px;
+      margin: 7px 0;
     }
   }
 }
-@media only screen and (min-width: 1281px) and (max-width: 1599px) {
+@media only screen and (max-width: 1600px) {
   .wrapper {
     & > div:first-child {
       margin: 0 0 7px;

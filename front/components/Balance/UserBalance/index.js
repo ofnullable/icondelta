@@ -39,9 +39,9 @@ const UserBalance = memo(({ symbol }) => {
   return (
     <ul className={wrapper}>
       <li>
-        <div width='20%'>name</div>
-        <div width='40%'>wallet</div>
-        <div width='40%'>score</div>
+        <div>name</div>
+        <div>wallet</div>
+        <div>score</div>
       </li>
       {renderItem('ICX', icx)}
       {renderItem(symbol, token)}

@@ -2,6 +2,7 @@
 
 .wrapper {
   height: 7%;
+  padding-top: 5px;
   & input {
     width: 80%;
     text-align: left;
@@ -32,9 +33,8 @@
     }
   }
 }
-@media only screen and (min-width: 1600px) {
+@media only screen and (min-width: 1601px) {
   .wrapper {
-    padding-top: 3px;
     & input {
       padding: 5px 10px;
     }
@@ -46,7 +46,7 @@
     }
   }
 }
-@media only screen and (min-width: 1281px) and (max-width: 1599px) {
+@media only screen and (max-width: 1600px) {
   .wrapper {
     & input + button {
       padding: 3px 10px;

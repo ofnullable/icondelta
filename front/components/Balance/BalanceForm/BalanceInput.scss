@@ -3,7 +3,7 @@
 .wrapper {
   height: 50%;
   & p {
-    margin: 0 5px 5px;
+    margin: 0;
   }
   & input {
     width: calc(70% - 1em);
@@ -19,8 +19,18 @@
     }
   }
 }
-@media only screen and (min-width: 1600px) {
+@media only screen and (min-width: 1601px) {
   .wrapper {
     padding: 0.5em 0;
+    & p {
+      padding: 0;
+    }
+  }
+}
+@media only screen and (max-width: 1600px) {
+  .wrapper {
+    & p {
+      padding: 5px 0;
+    }
   }
 }

@@ -29,13 +29,13 @@
   color: $danger;
 }
 
-@media only screen and (min-width: 1600px) {
+@media only screen and (min-width: 1601px) {
   & > div {
     padding: 15px;
   }
 }
 
-@media only screen and (max-width: 1599px) {
+@media only screen and (max-width: 1600px) {
   .wrapper {
     & > div {
       padding: 10px;
