@@ -11,7 +11,7 @@ const TokenInfo = ({ token, className }) => {
     <li className={className && className} onClick={handleItemClick}>
       <div width='34%'>{token.fullName}</div>
       <div width='33%'>{token.symbol}</div>
-      <div width='33%'>{token.currentPrice || '0.9'}</div>
+      <div width='33%'>{token.currentPrice}</div>
     </li>
   );
 };
