@@ -2,7 +2,7 @@
 
 .wrapper {
   display: flex;
-  height: calc(80% - 9px);
+  height: calc(76% - 0.5em);
   flex-direction: column;
   margin: 0;
   padding: 0;
@@ -30,5 +30,10 @@
   }
   &::-webkit-scrollbar-track {
     background: none;
+  }
+}
+@media only screen and (min-width: 1600px) {
+  .wrapper {
+    height: calc(80% - 0.5em);
   }
 }

@@ -3,6 +3,7 @@ export const isProd = process.env.NODE_ENV === 'production';
 
 export const SERVER_BASE_URL = 'https://api.icondelta.ga';
 export const ICON_NETWORK_URL = 'https://bicon.net.solidwallet.io'; // isProd ? 'https://tracker.icon.foundation' : 'https://bicon.net.solidwallet.io';
+export const TRACKER_BASE_URL = 'https://bicon.tracker.solidwallet.io'; // isProd ? 'https://tracker.icon.foundation' : 'https://bicon.tracker.solidwallet.io';
 
 export const ICX_ADDRESS = 'cx0000000000000000000000000000000000000000';
 

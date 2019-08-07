@@ -2,12 +2,11 @@
 
 .wrapper {
   height: 7%;
-  padding-top: 3px;
   & input {
     width: 80%;
     text-align: left;
-    padding: 5px 10px;
     vertical-align: middle;
+    border: 1px solid $white;
     border-right: none;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
@@ -15,12 +14,11 @@
   & input + button {
     width: 20%;
     cursor: pointer;
-    padding: 3px 10px;
     vertical-align: middle;
     text-align: center;
     background-color: $secondery;
     border-left: none;
-    border: 0.5px solid $secondery;
+    border: 1px solid $secondery;
     border-radius: 0;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
@@ -29,8 +27,33 @@
       background-color: darken($secondery, 10%);
     }
     & > i {
-      font-size: 16px;
-      line-height: 1.5;
+      vertical-align: middle;
+      line-height: 1;
+    }
+  }
+}
+@media only screen and (min-width: 1600px) {
+  .wrapper {
+    padding-top: 3px;
+    & input {
+      padding: 5px 10px;
+    }
+    & input + button {
+      padding: 5px 10px;
+      & > i {
+        font-size: 16px;
+      }
+    }
+  }
+}
+@media only screen and (min-width: 1281px) and (max-width: 1599px) {
+  .wrapper {
+    & input + button {
+      padding: 3px 10px;
+
+      & > i {
+        font-size: 14px;
+      }
     }
   }
 }

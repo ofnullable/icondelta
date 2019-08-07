@@ -1,8 +1,28 @@
 @import 'styles/_mixin';
 
 .wrapper {
-  height: 60%;
   menu {
     @include menu();
+    height: 20%;
+  }
+  .inputGroup {
+    padding: 1em 0;
+    height: 80%;
+  }
+}
+@media only screen and (min-width: 1600px) {
+  .wrapper {
+    height: 60%;
+    menu {
+      // TODO: check
+    }
+  }
+}
+@media only screen and (max-width: 1599px) {
+  .wrapper {
+    height: 65%;
+    menu {
+      padding: 10px;
+    }
   }
 }

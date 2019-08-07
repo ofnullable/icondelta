@@ -1,9 +1,6 @@
 @import 'styles/_mixin';
 
 .wrapper {
-  & > div {
-    margin-top: 1em;
-  }
   & p {
     margin-top: 0;
     margin-bottom: 0.5em;
@@ -13,13 +10,32 @@
   }
   & > button {
     width: 100%;
-    margin: 1.8em 0 0;
     line-height: 1.7;
     &.primary {
       @include button($primary);
     }
     &.danger {
       @include button($danger);
+    }
+  }
+}
+@media only screen and (min-width: 1600px) {
+  .wrapper {
+    & > div {
+      margin-top: 1em;
+    }
+    & > button {
+      margin: 1.8em 0 0;
+    }
+  }
+}
+@media only screen and (min-width: 1281px) and (max-width: 1599px) {
+  .wrapper {
+    & > div {
+      margin-top: 0.5em;
+    }
+    & > button {
+      margin: 1.5em 0 0;
     }
   }
 }
