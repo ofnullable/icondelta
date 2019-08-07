@@ -7,8 +7,8 @@
   & button {
     color: $secondery;
     min-width: 32px;
-    background-color: transparent;
     vertical-align: middle;
+    background-color: transparent;
     &.disabled {
       cursor: unset;
       color: $border-color;
