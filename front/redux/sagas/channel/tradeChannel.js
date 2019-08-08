@@ -14,15 +14,18 @@ let task;
 function subscribeTrade(socket, data) {
   return eventChannel(emit => {
     socket.on('trade_event', res => {
-      // console.log('broadcasted trade', res);
-      emit(setTokenPrice(res));
-      if (
-        res.tokenAddress === data.token.address &&
-        (res.takerAddress === data.address || res.makerAddress === data.address)
-      ) {
-        emit(myNewTradeReceived(res));
-      }
-      emit(loadWalletBalance({ address: data.address, symbol: data.token.symbol }));
+      console.log('trade_event', res);
+    });
+    socket.on('trade:checkTradeTxHash', res => {
+      console.log('trade:checkTradeTxHash', res);
+      // emit(setTokenPrice(res));
+      // if (
+      //   res.tokenAddress === data.token.address &&
+      //   (res.takerAddress === data.address || res.makerAddress === data.address)
+      // ) {
+      //   emit(myNewTradeReceived(res));
+      // }
+      // emit(loadWalletBalance({ address: data.address, symbol: data.token.symbol }));
     });
     return () => {};
   });
@@ -40,11 +43,11 @@ function* readTrade(socket) {
 }
 
 function* sendTxHash({ data }) {
-  data.socket.emit(
-    'trade_event',
-    { event: 'checkTradeTxHash', params: { txHash: data.txHash } },
-    res => console.log(res)
-  );
+  const sid = data.socket.io.engine.id;
+  data.socket.emit('trade_event', {
+    event: 'checkTradeTxHash',
+    params: { sid, txHash: data.txHash },
+  });
 }
 
 function* checkTrade() {

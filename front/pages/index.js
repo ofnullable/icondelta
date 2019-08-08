@@ -98,7 +98,7 @@ const Home = ({ symbol }) => {
 
       trade.emit(
         'trade_event',
-        { event: 'getTradesByAddress', params: { address, offset: 0, count: 10 } },
+        { event: 'getTradesByAddress', params: { address, symbol, offset: 0, count: 10 } },
         res => {
           console.log('get trades by address', res);
           dispatch({

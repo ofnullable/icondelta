@@ -12,11 +12,24 @@ let task;
 function subscribeOrder(socket, address) {
   return eventChannel(emit => {
     socket.on('order_event', res => {
-      // console.log('broadcasted order', res);
-      emit(newOrderReceived(res));
-      if (res.makerAddress === address) {
-        emit(myNewOrderReceived(res));
-      }
+      console.log('order_event', res);
+    });
+    socket.on('order:createOrder', res => {
+      console.log('order:createOrder', res);
+      // emit(newOrderReceived(res));
+      // if (res.makerAddress === address) {
+      //   emit(myNewOrderReceived(res));
+      // }
+    });
+    socket.on('order:updateOrder', res => {
+      console.log('order:updateOrder', res);
+      // emit(newOrderReceived(res));
+      // if (res.makerAddress === address) {
+      //   emit(myNewOrderReceived(res));
+      // }
+    });
+    socket.on('order:getOrders', res => {
+      console.log('order:getOrders', res);
     });
     return () => {};
   });
@@ -33,9 +46,8 @@ function* readOrder(socket) {
 }
 
 function* sendOrder({ data }) {
-  data.socket.emit('order_event', { event: 'createOrder', params: data.tempOrder }, res =>
-    console.log(res.success)
-  );
+  const sid = data.socket.io.engine.id;
+  data.socket.emit('order_event', { sid, event: 'createOrder', params: data.tempOrder });
   yield put(removeTemporalOrder());
 }
 
