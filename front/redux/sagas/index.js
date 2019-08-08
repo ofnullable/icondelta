@@ -5,8 +5,16 @@ import token from './token';
 import order from './order';
 import event from './event';
 
-import channel from './channel';
+import orderChannel from './channel/orderChannel';
+import tradeChannel from './channel/tradeChannel';
 
 export default function*() {
-  yield all([fork(wallet), fork(token), fork(order), fork(event), fork(channel)]);
+  yield all([
+    fork(wallet),
+    fork(token),
+    fork(order),
+    fork(event),
+    fork(orderChannel),
+    fork(tradeChannel),
+  ]);
 }
