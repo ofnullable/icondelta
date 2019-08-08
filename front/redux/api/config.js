@@ -4,7 +4,8 @@ import { SERVER_BASE_URL, ICON_NETWORK_URL } from '../../utils/const';
 
 export const socket = symbol => {
   const order = io.connect(`${SERVER_BASE_URL}/orders/${symbol}`, { transports: ['websocket'] });
-  const trade = io.connect(`${SERVER_BASE_URL}/trades/${symbol}`, { transports: ['websocket'] });
+  const trade = io.connect(`${SERVER_BASE_URL}/trades`, { transports: ['websocket'] });
+
   return { order, trade };
 };
 

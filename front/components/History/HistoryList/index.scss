@@ -1,3 +1,4 @@
+@import 'styles/_mixin';
 @import 'styles/_variables';
 
 .wrapper {
@@ -9,12 +10,18 @@
   list-style: none;
   align-items: center;
   border-radius: 3px;
-  & > li.noData {
+  & > li.noData,
+  & > li.loading {
     display: flex;
     height: 100%;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+  }
+  & > li.loading > i {
+    -webkit-animation: spin 1s infinite linear;
+    animation: spin 1s infinite linear;
+    color: $secondery;
   }
   &::-webkit-scrollbar {
     width: 0.3em;

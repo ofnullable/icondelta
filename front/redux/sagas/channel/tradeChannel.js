@@ -11,18 +11,21 @@ const getCurrentToken = state => state.token.currentToken;
 
 let task;
 
-function subscribeTrade(socket, data) {
+function subscribeTrade({ socket, address, token }) {
   return eventChannel(emit => {
     socket.on('trade_event', res => {
-      // console.log('broadcasted trade', res);
+      console.log('broadcasted trade', res);
       emit(setTokenPrice(res));
       if (
-        res.tokenAddress === data.token.address &&
-        (res.takerAddress === data.address || res.makerAddress === data.address)
+        res.tokenAddress === token.address &&
+        (res.takerAddress === address || res.makerAddress === address)
       ) {
         emit(myNewTradeReceived(res));
       }
-      emit(loadWalletBalance({ address: data.address, symbol: data.token.symbol }));
+      emit(loadWalletBalance({ address: address, symbol: token.symbol }));
+    });
+    socket.on('trade:checkTradeTxHash', res => {
+      console.log('trade:checkTradeTxHash', res);
     });
     return () => {};
   });
@@ -31,7 +34,7 @@ function subscribeTrade(socket, data) {
 function* readTrade(socket) {
   const address = yield select(getAddress);
   const currentToken = yield select(getCurrentToken);
-  const channel = yield call(subscribeTrade, socket, { address, token: currentToken });
+  const channel = yield call(subscribeTrade, { socket, address, token: currentToken });
 
   while (true) {
     let action = yield take(channel);
@@ -40,11 +43,11 @@ function* readTrade(socket) {
 }
 
 function* sendTxHash({ data }) {
-  data.socket.emit(
-    'trade_event',
-    { event: 'checkTradeTxHash', params: { txHash: data.txHash } },
-    res => console.log(res)
-  );
+  const sid = data.socket.io.engine.id;
+  data.socket.emit('trade_event', {
+    event: 'checkTradeTxHash',
+    params: { sid, txHash: data.txHash },
+  });
 }
 
 function* checkTrade() {
@@ -56,18 +59,18 @@ function* handleTradeEvent(socket) {
   yield fork(readTrade, socket);
 }
 
-function* cancelTask() {
-  yield cancel(task);
-}
-
 function* flow({ data }) {
   const { trade } = data;
   console.log('trade socket:', trade);
   const tradeTask = yield fork(handleTradeEvent, trade);
   task = tradeTask;
-  yield takeLatest(AT.REMOVE_SOCKET, cancelTask);
+}
+
+function* cancelTask() {
+  yield cancel(task);
 }
 
 export default function*() {
   yield takeLatest(AT.SET_SOCKET, flow);
+  yield takeLatest(AT.REMOVE_SOCKET, cancelTask);
 }
