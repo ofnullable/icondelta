@@ -12,7 +12,11 @@ let task;
 function subscribeOrder(socket, address) {
   return eventChannel(emit => {
     socket.on('order_event', res => {
-      console.log('order_event', res);
+      console.log('broadcasted order', res);
+      emit(newOrderReceived(res));
+      if (res.makerAddress === address) {
+        emit(myNewOrderReceived(res));
+      }
     });
     socket.on('order:createOrder', res => {
       console.log('order:createOrder', res);
@@ -23,7 +27,7 @@ function subscribeOrder(socket, address) {
     });
     socket.on('order:updateOrder', res => {
       console.log('order:updateOrder', res);
-      // emit(newOrderReceived(res));
+      // emit(updateOrderReceived(res));
       // if (res.makerAddress === address) {
       //   emit(myNewOrderReceived(res));
       // }
@@ -60,18 +64,18 @@ function* handleOrderEvent(socket) {
   yield fork(readOrder, socket);
 }
 
-function* cancelTask() {
-  yield cancel(task);
-}
-
 function* flow({ data }) {
   const { order } = data;
   console.log('order socket:', order);
   const orderTask = yield fork(handleOrderEvent, order);
   task = orderTask;
-  yield takeLatest(AT.REMOVE_SOCKET, cancelTask);
+}
+
+function* cancelTask() {
+  yield cancel(task);
 }
 
 export default function*() {
   yield takeLatest(AT.SET_SOCKET, flow);
+  yield takeLatest(AT.REMOVE_SOCKET, cancelTask);
 }

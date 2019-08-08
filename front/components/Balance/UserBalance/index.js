@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 
 import BalanceItem from './BalanceItem';
 
-import { wrapper, error } from './index.scss';
+import { wrapper, error, loading } from './index.scss';
 
 const UserBalance = memo(({ symbol }) => {
   const { icx, token } = useSelector(state => state.wallet);
@@ -13,7 +13,9 @@ const UserBalance = memo(({ symbol }) => {
       return (
         <li>
           <div>{name}</div>
-          <div style={{ width: '80%' }}>Loading</div>
+          <div style={{ width: '80%' }} className={loading}>
+            <i className='material-icons'>rotate_right</i>
+          </div>
         </li>
       );
     } else if (target.error) {

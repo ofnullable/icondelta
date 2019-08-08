@@ -30,9 +30,9 @@ const History = ({ symbol }) => {
       return (
         <ul className={menu}>
           <li>Price</li>
+          <li>Type</li>
           <li>Available</li>
           <li>Expires in</li>
-          <li>Cancel</li>
         </ul>
       );
     }
@@ -48,7 +48,7 @@ const History = ({ symbol }) => {
         </menu>
       </div>
       <div>{renderMenu()}</div>
-      <HistoryList type={type} history={type === 'Trades' ? trades.data : orders.data} />
+      <HistoryList type={type} history={type === 'Trades' ? trades : orders} />
     </div>
   );
 };
