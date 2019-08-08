@@ -9,7 +9,7 @@ const changeObjectState = (step, state, target, action) => {
       return {
         ...state,
         [target]: {
-          ...state[target],
+          data: {},
           isProceeding: true,
           error: '',
         },
@@ -46,7 +46,7 @@ const changeArrayState = (step, state, target, action) => {
       return {
         ...state,
         [target]: {
-          ...state[target],
+          data: [],
           isProceeding: true,
           error: '',
         },

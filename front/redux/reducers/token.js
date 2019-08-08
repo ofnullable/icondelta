@@ -13,11 +13,6 @@ export default (state = initialState, action) => {
       return changeState('ARR', REDUX_STEP.REQUEST, state, 'tokens');
 
     case AT.LOAD_TOKEN_LIST_SUCCESS:
-      action.data = [
-        ...action.data,
-        { fullName: 'ETC', address: 'cx012', symbol: 'ETC' },
-        { fullName: 'EOS', address: 'cx023', symbol: 'EOS' },
-      ];
       return changeState('ARR', REDUX_STEP.SUCCESS, state, 'tokens', action);
 
     case AT.LOAD_TOKEN_LIST_FAILURE:
