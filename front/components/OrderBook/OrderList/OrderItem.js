@@ -20,6 +20,7 @@ const OrderItem = ({ order }) => {
       dispatch({ type: AT.LOAD_ADDRESS_REQUEST });
       return;
     }
+    setTradeAmount(order.amount);
     setModalVisible(true);
   };
 
@@ -47,7 +48,6 @@ const OrderItem = ({ order }) => {
   };
 
   const handleCloseModal = () => {
-    changeTradeAmount(order.amount);
     setModalVisible(false);
   };
 

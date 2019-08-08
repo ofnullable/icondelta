@@ -7,6 +7,7 @@ import event from './event';
 
 import orderChannel from './channel/orderChannel';
 import tradeChannel from './channel/tradeChannel';
+import historyChannel from './channel/historyChannel';
 
 export default function*() {
   yield all([
@@ -16,5 +17,6 @@ export default function*() {
     fork(event),
     fork(orderChannel),
     fork(tradeChannel),
+    fork(historyChannel),
   ]);
 }

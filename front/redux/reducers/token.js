@@ -13,10 +13,15 @@ export default (state = initialState, action) => {
       return changeState('ARR', REDUX_STEP.REQUEST, state, 'tokens');
 
     case AT.LOAD_TOKEN_LIST_SUCCESS:
+      action.data = [
+        ...action.data,
+        { fullName: 'ETC', address: 'cx012', symbol: 'ETC' },
+        { fullName: 'EOS', address: 'cx023', symbol: 'EOS' },
+      ];
       return changeState('ARR', REDUX_STEP.SUCCESS, state, 'tokens', action);
 
     case AT.LOAD_TOKEN_LIST_FAILURE:
-      return changeState('ARR', REDUX_STEP.FAILURE, state, 'tokens');
+      return changeState('ARR', REDUX_STEP.FAILURE, state, 'tokens', action);
 
     case AT.SET_CURRENT_TOKEN:
       return {
@@ -42,6 +47,46 @@ export default (state = initialState, action) => {
         tokens: {
           ...state.tokens,
           data: [...state.tokens.data],
+        },
+      };
+
+    case AT.LOAD_LAST_TRADE_BY_TOKEN_REQUEST:
+      return {
+        ...state,
+        tokens: {
+          ...state.tokens,
+          data: state.tokens.data.map(t => {
+            t.currentPrice = 'loading';
+            return t;
+          }),
+        },
+      };
+
+    case AT.LOAD_LAST_TRADE_BY_TOKEN_SUCCESS:
+      state.tokens.data.forEach(t => {
+        if (action.data.data[t.symbol]) {
+          t.currentPrice = action.data.data[t.symbol].icxPrice;
+        } else {
+          t.currentPrice = '';
+        }
+      });
+      return {
+        ...state,
+        tokens: {
+          ...state.tokens,
+          data: [...state.tokens.data],
+        },
+      };
+
+    case AT.LOAD_LAST_TRADE_BY_TOKEN_FAILURE:
+      return {
+        ...state,
+        tokens: {
+          ...state.tokens,
+          data: state.tokens.data.map(t => {
+            t.currentPrice = 'Load Failure';
+            return t;
+          }),
         },
       };
 

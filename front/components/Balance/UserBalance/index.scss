@@ -1,4 +1,6 @@
+@import 'styles/_mixin';
 @import 'styles/_variables';
+
 .wrapper {
   display: flex;
   width: 100%;
@@ -34,6 +36,11 @@
         white-space: nowrap;
         text-overflow: ellipsis;
         color: red;
+      }
+      &.loading > i {
+        -webkit-animation: spin 1s infinite linear;
+        animation: spin 1s infinite linear;
+        color: $secondery;
       }
     }
   }

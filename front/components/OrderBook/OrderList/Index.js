@@ -2,11 +2,18 @@ import React, { memo } from 'react';
 
 import OrderItem from './OrderItem';
 
-import { wrapper, noData } from './index.scss';
+import { wrapper, noData, loading } from './index.scss';
 
 const OrderList = memo(({ sellOrders, buyOrders }) => {
   const renderOrders = () => {
-    if (!sellOrders.length && !buyOrders.length) {
+    if (sellOrders.isProceeding) {
+      return (
+        <li className={loading}>
+          <i className='material-icons'>rotate_right</i>
+          <p>Loading...</p>
+        </li>
+      );
+    } else if (!sellOrders.data.length && !buyOrders.data.length) {
       return (
         <li className={noData}>
           <img src='/static/images/no-data.svg' />
@@ -15,8 +22,8 @@ const OrderList = memo(({ sellOrders, buyOrders }) => {
       );
     } else {
       return [
-        sellOrders.map((o, i) => <OrderItem key={i} order={o} />),
-        buyOrders.map((o, i) => <OrderItem key={i} order={o} />),
+        sellOrders.data.map((o, i) => <OrderItem key={i} order={o} />),
+        buyOrders.data.map((o, i) => <OrderItem key={i} order={o} />),
       ];
     }
   };
