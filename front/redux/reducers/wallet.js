@@ -55,7 +55,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         icx: {
-          ...state.icx,
+          data: { deposited: 0, undeposited: 0 },
           isProceeding: false,
           error: action.error,
         },
@@ -76,7 +76,7 @@ export default (state = initialState, action) => {
           isProceeding: false,
         },
         token: {
-          ...state.token,
+          data: { deposited: 0, undeposited: 0 },
           isProceeding: false,
           error: action.error,
         },
@@ -86,12 +86,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         icx: {
-          ...state.icx,
+          data: { deposited: 0, undeposited: 0 },
           isProceeding: false,
           error: action.error,
         },
         token: {
-          ...state.token,
+          data: { deposited: 0, undeposited: 0 },
           isProceeding: false,
           error: action.error,
         },
