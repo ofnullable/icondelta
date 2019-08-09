@@ -60,7 +60,7 @@ export default (state = initialState, action) => {
     case AT.LOAD_LAST_TRADE_BY_TOKEN_SUCCESS:
       state.tokens.data.forEach(t => {
         if (action.data.data[t.symbol]) {
-          t.currentPrice = action.data.data[t.symbol].icxPrice;
+          t.currentPrice = action.data.data[t.symbol].icxPrice || '-';
         } else {
           t.currentPrice = '';
         }

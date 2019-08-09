@@ -104,10 +104,14 @@ const Home = ({ symbol }) => {
 Home.getInitialProps = async context => {
   const store = context.store;
   const symbol = context.query.symbol;
-  store.dispatch({
-    type: AT.LOAD_TOKEN_LIST_REQUEST,
-    symbol,
-  });
+
+  const tokens = store.getState().token.tokens.data;
+  if (!tokens.length) {
+    store.dispatch({
+      type: AT.LOAD_TOKEN_LIST_REQUEST,
+      symbol,
+    });
+  }
 
   return { symbol };
 };
