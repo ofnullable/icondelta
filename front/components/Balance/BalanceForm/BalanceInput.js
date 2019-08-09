@@ -50,16 +50,20 @@ const BalanceInput = memo(({ type, target, balance }) => {
       setAmount('');
       return;
     }
+    if (balance.error) {
+      alert(`Can't ${type.toLowerCase()}. Something went wrong`);
+      return false;
+    }
     if (type === 'Deposit') {
-      if (Number(balance.undeposited) < amount) {
-        alert(`Can't ${type} more then you have`);
-        setAmount(balance.undeposited);
+      if (Number(balance.data.undeposited) < amount) {
+        alert(`Can't ${type.toLowerCase()} more then you have`);
+        setAmount(balance.data.undeposited);
         return false;
       }
     } else {
-      if (Number(balance.deposited) < amount) {
+      if (Number(balance.data.deposited) < amount) {
         alert(`Can't ${type} more then you have`);
-        setAmount(balance.deposited);
+        setAmount(balance.data.deposited);
         return false;
       }
     }

@@ -8,6 +8,7 @@ import { wrapper, inputGroup, active } from './index.scss';
 const Balance = memo(() => {
   const [type, setType] = useState('Deposit');
 
+  const { icx, token } = useSelector(state => state.wallet);
   const { currentToken } = useSelector(state => state.token);
 
   const handleMenuClick = e => {
@@ -26,8 +27,8 @@ const Balance = memo(() => {
         Withdraw
       </menu>
       <div className={inputGroup}>
-        <BalanceInput type={type} target='ICX' />
-        <BalanceInput type={type} target={currentToken} />
+        <BalanceInput type={type} target='ICX' balance={icx} />
+        <BalanceInput type={type} target={currentToken} balance={token} />
       </div>
     </div>
   );

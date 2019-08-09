@@ -11,11 +11,10 @@ const fastify = require('fastify')({
 fastify
   .register(require('fastify-static'), {
     root: path.join(__dirname, 'static'),
-    prefix: '/static/', // optional: default '/'
+    prefix: '/static/',
   })
-  .register(require('fastify-nextjs'), { dev })
+  .register(require('fastify-nextjs'))
   .after(() => {
-    console.log(fastify.next);
     fastify.next('/', async (app, req, reply) => {
       return reply.redirect('/IDA');
     });
