@@ -74,7 +74,7 @@ const makeWithdrawIcxEvent = (amount, address) =>
     })
   );
 
-const makeDepostiTokenEvent = (amount, address, tokenAddress) =>
+const makeDepositTokenEvent = (amount, address, tokenAddress) =>
   iconexEvent(
     makeEventPayload({
       id: ICONEX_REQUEST_ID.DEPOSIT_TOKEN,
@@ -146,7 +146,7 @@ export const withdrawIcxEvent = (amount, address) =>
   window.dispatchEvent(makeWithdrawIcxEvent(amount, address));
 
 export const depositTokenEvent = (amount, address, tokenAddress) =>
-  window.dispatchEvent(makeDepostiTokenEvent(amount, address, tokenAddress));
+  window.dispatchEvent(makeDepositTokenEvent(amount, address, tokenAddress));
 
 export const withdrawTokenEvent = (amount, address, tokenAddress) =>
   window.dispatchEvent(makeWithdrawTokenEvent(amount, address, tokenAddress));

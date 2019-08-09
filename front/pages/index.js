@@ -111,6 +111,20 @@ Home.getInitialProps = async context => {
       type: AT.LOAD_TOKEN_LIST_REQUEST,
       symbol,
     });
+  } else {
+    const currentToken = store.getState().token.tokens.data.find(t => t.symbol === symbol);
+    if (currentToken) {
+      store.dispatch({
+        type: AT.SET_CURRENT_TOKEN,
+        data: currentToken,
+      });
+    } else {
+      // To prevent showing undefined
+      store.dispatch({
+        type: AT.SET_CURRENT_TOKEN_SYMBOL,
+        symbol,
+      });
+    }
   }
 
   return { symbol };
