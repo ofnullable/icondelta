@@ -15,10 +15,11 @@ fastify
   })
   .register(require('fastify-nextjs'))
   .after(() => {
-    fastify.next('/', async (app, req, reply) => {
+    fastify.next('/', (app, req, reply) => {
+      console.log(app, req, reply);
       return reply.redirect('/IDA');
     });
-    fastify.next('/:symbol', async (app, req, reply) => {
+    fastify.next('/:symbol', (app, req, reply) => {
       const symbol = req.params.symbol.toUpperCase();
       return app.render(req.raw, reply.res, '/', { symbol });
     });
