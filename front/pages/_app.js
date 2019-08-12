@@ -12,6 +12,7 @@ import '../styles/index.scss';
 
 const title = ' icondelta ';
 const url = 'https://www.icondelta.ga';
+const image = '/static/images/preview.png';
 const description = 'Decentralized Exchange on ICON Network';
 
 class IconDelta extends App {
@@ -34,11 +35,13 @@ class IconDelta extends App {
             { name: 'title', content: title },
             { name: 'description', content: description },
             { name: 'twitter:site', content: url },
+            { name: 'twitter:image', content: url + image },
             { name: 'twitter:card', content: 'summary_large_image' },
             { property: 'og:type', content: 'website' },
             { property: 'og:title', content: title },
             { property: 'og:description', content: description },
             { property: 'og:url', content: url },
+            { property: 'og:image', content: url + image },
           ]}
           link={[
             { rel: 'icon', href: '/static/favicon.ico' },
