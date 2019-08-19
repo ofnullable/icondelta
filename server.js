@@ -13,13 +13,13 @@ fastify
     root: path.join(__dirname, 'static'),
     prefix: '/static/',
   })
-  .register(require('fastify-nextjs'))
+  .register(require('fastify-nextjs'), { dev })
   .after(() => {
-    fastify.next('/', (app, req, reply) => {
-      console.log(app, req, reply);
+    fastify.next('/', async (app, req, reply) => {
       return reply.redirect('/IDA');
     });
-    fastify.next('/:symbol', (app, req, reply) => {
+
+    fastify.next('/:symbol', async (app, req, reply) => {
       const symbol = req.params.symbol.toUpperCase();
       return app.render(req.raw, reply.res, '/', { symbol });
     });

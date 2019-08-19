@@ -114,15 +114,16 @@ const TradeForm = ({ type }) => {
           value={amount}
           onChange={handleAmountChange}
           ref={amountInput}
+          placeholder='0'
         />
       </div>
       <div>
         <p>{`Price ( ${currentToken.symbol} / ICX )`}</p>
-        <input required type='text' value={price} onChange={handlePriceChange} />
+        <input required type='text' value={price} onChange={handlePriceChange} placeholder='0' />
       </div>
       <div>
         <p>Total ( ICX )</p>
-        <input required type='text' value={total} readOnly />
+        <input required type='text' value={total || 0} readOnly />
       </div>
       <div>
         <p>Expires</p>

@@ -4,8 +4,8 @@ const BalanceItem = ({ symbol, deposited, undeposited }) => {
   return (
     <li>
       <div>{symbol}</div>
-      <div>{undeposited}</div>
-      <div>{deposited}</div>
+      <div>{undeposited || '-'}</div>
+      <div>{deposited || '-'}</div>
     </li>
   );
 };
