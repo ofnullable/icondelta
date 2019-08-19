@@ -86,7 +86,13 @@ const BalanceInput = memo(({ type, target, balance }) => {
       <p>
         {type} {target !== 'ICX' ? target && target.symbol : target}
       </p>
-      <input type='text' value={amount} onChange={handleInputChange} onKeyDown={handleSubmit} />
+      <input
+        type='text'
+        value={amount}
+        onChange={handleInputChange}
+        onKeyDown={handleSubmit}
+        placeholder='0'
+      />
       <button className={type === 'Deposit' ? primary : danger} onClick={handleSubmit}>
         {type}
       </button>
