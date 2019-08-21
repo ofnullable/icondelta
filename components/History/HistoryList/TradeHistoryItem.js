@@ -1,12 +1,15 @@
 import React from 'react';
 
-import { toIcx } from '../../../utils/formatter';
+import { toIcx, toBigNumber } from '../../../utils/formatter';
 import { TRACKER_BASE_URL } from '../../../utils/const';
 
 import { wrapper, buy, sell } from './HistoryItem.scss';
 
 const TradeHistoryItem = ({ history }) => {
   const amount = toIcx(history.amount);
+  const price = toBigNumber(amount)
+    .multipliedBy(history.icxPrice)
+    .toNumber();
   return (
     <li className={wrapper}>
       <div>
@@ -16,7 +19,7 @@ const TradeHistoryItem = ({ history }) => {
       </div>
       <div className={history.type === 'buy' ? buy : sell}>{history.type}</div>
       <div>{amount}</div>
-      <div>{amount * history.icxPrice}</div>
+      <div>{price}</div>
       <div>{history.icxPrice}</div>
     </li>
   );
