@@ -32,14 +32,6 @@ export const toStringWithCommas = (value, round = 9) => {
   return withComma(value);
 };
 
-export const toNumber = value => {
-  if (!value) return 0;
-  if (typeof value === 'string') {
-    value = value.replace(/,/gi, '');
-  }
-  return toBigNumber(value).toNumber();
-};
-
 export const toHexString = value => {
   if (!isBigNumber(value)) {
     value = toBigNumber(value);
