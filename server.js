@@ -1,31 +1,45 @@
 const path = require('path');
 
-const port = process.env.PORT || 3020;
 const dev = process.env.NODE_ENV !== 'production';
 const host = dev ? 'localhost' : '0.0.0.0';
+const port = process.env.PORT || 3020;
 
-const fastify = require('fastify')({
-  logger: { level: dev ? 'info' : 'warn' },
-});
+const next = require('next');
+const app = next({ dev });
+const fastify = require('fastify');
 
-fastify
-  .register(require('fastify-static'), {
-    root: path.join(__dirname, 'static'),
-    prefix: '/static/',
-  })
-  .register(require('fastify-nextjs'), { dev })
-  .after(() => {
-    fastify.next('/', async (app, req, reply) => {
-      return reply.redirect('/IDA');
+const handle = app.getRequestHandler();
+
+app.prepare().then(() => {
+  const server = fastify({
+    logger: { level: dev ? 'info' : 'warn' },
+  });
+
+  server
+    .register(require('fastify-static'), {
+      root: path.join(__dirname, 'static'),
+      prefix: '/static/',
+    })
+    .addHook('onClose', (instance, done) => {
+      app.close();
+      done();
     });
 
-    fastify.next('/:symbol', async (app, req, reply) => {
-      const symbol = req.params.symbol.toUpperCase();
-      return app.render(req.raw, reply.res, '/', { symbol });
+  server.get('/', (req, reply) => {
+    reply.redirect('/IDA');
+  });
+  server.get('/:symbol', (req, reply) => {
+    const symbol = req.params.symbol.toUpperCase();
+    app.render(req.req, reply.res, '/', { symbol });
+  });
+  server.get('*', (req, reply) => {
+    return handle(req.req, reply.res).then(() => {
+      reply.sent = true;
     });
   });
 
-fastify.listen(port, host, err => {
-  if (err) throw err;
-  console.log(`Next, Fastify server listenging on port: ${port}`);
+  server.listen(port, host, err => {
+    if (err) throw err;
+    console.log(`Next, Fastify server listenging on port: ${port}`);
+  });
 });
