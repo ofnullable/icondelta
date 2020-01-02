@@ -8,8 +8,6 @@ const next = require('next');
 const app = next({ dev });
 const fastify = require('fastify');
 
-const handle = app.getRequestHandler();
-
 app.prepare().then(() => {
   const server = fastify({
     logger: { level: dev ? 'info' : 'warn' },
@@ -33,7 +31,7 @@ app.prepare().then(() => {
     app.render(req.req, reply.res, '/', { symbol });
   });
   server.get('*', (req, reply) => {
-    return handle(req.req, reply.res).then(() => {
+    return app.handleRequest(req.req, reply.res).then(() => {
       reply.sent = true;
     });
   });
