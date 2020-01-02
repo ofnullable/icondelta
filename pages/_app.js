@@ -1,7 +1,7 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import { Provider } from 'react-redux';
-import App, { Container } from 'next/app';
+import App from 'next/app';
 import withRedux from 'next-redux-wrapper';
 import withReduxSaga from 'next-redux-saga';
 
@@ -16,18 +16,16 @@ const image = '/static/images/preview.png';
 const description = 'Decentralized Exchange on ICON Network';
 
 class IconDelta extends App {
-  static async getInitialProps({ Component, ctx }) {
-    let pageProps = {};
-    if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx);
-    }
-    return { pageProps };
-  }
+  //   static async getInitialProps(appContext) {
+  //     // calls page's `getInitialProps` and fills `appProps.pageProps`
+  //     const appProps = await App.getInitialProps(appContext);
+  //     return { ...appProps };
+  //   }
 
   render() {
     const { Component, pageProps, store } = this.props;
     return (
-      <Container>
+      <>
         <Helmet
           title='icondelta'
           meta={[
@@ -54,7 +52,7 @@ class IconDelta extends App {
             <Component {...pageProps} />
           </Layout>
         </Provider>
-      </Container>
+      </>
     );
   }
 }
